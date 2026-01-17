@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.754" height="22.08" viewBox="0 0 25.754 22.08">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #303974;
+      }
+    </style>
+  </defs>
+  <path id="Icon_material-dashboard" data-name="Icon material-dashboard" class="cls-1" d="M4.5,16.767H15.946V4.5H4.5Zm0,9.813H15.946V19.22H4.5Zm14.308,0H30.254V14.313H18.808Zm0-22.08v7.36H30.254V4.5Z" transform="translate(-4.5 -4.5)"/>
+</svg>

@@ -1,0 +1,44 @@
+.dialog.confirm {
+  text-align: center;
+  .buttons {
+    gap: 1rem;
+    .button {
+      background-color: $primary-color;
+      &:disabled {
+        background-color: $primary-color-t;
+      }
+    }
+    button:nth-of-type(2) {
+      background-color: $gray;
+      &:disabled {
+        background-color: $gray-t;
+      }
+    }
+  }
+}
+
+.dialog {
+  .comment {
+    min-width: 20rem;
+    margin: auto;
+    border: 1px solid $gray;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  ul.files {
+    min-width: 15rem;
+    margin: auto;
+    border: 1px solid $gray;
+    border-radius: 8px;
+    padding: 8px;
+    li {
+      list-style-type: none;
+      margin: 0;
+      padding: 8px 0;
+      & > i {
+        margin-right: 8px;
+        padding: 4px;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "**/build**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "package-lock.json": true
+  }
+}

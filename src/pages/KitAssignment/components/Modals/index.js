@@ -1,0 +1,6 @@
+export { default as ResponsibleEditModal } from './ResponsibleEditModal'
+export { default as PlanModal } from './PlanModal'
+export { default as BinnacleDetailModal } from './BinnacleDetailModal'
+export { default as DocumentsDetailModal } from './DocumentsDetailModal'
+export { default as AddRegisterModal } from './AddRegisterModal'
+export { default as EditRegisterModal } from './EditRegisterModal'

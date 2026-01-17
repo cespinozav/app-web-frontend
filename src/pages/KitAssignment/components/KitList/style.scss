@@ -1,0 +1,154 @@
+.kit-list {
+  .table.p-datatable {
+    margin-top: 6px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    .p-datatable-thead > tr > th {
+      background-color: $background;
+      padding: 8px 1rem;
+    }
+    .contract {
+      padding: 2px 0;
+      text-align: center;
+      width: 7rem;
+      font-size: 0.8rem;
+      border-radius: 0.3rem;
+      div:last-child {
+        font-size: 0.75em;
+      }
+    }
+    .p-datatable-wrapper {
+      overflow-x: auto;
+    }
+    .p-column-title {
+      color: $gray-title;
+    }
+
+    table.p-datatable-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      .p-column-title {
+        font-weight: 600;
+      }
+      thead.p-datatable-thead > tr > th {
+        border: none;
+        &.action {
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+
+    .p-datatable-tbody {
+      font-weight: 500;
+      tr > td {
+        padding: 10px 1rem;
+      }
+      tr:first-child {
+        border-radius: 10px 10px 0 0;
+        td:first-child {
+          border-radius: 10px 0 0 0;
+        }
+        td:last-child {
+          border-radius: 0 10px 0 0;
+        }
+      }
+    }
+    .p-highlight {
+      color: $blue;
+    }
+  }
+
+  .table.p-skeleton {
+    margin: 8px 0;
+    min-height: 2.5rem;
+  }
+
+  .header {
+    align-items: flex-end;
+    color: $primary-color;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5px;
+  }
+  .buttons {
+    display: flex;
+    gap: 16px;
+    button {
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      padding: 8px 16px;
+    }
+    .disabled {
+      display: flex;
+      gap: 8px;
+      background-color: $background;
+      border: 1px solid $gray;
+      color: $gray;
+    }
+    .delete {
+      display: flex;
+      gap: 8px;
+      background-color: $background;
+      border: 1px solid $color1;
+      color: $color1;
+      &:hover {
+        background-color: $color1;
+        color: white;
+      }
+    }
+    .upload {
+      display: flex;
+      gap: 8px;
+      background-color: $background;
+      border: 1px solid $blue;
+      color: $blue;
+      &:hover {
+        background-color: $blue;
+        color: white;
+      }
+    }
+    .add {
+      background-color: $background;
+      border: 1px solid $secondary-color;
+      color: $green;
+      &:hover {
+        background-color: $secondary-color;
+        color: white;
+      }
+    }  
+    .reporting {
+      background-color: $background;
+      border: 1px solid $primary-color;
+      color: $primary-color;
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+      }
+    }  
+  }
+  .responsible {
+    border-radius: 4px;
+    padding: 6px 4px;
+  }
+  .status {
+    border-radius: 6px;
+    margin: auto;
+    padding: 6px;
+    text-align: center;
+    width: 7rem;
+  }
+  .actions {
+    .p-button {
+      background-color: transparent;
+      border: none;
+      padding: 4px;
+      width: auto;
+      .pi {
+        font-size: 1.2rem;
+        color: $blue;
+      }
+    }
+  }
+}

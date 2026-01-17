@@ -1,0 +1,19 @@
+.button {
+  margin-top: auto;
+  button {
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    height: 35px;
+    min-width: 80px;
+    cursor: pointer;
+  }
+  img{
+    width: 15px;
+    margin-left: 5px;
+  }
+}

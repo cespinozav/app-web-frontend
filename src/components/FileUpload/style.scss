@@ -1,0 +1,92 @@
+.file-upload {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  min-height: 10.4rem;
+  display: flex;
+  flex-direction: column;
+  &.p-invalid {
+    border: 1px solid #e24c4c;
+  }
+  .area {
+    border: 1px dashed #002e6c;
+    border-radius: 8px;
+    width: 100%;
+    padding: 4px;
+    background-color: transparent;
+    font-family: $primary-font;
+    color: black;
+    .upload {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 4px;
+      font-weight: 500;
+      row-gap: 4px;
+      text-align: center;
+    }
+    .p-button-label {
+      align-items: center;
+      padding: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    &:active,
+    &:hover {
+      color: black;
+      background-color: transparent;
+    }
+  }
+
+  p {
+    font-size: 0.8rem;
+    margin: 4px 0;
+    color: $gray;
+    text-align: center;
+    &.total {
+      margin-top: auto;
+      padding-top: 8px;
+      color: $primary-color;
+      font-weight: 500;
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .info {
+    align-items: center;
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid $gray;
+    font-weight: 600;
+    display: grid;
+    font-family: $primary-font;
+    grid-template-columns: 1.5rem 1fr 2rem;
+    button.delete {
+      background-color: transparent;
+      border: none;
+      color: gray;
+      // height: 1.6rem;
+      padding: 1px;
+      width: auto;
+      &:active {
+        border: none;
+      }
+    }
+    p {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 0.8rem;
+      margin: 0;
+    }
+    .size {
+      color: $gray;
+      font-weight: 500;
+    }
+  }
+}

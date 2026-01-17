@@ -1,0 +1,154 @@
+.form {
+  margin: 25px 0;
+  background-color: #f9fafc;
+  border-radius: 0.5rem;
+  .p-panel.expandable {
+    .header {
+      display: flex;
+      justify-content: center;
+      padding: 4px;
+      button {
+        // border: 1px solid #ced4da;
+        gap: 4px;
+        margin-bottom: 4px;
+        margin-right: 8px;
+        padding: 4px;
+      }
+    }
+    .p-panel-content {
+      background-color: transparent;
+      font-family: $primary-font;
+      padding: 0;
+      color: black;
+    }
+  }
+  .p-accordion-header {
+    display: none;
+  }
+}
+
+@mixin inputs {
+  font-family: $primary-font;
+  padding: 8px 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  font-family: $primary-font;
+  gap: 20px;
+  padding: 16px;
+
+  .action {
+    align-self: flex-end;
+  }
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-weight: 500;
+    }  
+    .dropdown {
+      // @include inputs;
+      padding: 1px;
+
+      min-width: 10rem;
+      // height: 2.2rem;
+      &:focus {
+        outline: none;
+      }
+      .p-dropdown-label {
+        // padding-top: 0;
+        padding: 7px;
+        // padding-right: 0;
+        font-family: $primary-font;
+      }
+    }
+
+    input {
+      @include inputs;
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button {
+      font-family: inherit;
+    }
+    label[for="holder"] + div {
+      margin: auto;
+    }
+    .icon-button {
+      border: 1px solid $gray;
+      color: black;
+      padding: 8px;
+    }
+
+  }
+  .primary-button {
+    align-self: flex-end;
+    .search {
+      background-color: $primary-color;
+      color: white;
+      padding: 9px 12px;
+      border: none;
+      .p-button-label {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.module {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  a {
+    text-decoration: none;
+    color: #414141;
+    font-size: 20px;
+    img {
+      width: 20px;
+      margin-right: 8px;
+      vertical-align: bottom;
+      margin-bottom: 2px;
+      filter: invert(37%) sepia(22%) saturate(0%) hue-rotate(64deg) brightness(99%) contrast(91%);
+    }
+  }
+  .active {
+    a {
+      color: $primary-color;
+      img {
+        filter: invert(17%) sepia(23%) saturate(5978%) hue-rotate(209deg) brightness(85%) contrast(105%);
+      }
+    }
+  }
+  & > div {
+    &:first-child {
+      margin-right: 60px;
+    }
+  }
+}
+
+@media screen and (max-width: 460px){
+  .form-group {
+    flex-direction: column;
+    & > div{
+      width: 100%;
+      input{
+        width: 100% !important;
+      }
+      button{
+        position: static !important;
+      }
+    }
+  }
+}
+
+@import "../KitAssignment/style.scss";
+@import "../KitMaintenance/style.scss";
+

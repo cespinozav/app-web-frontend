@@ -1,0 +1,57 @@
+.modalSelect {
+    position: fixed;
+    background-color: rgba(#ffffff,.7);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h1{
+        font-size: 20px;
+        text-align: center;
+        color: $primary-color;
+        margin-bottom: 25px;
+    }
+    &>div {
+        width: 440px;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        border: solid 2px #c2bdbd;
+        .container {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            button{
+                text-align: center;
+                background-color: $primary-color;
+                color: white;
+                padding:10px;
+                font-size: 14px;
+                margin-bottom: 5px;
+                border: none;
+                display: block;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+        }
+        
+    }
+    .box{
+        position: relative;
+        .close{
+            position: absolute;
+            right: -15px;
+            top: -15px;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            color: $primary-color;
+            cursor: pointer;
+        }
+    }
+}

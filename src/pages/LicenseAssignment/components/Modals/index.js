@@ -1,0 +1,5 @@
+export { default as EditRegisterModal } from './EditRegisterModal'
+export { default as LicenseTypeModal } from './LicenseTypeModal'
+export { default as BinnacleDetailModal } from './BinnacleDetailModal'
+export { default as DocumentsDetailModal } from './DocumentsDetailModal'
+export { default as AddRegisterModal } from './AddRegisterModal'

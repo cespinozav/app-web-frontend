@@ -1,0 +1,218 @@
+$primary-color: #0A2D74;
+$primary-color-t:#3c5fa7;
+$secondary-color: #88B13B;
+$background: #F2F3F8;
+$gray-t: #d1d1d1;
+$gray-title: #494949;
+$color1: #E15757;
+$color2: #E31B43;
+
+$green: #5FAB68;
+$green-bg: #EDFFEF;
+$blue: #2658A2;
+$blue-bg: #D1E5F5;
+$blue-text: #0A2D74;
+$black: #000000;
+$gray: #808080;
+
+$primary-font: 'Montserrat', sans-serif;
+
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.3125rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 2.652rem;
+$font-size-4xl: 4rem;
+
+
+
+
+input:focus,
+button:focus{
+  outline: none;
+}
+body{
+  font-size: $font-size-sm;
+}
+h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: $green;
+  font-weight: 600;
+  img {
+    width: 2rem;
+  }
+}
+.text-center-vh{
+  text-align: center;
+  margin-top: 20vh;
+  font-weight: 200;
+  font-size: 18px;
+}
+
+.form-group_report {
+  display: flex;
+  & > div {
+    margin-right: 10px;
+    position: relative;
+    min-width: 80px;
+  }
+  div label {
+    display: block;
+  }
+  div input {
+    padding: 10px 15px;
+    width: 100px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px 2px 6px -3px grey;
+    margin-top: 5px;
+    border: none;
+  }
+  .report-button {
+    margin-top: auto;
+  }
+  .report-link {
+    bottom: 0;
+
+    a {
+      position: absolute;
+      padding: 8px 15px;
+      text-decoration: none;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      height: 35px;
+      min-width: 80px;
+      cursor: pointer;
+      bottom: 0;
+    }
+  }
+}
+
+.report {
+  width: 100%;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    border: 0px solid #d5d5d5;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 0;
+    background: $gray;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background: #b0b0b0;
+    height: 3px;
+  }
+  .report-items {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    & > div {
+      padding: 10px;
+      background-color: white;
+      box-shadow: 2px 2px 6px -3px gray;
+      min-width: 150px;
+      border-right: solid 1px $gray;
+      border-bottom: solid 1px $gray;
+      &:nth-child(2){
+        min-width: 400px;
+      }
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(6),
+      &:nth-child(7),
+      &:nth-child(8),
+      &:nth-child(9) {
+        min-width: 300px;
+      }
+    }
+
+    &:nth-child(1) {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+
+      & > div {
+        padding: 10px;
+      }
+    }
+  }
+}
+
+.dashboard {
+  background-color: white;
+  width: 100%;
+  // overflow: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    border: 0px solid #d5d5d5;
+    height: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 0;
+    background: $gray;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background: #b0b0b0;
+    height: 3px;
+  }
+  
+  .dashboard-items {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3rem 6rem repeat(5, 1fr) 6rem;
+    & > div {
+      padding: 10px;
+      background-color: white;
+      box-shadow: 2px 2px 6px -3px gray;
+      min-width: 100px;
+      border-right: solid 1px $gray;
+      border-bottom: solid 1px $gray;
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(6),
+      &:nth-child(7),
+      &:nth-child(8),
+      &:nth-child(9) {
+        min-width: 200px;
+      }
+    }
+  }
+}
+
+@import "./pages/AssetsAssignment/style.scss";
+@import "./components/Modals/style.scss";
+@import "./components/ModalSelect/style.scss";
+@import "./pages/Login/style.scss";
+@import "./pages/MobileModule/style.scss";
+@import "./pages/LicensesModule/style.scss";
+
+@import "./components/Button/style.scss";
+// @import "./components/AutoComplete/style.scss";
+@import "./components/FileUpload/style.scss";
+@import "./components/MultiSelect/style.scss";
+@import "./components/SelectionTable/style.scss";
+@import "./components/Checkbox/style.scss";
+@import "./components/Steps/style.scss";
+@import "./components/Input/style.scss";
+@import "./components/NotFound/style.scss";
+@import "./components/LoadingScreen/style.scss";
+@import "./components/SessionExpired/style.scss";
+@import "./components/Layout/style.scss";

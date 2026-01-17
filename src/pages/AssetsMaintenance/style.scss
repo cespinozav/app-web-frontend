@@ -1,0 +1,110 @@
+.license-maintenance {
+  button {
+    background-color: transparent;
+    font-family: inherit;
+    font-weight: 600;
+  }
+  .header {
+    margin: 16px 4px 8px 4px;
+    padding: 8px;
+    display: flex;
+    border-bottom: 1px solid $primary-color;
+    gap: 2rem;
+
+    button {
+      font-size: 0.84rem;
+      border: none;
+      color: $gray;
+      &.active {
+        color: $primary-color;
+      }
+    }
+  }
+
+  section {
+    border-radius: 8px;
+    display: flex;
+    background-color: white;
+    .options {
+      display: flex;
+      flex-direction: column;
+      min-width: 5rem;
+      padding: 16px;
+      gap: 16px;
+      .p-dropdown {
+        display: none;
+      }
+      button {
+        border: none;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: $primary-color;
+        box-shadow: 0 3px 6px #00000029;
+        &:hover {
+          background-color: $background;
+        }
+        &.active {
+          background-color: $green-bg;
+          color: $green;
+          border-color: $green;
+        }
+      }
+    }
+  }
+
+  .maintenance.kit-list {
+    margin: 8px 16px;
+    flex: 1;
+    .table {
+      padding: 8px;
+      width: 100%;
+      &.p-datatable {
+        border-top: 1px solid $gray;
+        border-inline: 1px solid $gray;
+        border-radius: 8px 8px 0 0;
+        .p-datatable-thead > tr > th {
+          background-color: white;
+          font-size: 0.9rem;
+          span {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+    .paginate {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid $gray;
+      border-inline: 1px solid $gray;
+      border-radius: 0 0 8px 8px;
+      .p-paginator {
+        margin: auto;
+      }
+    }
+    .add {
+      background-color: transparent;
+      &:hover {
+        background-color: $green;        
+      }
+    }
+  }
+  @media screen and (max-width: 600px) {
+    section {
+      flex-direction: column;
+      .options {
+        button {
+          display: none;
+        }
+        .p-dropdown {
+          display: inline-flex;
+        }
+      }
+    }
+    .paginate {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+}

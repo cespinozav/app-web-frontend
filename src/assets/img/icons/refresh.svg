@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="35.628" height="35" viewBox="0 0 35.628 35">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #88b13b;
+      }
+    </style>
+  </defs>
+  <path id="Icon_material-refresh" data-name="Icon material-refresh" class="cls-1" d="M36.407,11.141A17.9,17.9,0,0,0,23.818,6a17.641,17.641,0,0,0-17.8,17.5A17.641,17.641,0,0,0,23.818,41,17.729,17.729,0,0,0,41.041,27.875H36.407A13.4,13.4,0,0,1,10.449,23.5,13.35,13.35,0,0,1,33.22,14.269l-7.175,7.044h15.6V6Z" transform="translate(-6.015 -6)"/>
+</svg>

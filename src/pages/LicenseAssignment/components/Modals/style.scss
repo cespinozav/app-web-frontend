@@ -1,0 +1,259 @@
+.dialog.add-license-dialog {
+  .dialog-table {
+    margin-top: 1rem;
+    max-height: 25rem;
+    overflow-y: auto;
+    padding: 8px;
+    width: 100%;
+    &.p-datatable {
+      // border-top: 1px solid $gray;
+      // border-inline: 1px solid $gray;
+      border-radius: 8px 8px 0 0;
+      .p-datatable-thead > tr > th {
+        background-color: white;
+        // font-size: 0.9rem;
+        span {
+          color: $primary-color;
+        }
+      }
+    }
+  }  
+  // .paginate {
+  //   display: flex;
+  //   align-items: center;
+  //   padding: 8px;
+  //   border-bottom: 1px solid $gray;
+  //   border-inline: 1px solid $gray;
+  //   border-radius: 0 0 8px 8px;
+  //   .p-paginator {
+  //     margin: auto;
+  //   }
+  // }
+  .section {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+  .header {
+    display: flex;
+    justify-content: center;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    .simple-row {
+      grid-template-columns: 1fr 14rem;
+      align-items: baseline;
+    }
+    .amount {
+      padding: 9px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      &::before {
+        content: none;
+      }
+    }
+    .contract {
+      padding: 3px 0.8rem;
+      text-align: center;
+      width: 12rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      div:last-child {
+        font-size: 0.75em;
+      }
+    }
+  }
+  // &.massive {
+  //   .section {
+  //     flex-direction: column;
+  //     align-items: center;
+  //   }
+  //   .m-row {
+  //     display: flex;
+  //     flex-direction: column;
+  //     margin-top: 0.75rem;
+  //     & > div,input {
+  //       margin-top: 0.5rem;
+  //       // width: 100%;
+  //     }
+  //   }  
+  // }
+
+  input {
+    min-width: 14rem;
+  }
+  .p-dropdown.dropdown {
+    padding: 2px;
+  }
+  label {
+    justify-self: flex-end;
+  }
+  textarea {
+    resize: none;
+  }
+  .details {
+    justify-content: flex-end;
+    .row {
+      align-self: center;
+      align-items: center;
+    }
+    .dropdown {
+      width: 12rem;
+      display: flex;
+    }
+  }
+
+  .p-dialog-header {
+    border-bottom: 1px solid #ecebeb;
+    padding: 16px;
+  }
+
+  .table-selection {
+    margin-top: 8px;
+  }
+  .table-row {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    max-width: 20rem;
+    padding: 1px;
+    margin: 15px auto 8px auto;
+    width: 100%;
+    .p-skeleton {
+      margin: 8px 0;
+    }
+  }
+}
+
+.dialog.licenses-dialog {
+  @mixin cell {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+  }
+  .p-dialog-content {
+    padding: 2rem;
+    padding-top: 0;
+    border-radius: 0 0 6px 6px;
+    .header {
+      border-bottom: 1px solid black;
+    }
+    .license {
+      padding-bottom: 0.5rem;
+      h3 {
+        color: $primary-color;
+        font-size: 1.1rem;
+      }
+    }
+    .simple-row > div {
+      text-align: center;
+      @include cell;
+    }
+    .row > div {
+      & > div {
+        @include cell;
+      }
+      div:first-of-type {
+        color: $gray;
+        padding-left: 12px;
+      }
+    }
+    .m-row {
+      display: flex;
+      flex-direction: column;
+      margin-top: 0.75rem;
+      & > div,input {
+        margin-top: 0.5rem;
+        width: 100%;
+      }
+      // width: 100%;
+    }
+  }
+}
+
+.dialog.license-details {
+  max-width: 800px;
+  .header{
+    border-bottom: 1px solid $primary-color;
+    h2 {
+      margin: 0;
+    }
+  }
+  h3 {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    color: $primary-color;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+  }
+
+  .fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 8px;
+    .field {
+      display: grid;
+      font-size: 0.875rem;
+      .addendum {
+        display: flex;
+        gap: 8px;
+        i {
+          font-size: 1.1rem;
+          color: $primary-color;
+        }
+      }
+      .p-skeleton {
+        background-color: #dee2e6;
+        margin: 0;
+        min-height: 2rem;
+      }
+
+      & > div {
+        padding: 0.5rem 6px;
+        &:first-of-type {
+          color: #686868;
+          font-weight: 600;
+        }
+        &:last-of-type:not(.check, .actions, .p-skeleton) {
+          border: 1px solid #ced4da;
+          border-radius: 6px;
+        }
+        &.check {
+          padding: 0;
+          margin: auto;
+        }
+      }
+      .status, .license {
+        text-align: center;
+      }
+      .license {
+        padding: 2px 0.8rem;
+        // text-align: center;
+        div:last-child {
+          font-size: 0.75em;
+        }
+      }
+      .days {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        text-align: center;
+        div:first-of-type {
+          font-size: 0.9em;
+        }
+        div:last-of-type {
+          font-size: 0.85em;
+        }
+      }
+    }
+  }
+}
+
+
+.dialog.maintenance {
+  min-width: 25rem;
+  .p-dialog-content {
+    padding-top: 0;
+  }
+}
