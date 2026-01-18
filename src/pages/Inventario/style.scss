@@ -1,0 +1,43 @@
+// Estilos para el módulo de Inventario, replicando el diseño horizontal de subrutas de zprime-frontend
+.module {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  a {
+    text-decoration: none;
+    color: #414141;
+    font-size: 20px;
+    img {
+      width: 20px;
+      margin-right: 8px;
+      vertical-align: bottom;
+      margin-bottom: 2px;
+      filter: invert(37%) sepia(22%) saturate(0%) hue-rotate(64deg) brightness(99%) contrast(91%);
+    }
+  }
+  .active {
+    a {
+      color: #007ad9; // $primary-color, ajustar si tienes variable
+      img {
+        filter: invert(17%) sepia(23%) saturate(5978%) hue-rotate(209deg) brightness(85%) contrast(105%);
+      }
+    }
+  }
+  & > div {
+    &:first-child {
+      margin-right: 60px;
+    }
+  }
+}
+
+@media screen and (max-width: 460px){
+  .module {
+    flex-direction: column;
+    & > div{
+      width: 100%;
+      a{
+        width: 100%;
+      }
+    }
+  }
+}

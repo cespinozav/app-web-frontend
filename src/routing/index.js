@@ -1,10 +1,16 @@
 
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from 'pages/Login';
 import Dashboard from 'pages/Dashboard';
+import InventarioModule from 'pages/Inventario/InventarioModule';
+import Productos from 'pages/Inventario/Productos';
+import Mantenimientos from 'pages/Inventario/Mantenimientos';
+import Perfil from 'pages/Perfil';
 import ROUTES from 'routing/routes';
 import AuthGuard from './AuthGuard';
+import Layout from 'components/Layout';
 
 export default function AppRoutes() {
   return (
@@ -12,7 +18,14 @@ export default function AppRoutes() {
       <Routes>
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route element={<AuthGuard />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route element={<Layout />}>
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.INVENTORY} element={<InventarioModule />}>
+              <Route path={ROUTES.INVENTORY_PRODUCTS} element={<Productos />} />
+              <Route path={ROUTES.INVENTORY_MAINTENANCE} element={<Mantenimientos />} />
+            </Route>
+            <Route path={ROUTES.PROFILE} element={<Perfil />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

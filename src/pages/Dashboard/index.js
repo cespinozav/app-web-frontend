@@ -1,12 +1,11 @@
 import React from 'react';
 
-const Dashboard = () => {
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Bienvenido al Dashboard</h1>
-      <p>Esta es la página principal después de iniciar sesión.</p>
-    </div>
-  );
-};
+
+const Dashboard = () => (
+  <>
+    <h1>Dashboard</h1>
+    <p>Página principal del sistema.</p>
+  </>
+);
 
 export default Dashboard;
