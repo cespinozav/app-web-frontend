@@ -83,7 +83,7 @@ export async function newtworkMultipartRequest(suffix, formData, method = HTTP_M
 }
 
 export async function getUser() {
-  return networkRequest('/access_token')
+  return networkRequest('/access-token')
     .then(res => res.json())
     .then(res => {
       const { result } = res

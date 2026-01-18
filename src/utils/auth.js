@@ -25,19 +25,19 @@ const authDummy = () =>
     }, 1000)
   })
 
-export function authenticate({ user, password }) {
+export function authenticate({ username, password }) {
   return makeRequest('/login', {
     method: HTTP_METHODS.POST,
     body: {
-      user,
+      username,
       password
     }
   })
     .then(res => res.json())
     .then(res => {
       const { result } = res
-      localStorage.setItem('accessToken', result.access_token)
-      localStorage.setItem('refreshToken', result.refresh_token)
+      localStorage.setItem('accessToken', result.access)
+      localStorage.setItem('refreshToken', result.refresh)
       return { username: result.username }
     })
   // return authDummy()

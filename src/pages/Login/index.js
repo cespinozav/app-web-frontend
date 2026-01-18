@@ -8,7 +8,7 @@ import { hasToken, authenticate } from 'utils/auth'
 import { useForm } from 'react-hook-form'
 import { Button } from 'primereact/button'
 
-const DEFAULT_FIELDS = { user: '', password: '' }
+const DEFAULT_FIELDS = { username: '', password: '' }
 
 const Login = () => {
   const navigate = useNavigate()
@@ -56,10 +56,10 @@ const Login = () => {
             <h1>Bienvenido</h1>
           </div>
           <div className="form-data">
-            <label htmlFor="user">Usuario de red</label>
+            <label htmlFor="username">Usuario de red</label>
             <input
-              id="user"
-              {...register('user', {
+              id="username"
+              {...register('username', {
                 required: 'Usuario no ingresado',
                 minLength: { value: 4, message: 'El Usuario debe tener 4 caractéres como mínimo' }
               })}
