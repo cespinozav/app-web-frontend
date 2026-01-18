@@ -1,4 +1,4 @@
-import { SUB_ROUTES } from './routes'
+
 
 export const ROLES = {
   USER: 'USER',
@@ -11,19 +11,19 @@ export const AUTHORIZER = {
     ASSET: true,
     MOBILE: true,
     LICENSE: true,
-    DEFAULT: SUB_ROUTES.MOBILE_MODULE.KIT_ASSIGNMENT
+    DEFAULT: '/'
   },
   USER: {
     ASSET: false,
     MOBILE: false,
     LICENSE: true,
-    DEFAULT: SUB_ROUTES.LICENSE_MODULE.LICENSE_ASSIGNMENT
+    DEFAULT: '/'
   },
   DEFAULT: {
     ASSET: false,
     MOBILE: true,
     LICENSE: false,
-    DEFAULT: SUB_ROUTES.MOBILE_MODULE.KIT_ASSIGNMENT
+    DEFAULT: '/'
   }
 }
 

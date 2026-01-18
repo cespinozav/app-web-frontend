@@ -1,6 +1,0 @@
-export { default as UserForm } from './UserForm'
-export { default as AssignmentForm } from './AssignmentForm'
-export { default as ConfirmEditForm } from './ConfirmEditForm'
-export { default as FileLoadForm } from './FileLoadForm'
-export { default as ObservationsForm } from './ObservationsForm'
-export { default as LicensesLoadForm } from './LicensesLoadForm'

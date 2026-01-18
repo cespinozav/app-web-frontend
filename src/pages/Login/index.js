@@ -21,6 +21,7 @@ const Login = () => {
     if (hasToken()) {
       navigate('/')
     }
+    // Si no hay token, no hacer nada, mostrar login
   }, [])
 
   const toast = useToast()

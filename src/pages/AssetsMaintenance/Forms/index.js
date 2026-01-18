@@ -1,7 +1,0 @@
-export { default as GenericSpecForm } from './GenericSpec'
-export { default as TypesForm } from './Types'
-export { default as LeasingForm } from './Leasing'
-export { default as SeatForm } from './Seat'
-export { default as ModelForm } from './Model'
-export { default as BrandForm } from './Brand'
-export { default as ClassificationForm } from './Classification'
