@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from 'pages/Login';
 import Dashboard from 'pages/Dashboard';
 import InventarioModule from 'pages/Inventario/InventarioModule';
@@ -21,6 +21,7 @@ export default function AppRoutes() {
           <Route element={<Layout />}>
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
             <Route path={ROUTES.INVENTORY} element={<InventarioModule />}>
+              <Route index element={<Navigate to={ROUTES.INVENTORY_PRODUCTS} replace />} />
               <Route path={ROUTES.INVENTORY_PRODUCTS} element={<Productos />} />
               <Route path={ROUTES.INVENTORY_MAINTENANCE} element={<Mantenimientos />} />
             </Route>

@@ -1,0 +1,114 @@
+.add {
+  background-color: #fff;
+  color: #00b386;
+  border: 1.5px solid #00b386;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s;
+  margin-left: 8px;
+  margin-right: 8px;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.add:hover, .add:focus {
+  background: #e6f9f0;
+  color: #009e6d;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+  border-color: #009e6d;
+}
+.add:active {
+  background: #c2f2df;
+  color: #007a53;
+  border-color: #007a53;
+}
+.actions {
+  display: flex;
+  gap: 5px;
+}
+.actions .p-button.p-button-icon-only {
+  transition: background 0.2s;
+  border-radius: 50%;
+}
+.actions .p-button.p-button-icon-only:hover {
+  background: #e3f0fa !important;
+}
+.actions .p-button.p-button-icon-only.p-button-danger:hover {
+  background: #ffeaea !important;
+}
+.actions .p-button.p-button-icon-only .pi {
+  color: #007ad9 !important;
+  font-size: 1.2rem;
+}
+.actions .p-button.p-button-icon-only.p-button-danger .pi {
+  color: #d32f2f !important;
+}
+.productos-listado {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin: 24px auto;
+  max-width: 900px;
+}
+.header-productos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid #ecebeb;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+.header-productos h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+.filtros-productos {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+.tabla-productos {
+  margin-bottom: 18px;
+}
+.table {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #fafbfc;
+}
+.table th, .table td {
+  padding: 10px 8px;
+  text-align: left;
+}
+.table th {
+  background: #f5f5f5;
+  color: #007ad9;
+  font-weight: 600;
+}
+.table tr {
+  transition: background 0.2s;
+}
+.table tr:hover {
+  background: #f0f8ff;
+}
+.table td:last-child {
+  text-align: center;
+}
+.paginate {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

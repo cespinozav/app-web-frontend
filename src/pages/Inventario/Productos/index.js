@@ -1,11 +1,341 @@
-import React from 'react';
 
+import React, { useState } from 'react'
+import { Dialog } from 'primereact/dialog'
+import { useForm, Controller } from 'react-hook-form'
+import useToast from 'hooks/useToast'
+import { Button } from 'primereact/button'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import ProductoService from 'services/Producto'
+import CategoriaService from 'services/Categoria'
+import { Paginator } from 'primereact/paginator'
+import { useQuery } from 'hooks/useRequest'
+import { Skeleton } from 'primereact/skeleton'
+import './style.scss'
 
-const Productos = () => (
-  <>
-    <h1>Productos</h1>
-    <p>Gestión de productos del inventario.</p>
-  </>
-);
+const PAGE_SIZE = 10
 
-export default Productos;
+function fetchProductos({ page = 1, search = '', cat = '', active = '' }) {
+  const params = []
+  if (search) params.push(`search=${encodeURIComponent(search)}`)
+  if (cat) params.push(`cat=${cat}`)
+  if (active !== '') params.push(`active=${active}`)
+  params.push(`page=${page}`)
+  params.push(`page_size=${PAGE_SIZE}`)
+  const query = params.length ? `?${params.join('&')}` : ''
+  return fetch(`/api/v1/productos/${query}`)
+    .then(res => res.json())
+    .then(res => {
+      const result = res.result || {}
+      return {
+        results: Array.isArray(result.results) ? result.results : [],
+        count: typeof result.count === 'number' ? result.count : 0
+      }
+    })
+}
+
+export default function Productos() {
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [cat, setCat] = useState('')
+  const [active, setActive] = useState(0) // Estado disponible por defecto
+  const [categorias, setCategorias] = useState([{ label: 'Todas', value: '' }])
+  const [catLoading, setCatLoading] = useState(false)
+
+  // const categorias = [...] // Eliminado: ahora se usa el estado categorias
+  const categoriasSinTodas = categorias.filter(c => c.value !== '')
+  const estados = [
+    { label: 'Todos', value: '' },
+    { label: 'Disponible', value: 0 },
+    { label: 'No disponible', value: 1 }
+  ]
+
+  // Cargar categorías al montar
+  React.useEffect(() => {
+    setCatLoading(true)
+    CategoriaService.get({ page: 1, page_size: 100 })
+      .then(res => {
+        const cats = Array.isArray(res.results)
+          ? res.results.map(c => ({ label: c.nombre || c.description || c.label, value: c.id }))
+          : []
+        setCategorias([{ label: 'Todas', value: '' }, ...cats])
+      })
+      .finally(() => setCatLoading(false))
+  }, [])
+
+  const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, active], () =>
+    ProductoService.get({ page, page_size: PAGE_SIZE, search, cat, active })
+  )
+  const productos = data?.results || []
+  const totalRecords = data?.count || 0
+
+  // Modal de agregar/editar producto
+  const [showAdd, setShowAdd] = useState(false)
+  const [isMutating, setIsMutating] = useState(false)
+  const [rowData, setRowData] = useState(null)
+  const [showDelete, setShowDelete] = useState(false)
+  const toast = useToast()
+  // Formulario separado como en categoría
+  function ProductModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
+    const { control, handleSubmit, reset, formState: { errors }, setValue } = useForm({
+      defaultValues: defaultValues || { nombre: '', cat: '', active: 0 }
+    })
+    // Cargar datos al editar
+    React.useEffect(() => {
+      if (defaultValues) {
+        reset(defaultValues)
+      } else {
+        reset({ nombre: '', cat: '', active: 0 })
+      }
+    }, [defaultValues, reset])
+    const handleError = errors => {
+      // Mostrar solo los primeros 4 errores, como en mantenimiento
+      const messages = Object.values(errors)
+        .slice(0, 4)
+        .map(e => e.message)
+      toast.error(messages)
+    }
+    const onSubmit = data => onSubmitFields(data, reset)
+    // Simula fetch de categorías, reemplaza por API real si es necesario
+    const fetchCategorias = async (query) => {
+      // Aquí deberías hacer un fetch real a tu API de categorías filtrando por query
+      // Por ahora, filtra las categorías simuladas
+      return categoriasSinTodas.filter(c => c.label.toLowerCase().includes(query.toLowerCase()))
+    }
+    return (
+      <form onSubmit={handleSubmit(onSubmit, handleError)}>
+        <div className="content">
+          <div className="m-row">
+            <label htmlFor="nombre">Nombre del producto:</label>
+            <Controller
+              name="nombre"
+              control={control}
+              rules={{ required: 'Nombre requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
+              render={({ field }) => (
+                <InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+              )}
+            />
+            {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
+          </div>
+          <div className="m-row">
+            <label htmlFor="cat">Categoría:</label>
+            <Controller
+              name="cat"
+              control={control}
+              rules={{ required: 'Seleccione una categoría' }}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={categoriasSinTodas}
+                  placeholder="Seleccione categoría"
+                  style={{ minWidth: 160 }}
+                  loading={catLoading}
+                />
+              )}
+            />
+            {errors.cat && <div className="error-message">{errors.cat.message}</div>}
+          </div>
+          <div className="m-row">
+            <label htmlFor="active">Estado:</label>
+            <Controller
+              name="active"
+              control={control}
+              rules={{ required: 'Seleccione estado' }}
+              render={({ field }) => (
+                <Dropdown {...field} options={[
+                  { label: 'Disponible', value: 0 },
+                  { label: 'No disponible', value: 1 }
+                ]} placeholder="Seleccione" style={{ minWidth: 160 }} />
+              )}
+            />
+            {errors.active && <div className="error-message">{errors.active.message}</div>}
+          </div>
+        </div>
+        <div className="buttons">
+          <Button
+            aria-label="Guardar"
+            label="Guardar"
+            loading={isMutating}
+            disabled={isMutating}
+            className="button p-button p-component"
+            loadingIcon="pi pi-spin pi-spinner"
+            iconPos="right"
+            type="submit"
+          />
+        </div>
+      </form>
+    )
+  }
+
+  // Lógica de submit igual a ModalForm de categoría
+  const onSubmitFields = async (formData, resetForm) => {
+    setIsMutating(true)
+    try {
+      let catValue = formData.cat
+      if (catValue && typeof catValue === 'object') {
+        catValue = catValue.value || catValue.id || ''
+      }
+      // Si rowData existe, es edición
+      if (rowData && rowData.id) {
+        await ProductoService.put({
+          id: rowData.id,
+          nombre: formData.nombre,
+          cat: catValue,
+          active: formData.active
+        })
+        setShowAdd(false)
+        setRowData(null)
+        resetForm && resetForm()
+        toast.success('Producto editado con éxito')
+        refetch()
+      } else {
+        await ProductoService.post({
+          nombre: formData.nombre,
+          cat: catValue,
+          active: formData.active
+        })
+        setShowAdd(false)
+        resetForm && resetForm()
+        toast.success('Producto agregado con éxito')
+        refetch()
+      }
+    } catch (e) {
+      if (e?.result?.nombre && Array.isArray(e.result.nombre)) {
+        toast.error(e.result.nombre[0])
+        return
+      }
+      if (e?.status === 401 || (e?.message && String(e.message).includes('401'))) {
+        window.location.href = '/login'
+        return
+      }
+      toast.error(e.message || 'Error al guardar producto')
+    } finally {
+      setIsMutating(false)
+    }
+  }
+
+  return (
+    <div className="productos-listado">
+      <div className="header-productos">
+        <h2>LISTADO GENERAL</h2>
+        <div className="acciones">
+          <button
+            className="add"
+            onClick={() => setShowAdd(true)}
+          >
+            Agregar +
+          </button>
+        </div>
+      </div>
+      <div className="filtros-productos">
+        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* <label style={{ minWidth: 90 }}>Nombre producto</label> */}
+          <span className="p-input-icon-left">
+            <i className="pi pi-search" />
+            <InputText placeholder="Nombre producto" value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} />
+          </span>
+        </div>
+        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label style={{ minWidth: 70 }}>Categoría</label>
+          <Dropdown value={cat} options={categorias} onChange={e => { setCat(e.value); setPage(1) }} placeholder="Categoría" style={{ minWidth: 160 }} loading={catLoading} />
+        </div>
+        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <label style={{ minWidth: 60 }}>Estado</label>
+          <Dropdown value={active} options={estados} onChange={e => { setActive(e.value); setPage(1) }} placeholder="Estado" style={{ minWidth: 160 }} />
+        </div>
+      </div>
+      <div className="tabla-productos">
+        {isFetching ? (
+          Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
+        ) : (
+          <table className="p-datatable table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productos.length === 0 ? (
+                <tr><td colSpan={5} style={{ textAlign: 'center' }}>No hay resultados</td></tr>
+              ) : (
+                productos.map(prod => (
+                  <tr key={prod.id}>
+                    <td>{prod.id}</td>
+                    <td>{prod.nombre || prod.description}</td>
+                    <td>{prod.category_name || '-'}</td>
+                    <td>{prod.active === 0 ? 'Disponible' : 'No disponible'}</td>
+                    <td>
+                      <div className="actions">
+                        <Button
+                          icon="pi pi-pencil"
+                          className="p-button p-component p-button-icon-only"
+                          style={{ background: 'transparent' }}
+                          onClick={() => { setRowData(prod); setShowAdd(true); }}
+                          aria-label="Editar"
+                        />
+                        <Button
+                          icon="pi pi-trash"
+                          className="p-button p-component p-button-icon-only p-button-danger"
+                          style={{ background: 'transparent' }}
+                          onClick={() => { setRowData(prod); setShowDelete(true); }}
+                          aria-label="Eliminar"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
+      <Dialog
+        className="dialog licenses-dialog maintenance"
+        draggable={false}
+        visible={showAdd}
+        modal
+        onHide={() => { setShowAdd(false); setRowData(null); }}
+        header={<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{rowData ? 'Editar producto' : 'Agregar producto'}</span>}
+        closable={true}
+      >
+        <ProductModalForm
+          onClose={() => { setShowAdd(false); setRowData(null); }}
+          onSubmitFields={onSubmitFields}
+          isMutating={isMutating}
+          defaultValues={rowData ? {
+            nombre: rowData.nombre || '',
+            cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
+            active: typeof rowData.active === 'number' ? rowData.active : 0
+          } : undefined}
+        />
+      </Dialog>
+      <Dialog
+        className="dialog delete-dialog"
+        draggable={false}
+        visible={showDelete}
+        modal
+        onHide={() => setShowDelete(false)}
+        header={<span style={{ fontWeight: 600, fontSize: '1.1rem' }}>Eliminar producto</span>}
+        closable={true}
+        footer={<div>
+          <Button label="Cancelar" onClick={() => setShowDelete(false)} className="p-button-text" />
+          <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={() => {/* Aquí va la lógica de borrado */ setShowDelete(false); }} />
+        </div>}
+      >
+        <p>¿Está seguro que desea eliminar el producto <b>{rowData?.nombre || rowData?.description}</b>?</p>
+      </Dialog>
+      <div className="paginate">
+        <Paginator
+          first={(page - 1) * PAGE_SIZE}
+          rows={PAGE_SIZE}
+          onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
+          totalRecords={totalRecords}
+        />
+      </div>
+    </div>
+  )
+}

@@ -92,7 +92,7 @@ export default function Table({ option }) {
                 }}
                 className="add"
               >
-                Agregar categoría +
+                Agregar +
               </button>
             </div>
           </div>
