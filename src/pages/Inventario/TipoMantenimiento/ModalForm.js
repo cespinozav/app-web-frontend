@@ -12,12 +12,17 @@ export default function ModalForm({ isVisible, onClose, FormComponent, defaultFi
       {
         onSuccess: () => {
           onClose()
-          toast.success(isEditing ? `Categoría ${defaultFields.id} editada con éxito` : 'Categoría agregada con éxito')
+          toast.success(isEditing ? `Categoría editada con éxito` : 'Categoría agregada con éxito')
         },
         onError: err => {
           // Si la API responde con un campo description duplicado
           if (err?.result?.description && Array.isArray(err.result.description)) {
             toast.error(err.result.description[0])
+            return
+          }
+          // Si la respuesta es 401, refrescar y redirigir al login
+          if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
+            window.location.href = '/login'
             return
           }
           const strMessage = String(err)

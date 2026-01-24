@@ -18,9 +18,11 @@ const MODAL = {
 
 export default function Table({ option }) {
   const { FormComponent, service } = option
-  const { data: queryData, isFetching } = useQuery([service.id], option.request)
-  const data = Array.isArray(queryData) ? queryData : []
-  const [firstRow, setFirstRow] = useState(0)
+  const [page, setPage] = useState(1)
+  const PAGE_SIZE = 10
+  const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }))
+  const data = queryData?.results || []
+  const totalRecords = queryData?.count || 0
   const [showModal, setShowModal] = useState(MODAL.NONE)
   const [rowData, setRowData] = useState(null)
 
@@ -35,9 +37,7 @@ export default function Table({ option }) {
 
   useEffect(() => {
     setRowData(null)
-    return () => {
-      setFirstRow(0)
-    }
+    setPage(1)
   }, [option])
 
   return (
@@ -60,8 +60,9 @@ export default function Table({ option }) {
             service={service}
             postDelete={postDelete}
             rowId={rowData?.id}
+            rowName={rowData?.description}
           />
-          <DataTable value={data.slice(firstRow, firstRow + PAGE_SIZE)} className="table" emptyMessage="No hay resultados">
+          <DataTable value={data} className="table" emptyMessage="No hay resultados">
             <Column field="id" header="ID" />
             <Column field="description" header="Nombre" />
             <Column field="user_created" header="Creador" />
@@ -70,18 +71,18 @@ export default function Table({ option }) {
               header="Acción"
               body={row => (
                 <div className="actions">
-                  <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" onClick={() => { setRowData(row); setShowModal(MODAL.EDIT) }} />
-                  <Button icon="pi pi-trash" className="p-button p-component p-button-icon-only" onClick={() => { setRowData(row); setShowModal(MODAL.DELETE) }} />
+                  <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.EDIT) }} />
+                  <Button icon="pi pi-trash" className="p-button p-component p-button-icon-only p-button-danger" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.DELETE) }} />
                 </div>
               )}
             />
           </DataTable>
           <div className="paginate">
             <Paginator
-              first={firstRow}
+              first={(page - 1) * PAGE_SIZE}
               rows={PAGE_SIZE}
-              onPageChange={e => setFirstRow(e.first)}
-              totalRecords={data.length}
+              onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
+              totalRecords={totalRecords}
             />
             <div className="buttons">
               <button

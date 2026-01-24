@@ -1,3 +1,31 @@
+.dialog.licenses-dialog .p-dialog-header {
+  border-bottom: 1px solid #ecebeb;
+  padding: 16px 24px 12px 24px;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.actions {
+  display: flex;
+  gap: 5px;
+}
+.actions .p-button.p-button-icon-only {
+  transition: background 0.2s;
+  border-radius: 50%;
+}
+.actions .p-button.p-button-icon-only:hover {
+  background: #e3f0fa !important; /* azul claro para hover */
+}
+.actions .p-button.p-button-icon-only.p-button-danger:hover {
+  background: #ffeaea !important; /* rojo claro para hover en eliminar */
+}
+// Asegura que los íconos de acción sean visibles sobre fondo blanco
+.actions .p-button.p-button-icon-only .pi {
+  color: #007ad9 !important; /* azul visible */
+  font-size: 1.2rem;
+}
+.actions .p-button.p-button-icon-only.p-button-danger .pi {
+  color: #d32f2f !important; /* rojo para eliminar */
+}
 // --- Mejoras para el modal de agregar/editar categoría ---
 .modal-form {
   background: #fff;
@@ -38,7 +66,8 @@
 }
 .buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 16px;
   margin-top: 16px;
 }
 @media screen and (max-width: 600px) {
@@ -135,9 +164,29 @@
       }
     }
     .add {
-      background-color: transparent;
-      &:hover {
-        background-color: #f0f0f0;
+      background-color: #fff;
+      color: #00b386;
+      border: 1.5px solid #00b386;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      margin-left: 8px;
+      margin-right: 8px;
+      outline: none;
+      &:hover, &:focus {
+        background: #e6f9f0;
+        color: #009e6d;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+        border-color: #009e6d;
+      }
+      &:active {
+        background: #c2f2df;
+        color: #007a53;
+        border-color: #007a53;
       }
     }
   }

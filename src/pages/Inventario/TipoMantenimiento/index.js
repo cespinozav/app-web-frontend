@@ -20,14 +20,7 @@ export default function CategoriaMantenimiento() {
   const [selectedOption, setSelectedOption] = useState(0)
   return (
     <div className="device-maintenance">
-      <div className="header">
-        <button onClick={() => setShowMaintenance(true)} className={showMaintenance ? 'active' : ''}>
-          MANTENIMIENTO
-        </button>
-        <button onClick={() => setShowMaintenance(false)} className={showMaintenance ? '' : 'active'}>
-          BITÁCORA DE MOVIMIENTO
-        </button>
-      </div>
+      <hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
       <section>
         <div className="options">
           {options.map((option, index) => (

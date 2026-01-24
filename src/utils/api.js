@@ -33,6 +33,10 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
       signal
     })
     if (response.ok) return response
+    if (response.status === 401) {
+      window.location.href = '/login'
+      return
+    }
     const err = await response.json()
     throw err
   } catch (e) {

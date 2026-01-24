@@ -24,7 +24,7 @@ function InventarioModule() {
         <div className={isMaintenanceActive ? 'active' : ''}>
           <Link to={SUB_ROUTES.INVENTORY.MAINTENANCE}>
             <img src={MAINTENANCE_ICON} alt="mantenimientos icon" />
-            Mantenimientos
+            Mantenimiento
           </Link>
         </div>
       </div>
