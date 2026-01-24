@@ -1,11 +1,5 @@
-import React from 'react';
+import MantenimientoInventario from '../Mantenimiento';
 
-
-const Mantenimientos = () => (
-  <>
-    <h1>Mantenimientos</h1>
-    <p>Gestión de mantenimientos del inventario.</p>
-  </>
-);
-
-export default Mantenimientos;
+export default function Mantenimientos() {
+  return <MantenimientoInventario />;
+}

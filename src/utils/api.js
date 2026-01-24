@@ -1,4 +1,5 @@
 import { HTTP_METHODS } from './constants'
+import { getBearer } from './auth'
 
 function getAPI() {
   if (process.env.REACT_APP_ENV === 'prd') {
@@ -11,7 +12,8 @@ export const API = getAPI()
 
 const HEADERS = {
   'X-Requested-With': 'XMLHttpRequest',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  ...(localStorage.getItem('accessToken') && { Authorization: getBearer() })
 }
 
 export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, body, headers, signal } = {}) {
@@ -26,7 +28,7 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
   try {
     const response = await fetch(url, {
       method,
-      headers: headers ? { ...HEADERS, ...headers } : HEADERS,
+      headers: headers ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) } : HEADERS,
       body: body ? JSON.stringify(body) : null,
       signal
     })
@@ -47,7 +49,7 @@ export async function makeNoParamRequest(suffix, { headers, signal } = {}) {
   try {
     const response = await fetch(url, {
       method: HTTP_METHODS.GET,
-      headers: headers ? { ...HEADERS, ...headers } : HEADERS,
+      headers: headers ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) } : HEADERS,
       signal
     })
     if (response.ok) return response
