@@ -4,9 +4,9 @@ const ENDPOINT = '/productos'
 
 
 const ProductoService = {
-  get: ({ page = 1, page_size = 10, search = '', cat = '', active = '' } = {}) =>
+  get: ({ page = 1, page_size = 10, search = '', cat = '', state = '' } = {}) =>
     makeRequest(`${ENDPOINT}`, {
-      params: { page, page_size, search, cat, active },
+      params: { page, page_size, search, cat, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
       .then(res => res.json())
@@ -32,17 +32,17 @@ const ProductoService = {
           count: typeof result.count === 'number' ? result.count : 0
         }
       }),
-  post: ({ nombre, cat, active }) =>
+  post: ({ nombre, cat, state }) =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
-      body: { nombre, cat, active },
+      body: { nombre, cat, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
 
-  put: ({ id, nombre, cat, active }) =>
+  put: ({ id, nombre, cat, state }) =>
     makeRequest(`${ENDPOINT}/${id}`, {
       method: 'PUT',
-      body: { nombre, cat, active },
+      body: { nombre, cat, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
 }

@@ -3,6 +3,7 @@ import MENU_BTN from 'assets/img/menu.png'
 import LOGO from 'assets/img/logo.png'
 import DASHBOARD_ICON from 'assets/img/icons/dashboard.svg'
 import INVENTORY_ICON from 'assets/img/icons/file.svg'
+import CLIENTS_ICON from 'assets/img/icons/folder-shared.svg';
 import SETTINGS_ICON from 'assets/img/icons/settings.svg'
 import LOGO_SM from 'assets/img/talma_logo.png'
 import { UserContext } from 'context'
@@ -55,6 +56,11 @@ function Layout() {
               path="/inventario"
               name="Inventario"
               icon={INVENTORY_ICON}
+            />
+            <MenuItem
+              path="/clientes"
+              name="Clientes"
+              icon={CLIENTS_ICON}
             />
             <MenuItem
               path="/perfil"

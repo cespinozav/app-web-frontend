@@ -38,7 +38,7 @@ export default function Productos() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [cat, setCat] = useState('')
-  const [active, setActive] = useState(0) // Estado disponible por defecto
+  const [state, setState] = useState('')
   const [categorias, setCategorias] = useState([{ label: 'Todas', value: '' }])
   const [catLoading, setCatLoading] = useState(false)
 
@@ -46,8 +46,8 @@ export default function Productos() {
   const categoriasSinTodas = categorias.filter(c => c.value !== '')
   const estados = [
     { label: 'Todos', value: '' },
-    { label: 'Disponible', value: 0 },
-    { label: 'No disponible', value: 1 }
+    { label: 'Activo', value: 'activo' },
+    { label: 'Inactivo', value: 'inactivo' }
   ]
 
   // Cargar categorías al montar
@@ -63,9 +63,11 @@ export default function Productos() {
       .finally(() => setCatLoading(false))
   }, [])
 
-  const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, active], () =>
-    ProductoService.get({ page, page_size: PAGE_SIZE, search, cat, active })
-  )
+  const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, state], () => {
+    let params = { page, page_size: PAGE_SIZE, search, cat };
+    if (state !== '') params.state = state;
+    return ProductoService.get(params);
+  });
   const productos = data?.results || []
   const totalRecords = data?.count || 0
 
@@ -136,19 +138,19 @@ export default function Productos() {
             {errors.cat && <div className="error-message">{errors.cat.message}</div>}
           </div>
           <div className="m-row">
-            <label htmlFor="active">Estado:</label>
+            <label htmlFor="state">Estado:</label>
             <Controller
-              name="active"
+              name="state"
               control={control}
               rules={{ required: 'Seleccione estado' }}
               render={({ field }) => (
                 <Dropdown {...field} options={[
-                  { label: 'Disponible', value: 0 },
-                  { label: 'No disponible', value: 1 }
+                  { label: 'Activo', value: 'activo' },
+                  { label: 'Inactivo', value: 'inactivo' }
                 ]} placeholder="Seleccione" style={{ minWidth: 160 }} />
               )}
             />
-            {errors.active && <div className="error-message">{errors.active.message}</div>}
+            {errors.state && <div className="error-message">{errors.state.message}</div>}
           </div>
         </div>
         <div className="buttons">
@@ -181,7 +183,7 @@ export default function Productos() {
           id: rowData.id,
           nombre: formData.nombre,
           cat: catValue,
-          active: formData.active
+          state: formData.state
         })
         setShowAdd(false)
         setRowData(null)
@@ -192,7 +194,7 @@ export default function Productos() {
         await ProductoService.post({
           nombre: formData.nombre,
           cat: catValue,
-          active: formData.active
+          state: formData.state
         })
         setShowAdd(false)
         resetForm && resetForm()
@@ -241,7 +243,7 @@ export default function Productos() {
         </div>
         <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <label style={{ minWidth: 60 }}>Estado</label>
-          <Dropdown value={active} options={estados} onChange={e => { setActive(e.value); setPage(1) }} placeholder="Estado" style={{ minWidth: 160 }} />
+          <Dropdown value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
         </div>
       </div>
       <div className="tabla-productos">
@@ -267,7 +269,7 @@ export default function Productos() {
                     <td>{prod.id}</td>
                     <td>{prod.nombre || prod.description}</td>
                     <td>{prod.category_name || '-'}</td>
-                    <td>{prod.active === 0 ? 'Disponible' : 'No disponible'}</td>
+                    <td>{prod.state}</td>
                     <td>
                       <div className="actions">
                         <Button
@@ -309,7 +311,7 @@ export default function Productos() {
           defaultValues={rowData ? {
             nombre: rowData.nombre || '',
             cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
-            active: typeof rowData.active === 'number' ? rowData.active : 0
+            state: rowData.state || 'activo'
           } : undefined}
         />
       </Dialog>

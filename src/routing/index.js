@@ -7,6 +7,9 @@ import Dashboard from 'pages/Dashboard';
 import InventarioModule from 'pages/Inventario/InventarioModule';
 import Productos from 'pages/Inventario/Productos';
 import Mantenimientos from 'pages/Inventario/Mantenimientos';
+import ClientesModule from 'pages/Clientes/ClientesModule';
+import Clientes from 'pages/Clientes/Clientes';
+import MantenimientoClientes from 'pages/Clientes/Mantenimiento';
 import Perfil from 'pages/Perfil';
 import ROUTES from 'routing/routes';
 import AuthGuard from './AuthGuard';
@@ -24,6 +27,11 @@ export default function AppRoutes() {
               <Route index element={<Navigate to={ROUTES.INVENTORY_PRODUCTS} replace />} />
               <Route path={ROUTES.INVENTORY_PRODUCTS} element={<Productos />} />
               <Route path={ROUTES.INVENTORY_MAINTENANCE} element={<Mantenimientos />} />
+            </Route>
+            <Route path={ROUTES.CLIENTS} element={<ClientesModule />}>
+              <Route index element={<Navigate to={ROUTES.CLIENTS_MAIN} replace />} />
+              <Route path={ROUTES.CLIENTS_MAIN} element={<Clientes />} />
+              <Route path={ROUTES.CLIENTS_MAINTENANCE} element={<MantenimientoClientes />} />
             </Route>
             <Route path={ROUTES.PROFILE} element={<Perfil />} />
           </Route>
