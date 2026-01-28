@@ -6,3 +6,4 @@ export { default as PersonService } from './Person'
 export { default as SedeService } from './Sede'
 
 export { default as CategoriaClienteService } from './CategoriaCliente'
+export { default as CiudadClienteService } from './CiudadCliente'
