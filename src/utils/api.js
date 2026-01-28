@@ -29,7 +29,7 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     const response = await fetch(url, {
       method,
       headers: headers ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) } : HEADERS,
-      body: body ? JSON.stringify(body) : null,
+      body: body ? (typeof body === 'string' ? body : JSON.stringify(body)) : null,
       signal
     })
     if (response.ok) return response

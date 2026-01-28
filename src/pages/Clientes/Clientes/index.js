@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
+import SedesModal from './components/Modals/SedesModal';
 import { useForm, Controller } from 'react-hook-form';
 import useToast from 'hooks/useToast';
 import { Button } from 'primereact/button';
@@ -41,7 +42,54 @@ export default function MantenimientoClientes() {
   const [isMutating, setIsMutating] = useState(false);
   const [rowData, setRowData] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
+  const [showSedes, setShowSedes] = useState(false);
   const toast = useToast();
+
+  // Lógica para guardar cliente (faltante en el return principal)
+  const onSubmitFields = async (formData, resetForm) => {
+    setIsMutating(true);
+    try {
+      if (rowData && rowData.id) {
+        await ClienteService.put({
+          id: rowData.id,
+          nombre: formData.nombre,
+          abrev: formData.abreviatura,
+          cod_ruc: formData.ruc,
+          state: formData.active === 1 ? 'activo' : 'inactivo',
+          user_created: 1 // Ajustar según usuario actual
+        });
+        setShowAdd(false);
+        setRowData(null);
+        resetForm && resetForm();
+        toast.success('Cliente editado con éxito');
+        refetch();
+      } else {
+        await ClienteService.post({
+          nombre: formData.nombre,
+          abrev: formData.abreviatura,
+          cod_ruc: formData.ruc,
+          state: formData.active === 1 ? 'activo' : 'inactivo',
+          user_created: 1 // Ajustar según usuario actual
+        });
+        setShowAdd(false);
+        resetForm && resetForm();
+        toast.success('Cliente agregado con éxito');
+        refetch();
+      }
+    } catch (e) {
+      if (e?.result?.nombre && Array.isArray(e.result.nombre)) {
+        toast.error(e.result.nombre[0]);
+        return;
+      }
+      if (e?.status === 401 || (e?.message && String(e.message).includes('401'))) {
+        window.location.href = '/login';
+        return;
+      }
+      toast.error(e.message || 'Error al guardar cliente');
+    } finally {
+      setIsMutating(false);
+    }
+  };
 
   function ClienteModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
@@ -115,65 +163,19 @@ export default function MantenimientoClientes() {
         </div>
         <div className="buttons">
           <Button
-            aria-label="Guardar"
-            label="Guardar"
             loading={isMutating}
             disabled={isMutating}
             className="button p-button p-component"
             loadingIcon="pi pi-spin pi-spinner"
             iconPos="right"
             type="submit"
+            label="Guardar"
           />
         </div>
       </form>
     );
   }
-
-  const onSubmitFields = async (formData, resetForm) => {
-    setIsMutating(true);
-    try {
-      if (rowData && rowData.id) {
-        await ClienteService.put({
-          id: rowData.id,
-          nombre: formData.nombre,
-          abrev: formData.abreviatura,
-          cod_ruc: formData.ruc,
-          state: formData.active === 1 ? 'activo' : 'inactivo',
-          user_created: 1 // Ajustar según usuario actual
-        });
-        setShowAdd(false);
-        setRowData(null);
-        resetForm && resetForm();
-        toast.success('Cliente editado con éxito');
-        refetch();
-      } else {
-        await ClienteService.post({
-          nombre: formData.nombre,
-          abrev: formData.abreviatura,
-          cod_ruc: formData.ruc,
-          state: formData.active === 1 ? 'activo' : 'inactivo',
-          user_created: 1 // Ajustar según usuario actual
-        });
-        setShowAdd(false);
-        resetForm && resetForm();
-        toast.success('Cliente agregado con éxito');
-        refetch();
-      }
-    } catch (e) {
-      if (e?.result?.nombre && Array.isArray(e.result.nombre)) {
-        toast.error(e.result.nombre[0]);
-        return;
-      }
-      if (e?.status === 401 || (e?.message && String(e.message).includes('401'))) {
-        window.location.href = '/login';
-        return;
-      }
-      toast.error(e.message || 'Error al guardar cliente');
-    } finally {
-      setIsMutating(false);
-    }
-  };
-
+  // Return principal restaurado con el listado y los modales
   return (
     <div className="clientes-listado">
       <div className="header-clientes">
@@ -239,11 +241,11 @@ export default function MantenimientoClientes() {
                           aria-label="Editar"
                         />
                         <Button
-                          icon="pi pi-trash"
-                          className="p-button p-component p-button-icon-only p-button-danger"
-                          style={{ background: 'transparent' }}
-                          onClick={() => { setRowData(cli); setShowDelete(true); }}
-                          aria-label="Eliminar"
+                          icon="pi pi-map-marker"
+                          className="p-button p-component p-button-icon-only"
+                          style={{ background: 'transparent', marginLeft: 8 }}
+                          onClick={() => { setRowData(cli); setShowSedes(true); }}
+                          aria-label="Sedes"
                         />
                       </div>
                     </td>
@@ -275,21 +277,8 @@ export default function MantenimientoClientes() {
           } : undefined}
         />
       </Dialog>
-      <Dialog
-        className="dialog delete-dialog"
-        draggable={false}
-        visible={showDelete}
-        modal
-        onHide={() => setShowDelete(false)}
-        header={<span style={{ fontWeight: 600, fontSize: '1.1rem' }}>Eliminar cliente</span>}
-        closable={true}
-        footer={<div>
-          <Button label="Cancelar" onClick={() => setShowDelete(false)} className="p-button-text" />
-          <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={() => {/* Aquí va la lógica de borrado */ setShowDelete(false); }} />
-        </div>}
-      >
-        <p>¿Está seguro que desea eliminar el cliente <b>{rowData?.nombre}</b>?</p>
-      </Dialog>
+      {/* Modal de Sedes */}
+      <SedesModal visible={showSedes} onHide={() => setShowSedes(false)} cliente={rowData} />
       <div className="paginate">
         <Paginator
           first={(page - 1) * PAGE_SIZE}
@@ -301,3 +290,4 @@ export default function MantenimientoClientes() {
     </div>
   );
 }
+
