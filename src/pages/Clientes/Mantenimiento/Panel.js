@@ -1,7 +1,8 @@
 
 import React from 'react'
 import { CategoriaClienteService, CiudadClienteService } from 'services'
-import Table from '../../Inventario/CategoriaMantenimiento/Table'
+import CategoriaTable from '../CategoriaMantenimiento/Table'
+import CiudadTable from '../CiudadMantenimiento/Table'
 import CategoriaForm from '../CategoriaMantenimiento/TypeServiceForm'
 import CiudadForm from '../CiudadMantenimiento/TypeServiceForm'
 import '../CategoriaMantenimiento/style.scss'
@@ -61,7 +62,11 @@ export default function Panel() {
             </button>
           ))}
         </div>
-        <Table option={options[selectedOption]} />
+        {selectedOption === 0 ? (
+          <CategoriaTable option={options[0]} />
+        ) : (
+          <CiudadTable option={options[1]} />
+        )}
       </section>
     </div>
   )

@@ -9,7 +9,11 @@ const DEFAULT_FIELDS = {
   userCreated: ''
 }
 
-function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating, onClose }) {
+import { useMutation } from 'hooks/useRequest'
+
+function CategoriaClienteServiceForm({ defaultFields, onClose, service }) {
+  const isEditing = Boolean(defaultFields)
+  const { mutate, isLoading } = useMutation(service.id, isEditing ? service.put : service.post)
   const toast = useToast()
   const {
     control,
@@ -24,7 +28,6 @@ function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
   }, [defaultFields])
 
-  const isEditing = Boolean(defaultFields)
   const handleError = errors => {
     const messages = Object.values(errors)
       .slice(0, 4)
@@ -32,7 +35,7 @@ function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating
     toast.error(messages)
   }
 
-  const onSubmit = formData => {
+  const onSubmit = async formData => {
     if (defaultFields) {
       const dirtyList = Object.keys(dirtyFields)
       if (dirtyList.length === 0) {
@@ -40,7 +43,31 @@ function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating
         return
       }
     }
-    onSubmitFields(formData)
+    mutate(
+      { ...formData, user_created: formData.userCreated || 'admin', id: defaultFields?.id },
+      {
+        onSuccess: () => {
+          onClose()
+          toast.success(isEditing ? 'Categoría editada con éxito' : 'Categoría agregada con éxito')
+        },
+        onError: err => {
+          if (err?.result?.description && Array.isArray(err.result.description)) {
+            toast.error(err.result.description[0])
+            return
+          }
+          if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
+            window.location.href = '/login'
+            return
+          }
+          const strMessage = String(err)
+          if (strMessage.includes('already exists')) {
+            toast.error('La categoría ya existe')
+          } else {
+            toast.error(err?.message || err)
+          }
+        }
+      }
+    )
   }
 
   return (
@@ -61,9 +88,9 @@ function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating
       </div>
       <div className="footer" style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
         <Button
-          label="Guardar"
+          label={isEditing ? 'Editar categoría' : 'Agregar categoría'}
           type="submit"
-          loading={isMutating}
+          loading={isLoading}
           className="add"
           style={{ minWidth: 120 }}
         />
@@ -72,5 +99,4 @@ function CategoriaClienteServiceForm({ defaultFields, onSubmitFields, isMutating
     </form>
   )
 }
-
 export default CategoriaClienteServiceForm

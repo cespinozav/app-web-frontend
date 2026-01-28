@@ -1,7 +1,7 @@
 
 import React from 'react'
 import options from './service'
-import Table from '../../Inventario/CategoriaMantenimiento/Table'
+import Table from './Table'
 import './style.scss'
 
 export default function CiudadMantenimiento() {

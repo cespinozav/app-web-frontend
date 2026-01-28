@@ -75,7 +75,6 @@ export default function Productos() {
   const [showAdd, setShowAdd] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
   const [rowData, setRowData] = useState(null)
-  const [showDelete, setShowDelete] = useState(false)
   const toast = useToast()
   // Formulario separado como en categoría
   function ProductModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
@@ -278,13 +277,6 @@ export default function Productos() {
                           style={{ background: 'transparent' }}
                           onClick={() => { setRowData(prod); setShowAdd(true); }}
                           aria-label="Editar"
-                        />
-                        <Button
-                          icon="pi pi-trash"
-                          className="p-button p-component p-button-icon-only p-button-danger"
-                          style={{ background: 'transparent' }}
-                          onClick={() => { setRowData(prod); setShowDelete(true); }}
-                          aria-label="Eliminar"
                         />
                       </div>
                     </td>

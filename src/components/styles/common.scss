@@ -1,0 +1,109 @@
+// Botón de acción editar estandarizado (circular azul, icono)
+.actions {
+  display: flex;
+  gap: 5px;
+}
+.actions .p-button.p-button-icon-only {
+  transition: background 0.2s;
+  border-radius: 50%;
+}
+.actions .p-button.p-button-icon-only:hover {
+  background: #e3f0fa !important;
+}
+.actions .p-button.p-button-icon-only .pi {
+  color: #007ad9 !important;
+  font-size: 1.2rem;
+}
+.actions .p-button.p-button-icon-only.p-button-danger .pi {
+  color: #d32f2f !important;
+}
+.actions .p-button.p-button-icon-only.p-button-danger:hover {
+  background: #ffeaea !important;
+}
+// Botón de agregar estandarizado
+.add {
+  background-color: #fff;
+  color: #00b386;
+  border: 1.5px solid #00b386;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s;
+  margin-left: 8px;
+  margin-right: 8px;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.add:hover, .add:focus {
+  background: #e6f9f0;
+  color: #009e6d;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+  border-color: #009e6d;
+}
+.add:active {
+  background: #c2f2df;
+  color: #007a53;
+  border-color: #007a53;
+}
+// Estilos comunes y reutilizables para estandarización
+
+.device-maintenance {
+  .options {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    button {
+      padding: 8px 16px;
+      border: none;
+      background: #f5f5f5;
+      cursor: pointer;
+      &.active {
+        background: #1976d2;
+        color: #fff;
+      }
+    }
+  }
+  section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 16px;
+  }
+}
+
+.kit-list.maintenance {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 16px;
+}
+
+.paginate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.buttons .add {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.buttons .add:hover {
+  background: #125ea7;
+}
+
+// Otros estilos reutilizables pueden agregarse aquí

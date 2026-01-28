@@ -4,28 +4,8 @@
   font-weight: 600;
   font-size: 1.2rem;
 }
-.actions {
-  display: flex;
-  gap: 5px;
-}
-.actions .p-button.p-button-icon-only {
-  transition: background 0.2s;
-  border-radius: 50%;
-}
-.actions .p-button.p-button-icon-only:hover {
-  background: #e3f0fa !important; /* azul claro para hover */
-}
-.actions .p-button.p-button-icon-only.p-button-danger:hover {
-  background: #ffeaea !important; /* rojo claro para hover en eliminar */
-}
-// Asegura que los íconos de acción sean visibles sobre fondo blanco
-.actions .p-button.p-button-icon-only .pi {
-  color: #007ad9 !important; /* azul visible */
-  font-size: 1.2rem;
-}
-.actions .p-button.p-button-icon-only.p-button-danger .pi {
-  color: #d32f2f !important; /* rojo para eliminar */
-}
+@import 'src/components/styles/common.scss';
+@import 'src/components/styles/common.scss';
 // --- Mejoras para el modal de agregar/editar categoría ---
 .modal-form {
   background: #fff;

@@ -6,14 +6,14 @@ import { DataTable } from 'primereact/datatable'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
 import ModalForm from './ModalForm'
-import DeleteModal from './DeleteModal'
+// import DeleteModal from './DeleteModal'
 import { Paginator } from 'primereact/paginator'
 
 const PAGE_SIZE = 10
 const MODAL = {
   NONE: 0,
   EDIT: 1,
-  DELETE: 2
+  // DELETE: 2
 }
 
 export default function Table({ option }) {
@@ -30,10 +30,10 @@ export default function Table({ option }) {
     setShowModal(MODAL.NONE)
     setRowData(null)
   }
-  const postDelete = () => {
-    setRowData(null)
-    setShowModal(MODAL.NONE)
-  }
+  // const postDelete = () => {
+  //   setRowData(null)
+  //   setShowModal(MODAL.NONE)
+  // }
 
   useEffect(() => {
     setRowData(null)
@@ -54,14 +54,7 @@ export default function Table({ option }) {
             service={service}
             FormComponent={FormComponent}
           />
-          <DeleteModal
-            onClose={onClose}
-            isVisible={showModal === MODAL.DELETE && rowData?.id}
-            service={service}
-            postDelete={postDelete}
-            rowId={rowData?.id}
-            rowName={rowData?.description}
-          />
+          {/* Eliminar modal de eliminación */}
           <DataTable value={data} className="table" emptyMessage="No hay resultados">
             <Column field="id" header="ID" />
             <Column field="description" header="Nombre" />
@@ -71,8 +64,7 @@ export default function Table({ option }) {
               header="Acción"
               body={row => (
                 <div className="actions">
-                  <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.EDIT) }} />
-                  <Button icon="pi pi-trash" className="p-button p-component p-button-icon-only p-button-danger" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.DELETE) }} />
+                  <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.EDIT) }} aria-label="Editar" />
                 </div>
               )}
             />

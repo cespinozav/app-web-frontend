@@ -23,22 +23,4 @@ export function ClienteAddEditModal({ visible, onHide, onSubmitFields, isMutatin
   );
 }
 
-export function ClienteDeleteModal({ visible, onHide, onDelete, rowData }) {
-  return (
-    <Dialog
-      className="dialog delete-dialog"
-      draggable={false}
-      visible={visible}
-      modal
-      onHide={onHide}
-      header={<span style={{ fontWeight: 600, fontSize: '1.1rem' }}>Eliminar cliente</span>}
-      closable={true}
-      footer={<div>
-        <button className="p-button-text" onClick={onHide}>Cancelar</button>
-        <button className="p-button-danger" onClick={onDelete}>Eliminar</button>
-      </div>}
-    >
-      <p>¿Está seguro que desea eliminar el cliente <b>{rowData?.nombre}</b>?</p>
-    </Dialog>
-  );
-}
+// ClienteDeleteModal removed as delete functionality is not required.

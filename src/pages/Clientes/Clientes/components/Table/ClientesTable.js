@@ -45,13 +45,6 @@ export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }
                         onClick={() => onEdit(cli)}
                         aria-label="Editar"
                       />
-                      <Button
-                        icon="pi pi-trash"
-                        className="p-button p-component p-button-icon-only p-button-danger"
-                        style={{ background: 'transparent' }}
-                        onClick={() => onDelete(cli)}
-                        aria-label="Eliminar"
-                      />
                     </div>
                   </td>
                 </tr>
