@@ -307,21 +307,6 @@ export default function Productos() {
           } : undefined}
         />
       </Dialog>
-      <Dialog
-        className="dialog delete-dialog"
-        draggable={false}
-        visible={showDelete}
-        modal
-        onHide={() => setShowDelete(false)}
-        header={<span style={{ fontWeight: 600, fontSize: '1.1rem' }}>Eliminar producto</span>}
-        closable={true}
-        footer={<div>
-          <Button label="Cancelar" onClick={() => setShowDelete(false)} className="p-button-text" />
-          <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={() => {/* Aquí va la lógica de borrado */ setShowDelete(false); }} />
-        </div>}
-      >
-        <p>¿Está seguro que desea eliminar el producto <b>{rowData?.nombre || rowData?.description}</b>?</p>
-      </Dialog>
       <div className="paginate">
         <Paginator
           first={(page - 1) * PAGE_SIZE}
