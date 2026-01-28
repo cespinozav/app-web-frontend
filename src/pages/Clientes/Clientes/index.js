@@ -22,7 +22,7 @@ const estados = [
 export default function MantenimientoClientes() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [state, setState] = useState('');
+  const [state, setState] = useState(1); // Por defecto, mostrar solo activos
   const { data, isFetching, refetch } = useQuery([
     'clientes', page, search, state
   ], () => {

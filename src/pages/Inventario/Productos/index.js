@@ -38,7 +38,7 @@ export default function Productos() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [cat, setCat] = useState('')
-  const [state, setState] = useState('')
+  const [state, setState] = useState('activo') // Por defecto, mostrar solo activos
   const [categorias, setCategorias] = useState([{ label: 'Todas', value: '' }])
   const [catLoading, setCatLoading] = useState(false)
 
