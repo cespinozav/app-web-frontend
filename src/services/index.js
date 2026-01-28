@@ -4,3 +4,5 @@ export { default as LicenseService } from './License'
 export { default as AssetService } from './Asset'
 export { default as PersonService } from './Person'
 export { default as SedeService } from './Sede'
+
+export { default as CategoriaClienteService } from './CategoriaCliente'

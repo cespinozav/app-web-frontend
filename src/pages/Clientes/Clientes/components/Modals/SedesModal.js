@@ -104,8 +104,8 @@ export default function SedesModal({ visible, onHide, cliente }) {
                   <th>Ciudad</th>
                   <th>Dirección</th>
                   <th>Latitud</th>
-                  <th>Longitud</th>
-                  <th>Acción</th>
+                  {/* <th>Longitud</th>
+                  <th>Acción</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -120,11 +120,23 @@ export default function SedesModal({ visible, onHide, cliente }) {
                       <td>{sede.state}</td>
                       <td>{sede.name_country}</td>
                       <td>{sede.adress}</td>
-                      <td>{sede.lat}</td>
-                      <td>{sede.long}</td>
+                      {/* <td>{sede.lat}</td>
+                      <td>{sede.long}</td> */}
                       <td>
-                        <div className="actions">
+                        <div className="actions" style={{ display: 'flex', gap: 8 }}>
                           <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" style={{ background: 'transparent' }} onClick={() => handleEdit(sede)} />
+                          <Button
+                            icon="pi pi-map-marker"
+                            className="p-button p-component p-button-icon-only"
+                            style={{ background: 'transparent', color: '#007bff' }}
+                            title="Ver ubicación en Google Maps"
+                            onClick={() => {
+                              if (sede.lat && sede.long) {
+                                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sede.lat)},${encodeURIComponent(sede.long)}`;
+                                window.open(url, '_blank');
+                              }
+                            }}
+                          />
                         </div>
                       </td>
                     </tr>
