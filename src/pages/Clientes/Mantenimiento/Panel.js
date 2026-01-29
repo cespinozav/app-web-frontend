@@ -13,7 +13,7 @@ const options = [
     request: CategoriaClienteService.get,
     schema: [
       { field: 'id', label: 'ID' },
-      { field: 'description', label: 'Nombre de la categoría' },
+      { field: 'description', label: 'Categoría' },
       { field: 'user_created', label: 'Creador' },
       { field: 'date_created', label: 'Fecha de creación' }
     ],
@@ -30,7 +30,7 @@ const options = [
     request: CiudadClienteService.get,
     schema: [
       { field: 'id', label: 'ID' },
-      { field: 'description', label: 'Nombre de la ciudad' },
+      { field: 'description', label: 'Ciudad' },
       { field: 'user_created', label: 'Creador' },
       { field: 'date_created', label: 'Fecha de creación' }
     ],

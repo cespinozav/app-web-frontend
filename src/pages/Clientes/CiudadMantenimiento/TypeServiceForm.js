@@ -75,12 +75,12 @@ function CiudadClienteServiceForm({ defaultFields, onClose, service }) {
     <form ref={formRef} onSubmit={handleSubmit(onSubmit, handleError)}>
       <div className="content">
         <div className="m-row">
-          <label htmlFor="description">Nombre de la ciudad:</label>
+          <label htmlFor="description">Ciudad:</label>
           <FormInput
             control={control}
             name="description"
             rules={{
-              required: 'Nombre de la ciudad no ingresado',
+              required: 'Ciudad no ingresado',
               maxLength: { value: 50, message: 'El nombre supera los 50 caracteres' }
             }}
             className="p-inputtext p-component"

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CategoriaClienteService from 'services/CategoriaCliente';
 import { Dialog } from 'primereact/dialog';
 import SedesModal from './components/Modals/SedesModal';
 import { useForm, Controller } from 'react-hook-form';
@@ -49,12 +50,14 @@ export default function MantenimientoClientes() {
   const onSubmitFields = async (formData, resetForm) => {
     setIsMutating(true);
     try {
+      const categoria = formData.categoria;
       if (rowData && rowData.id) {
         await ClienteService.put({
           id: rowData.id,
           nombre: formData.nombre,
           abrev: formData.abreviatura,
           cod_ruc: formData.ruc,
+          categoria,
           state: formData.active === 1 ? 'activo' : 'inactivo',
           user_created: 1 // Ajustar según usuario actual
         });
@@ -68,6 +71,7 @@ export default function MantenimientoClientes() {
           nombre: formData.nombre,
           abrev: formData.abreviatura,
           cod_ruc: formData.ruc,
+          categoria,
           state: formData.active === 1 ? 'activo' : 'inactivo',
           user_created: 1 // Ajustar según usuario actual
         });
@@ -93,13 +97,24 @@ export default function MantenimientoClientes() {
 
   function ClienteModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
-      defaultValues: defaultValues || { nombre: '', abreviatura: '', ruc: '', active: 1 }
+      defaultValues: defaultValues || { nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 }
     });
+    const [categorias, setCategorias] = React.useState([]);
+    const [loadingCategorias, setLoadingCategorias] = React.useState(false);
+    React.useEffect(() => {
+      setLoadingCategorias(true);
+      CategoriaClienteService.get({ page: 1, page_size: 100 })
+        .then(res => {
+          setCategorias(res.results.map(cat => ({ label: cat.description || cat.nombre || cat.label, value: cat.id })));
+        })
+        .catch(() => setCategorias([]))
+        .finally(() => setLoadingCategorias(false));
+    }, []);
     React.useEffect(() => {
       if (defaultValues) {
         reset(defaultValues);
       } else {
-        reset({ nombre: '', abreviatura: '', ruc: '', active: 1 });
+        reset({ nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 });
       }
     }, [defaultValues, reset]);
     const handleError = errors => {
@@ -135,6 +150,18 @@ export default function MantenimientoClientes() {
               )}
             />
             {errors.abreviatura && <div className="error-message">{errors.abreviatura.message}</div>}
+          </div>
+          <div className="m-row">
+            <label htmlFor="categoria">Categoría:</label>
+            <Controller
+              name="categoria"
+              control={control}
+              rules={{ required: 'Seleccione una categoría' }}
+              render={({ field }) => (
+                <Dropdown {...field} options={categorias} placeholder={loadingCategorias ? 'Cargando...' : 'Seleccione'} loading={loadingCategorias} style={{ minWidth: 160 }} />
+              )}
+            />
+            {errors.categoria && <div className="error-message">{errors.categoria.message}</div>}
           </div>
           <div className="m-row">
             <label htmlFor="ruc">RUC:</label>
@@ -211,6 +238,7 @@ export default function MantenimientoClientes() {
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Abreviatura</th>
+                <th>Categoría</th>
                 <th>RUC</th>
                 <th>Estado</th>
                 <th>Usuario creado</th>
@@ -227,6 +255,7 @@ export default function MantenimientoClientes() {
                     <td>{cli.id}</td>
                     <td>{cli.nombre}</td>
                     <td>{cli.abreviatura}</td>
+                    <td>{cli.categoria || '-'}</td>
                     <td>{cli.ruc}</td>
                     <td>{cli.active}</td>
                     <td>{cli.usuario_creado || '-'}</td>
@@ -272,6 +301,7 @@ export default function MantenimientoClientes() {
           defaultValues={rowData ? {
             nombre: rowData.nombre || '',
             abreviatura: rowData.abreviatura || '',
+            categoria: rowData.categoria_id || null,
             ruc: rowData.ruc || '',
             active: rowData.active === 'inactivo' ? 0 : 1
           } : undefined}

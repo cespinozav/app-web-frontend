@@ -17,6 +17,8 @@ const ClienteService = {
               nombre: cli.nombre,
               abreviatura: cli.abrev,
               ruc: cli.cod_ruc,
+              categoria: cli.categoria, // nombre de la categoría
+              categoria_id: cli.categoria_id, // id de la categoría
               active: cli.state, // ahora es 'state' ("activo"/"inactivo")
               usuario_creado: cli.user_created,
               fecha_creada: cli.date_created
@@ -27,16 +29,16 @@ const ClienteService = {
           count: typeof result.count === 'number' ? result.count : 0
         };
       }),
-  post: ({ nombre, abrev, cod_ruc, state, user_created }) =>
+  post: ({ nombre, abrev, cod_ruc, categoria, state, user_created }) =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
-      body: { nombre, abrev, cod_ruc, state, user_created },
+      body: { nombre, abrev, cod_ruc, categoria, state, user_created },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
-  put: ({ id, nombre, abrev, cod_ruc, state, user_created }) =>
+  put: ({ id, nombre, abrev, cod_ruc, categoria, state, user_created }) =>
     makeRequest(`${ENDPOINT}/${id}`, {
       method: 'PUT',
-      body: { nombre, abrev, cod_ruc, state, user_created },
+      body: { nombre, abrev, cod_ruc, categoria, state, user_created },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
 }
