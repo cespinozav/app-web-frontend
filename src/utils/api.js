@@ -17,13 +17,23 @@ const HEADERS = {
 }
 
 export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, body, headers, signal } = {}) {
-  let url = `${API}${suffix}/`
-  if (params) {
-    const strParams = Object.entries(params)
-      .filter(([, val]) => ![undefined, '', null].includes(val) && !(Array.isArray(val) && val.length === 0))
-      .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
-      .join('&')
-    url += `?${strParams}`
+  let url;
+  // Si el sufijo contiene '?', asegúrate que antes del '?' haya un slash
+  if (suffix.includes('?')) {
+    const [base, query] = suffix.split('?');
+    let cleanBase = base;
+    if (!base.endsWith('/')) cleanBase += '/';
+    url = `${API}${cleanBase}?${query}`;
+  } else {
+    url = `${API}${suffix}`;
+    if (!suffix.endsWith('/')) url += '/';
+    if (params) {
+      const strParams = Object.entries(params)
+        .filter(([, val]) => ![undefined, '', null].includes(val) && !(Array.isArray(val) && val.length === 0))
+        .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+        .join('&');
+      url += `?${strParams}`;
+    }
   }
   try {
     const response = await fetch(url, {
