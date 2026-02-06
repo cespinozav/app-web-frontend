@@ -1,3 +1,8 @@
+// Tabs activos para mantenimiento
+.device-maintenance .options button.active {
+  background: #f0f0f0;
+  font-weight: bold;
+}
 // Estilos para el módulo de Inventario, replicando el diseño horizontal de subrutas de zprime-frontend
 .module {
   display: flex;

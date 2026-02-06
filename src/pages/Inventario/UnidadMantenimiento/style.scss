@@ -1,0 +1,21 @@
+.device-maintenance .options button.active {
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+.device-maintenance .form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.device-maintenance .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-maintenance .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}

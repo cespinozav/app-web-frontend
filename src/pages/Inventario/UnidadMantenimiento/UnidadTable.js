@@ -2,22 +2,19 @@ import { useQuery } from 'hooks/useRequest'
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-// ...existing code...
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
-// Permite usar un ModalForm personalizado si se provee en option
-// import DeleteModal from './DeleteModal'
+import ModalForm from './ModalForm'
 import { Paginator } from 'primereact/paginator'
 
 const PAGE_SIZE = 10
 const MODAL = {
   NONE: 0,
   EDIT: 1,
-  // DELETE: 2
 }
 
-export default function Table({ option }) {
-  const { FormComponent, service, ModalForm: CustomModalForm } = option
+export default function UnidadTable({ option }) {
+  const { FormComponent, service } = option
   const [page, setPage] = useState(1)
   const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }))
   const data = queryData?.results || []
@@ -29,24 +26,19 @@ export default function Table({ option }) {
     setShowModal(MODAL.NONE)
     setRowData(null)
   }
-  // const postDelete = () => {
-  //   setRowData(null)
-  //   setShowModal(MODAL.NONE)
-  // }
 
   useEffect(() => {
     setRowData(null)
     setPage(1)
   }, [option])
 
-  const ModalFormComponent = CustomModalForm || require('./ModalForm').default
   return (
     <div className="kit-list maintenance">
       {isFetching ? (
         Array.from({ length: PAGE_SIZE }).map((_, key) => <Skeleton className="table" key={key}></Skeleton>)
       ) : (
         <>
-          <ModalFormComponent
+          <ModalForm
             isVisible={showModal === MODAL.EDIT}
             onClose={onClose}
             defaultFields={rowData}
@@ -54,10 +46,11 @@ export default function Table({ option }) {
             service={service}
             FormComponent={FormComponent}
           />
-          {/* Eliminar modal de eliminación */}
           <DataTable value={data} className="table" emptyMessage="No hay resultados">
             <Column field="id" header="ID" />
-            <Column field="description" header="Nombre" />
+            <Column field="description" header="Unidad" />
+            <Column field="reference" header="Referencia" />
+            <Column field="state" header="Estado" />
             <Column field="user_created" header="Creador" />
             <Column field="date_created" header="Fecha Creación" />
             <Column
