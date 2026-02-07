@@ -1,4 +1,5 @@
-
+// Variable global para el tipo de moneda
+export const tipoMoneda = 'S/';
 import React, { useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { useForm, Controller } from 'react-hook-form'
@@ -8,6 +9,7 @@ import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import ProductoService from 'services/Producto'
 import CategoriaService from 'services/Categoria'
+import UnitService from 'services/Unit'
 import { Paginator } from 'primereact/paginator'
 import { useQuery } from 'hooks/useRequest'
 import { Skeleton } from 'primereact/skeleton'
@@ -79,16 +81,32 @@ export default function Productos() {
   // Formulario separado como en categoría
   function ProductModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
     const { control, handleSubmit, reset, formState: { errors }, setValue } = useForm({
-      defaultValues: defaultValues || { nombre: '', cat: '', active: 0 }
+      defaultValues: defaultValues || { nombre: '', cat: '', price: '', unit: '', active: 0 }
     })
+    const [units, setUnits] = React.useState([])
+    const [unitsLoading, setUnitsLoading] = React.useState(false)
     // Cargar datos al editar
     React.useEffect(() => {
       if (defaultValues) {
         reset(defaultValues)
       } else {
-        reset({ nombre: '', cat: '', active: 0 })
+        reset({ nombre: '', cat: '', price: '', unit: '', active: 0 })
       }
     }, [defaultValues, reset])
+
+    React.useEffect(() => {
+      setUnitsLoading(true)
+      UnitService.get({ page: 1, page_size: 100 })
+        .then(res => {
+          setUnits(Array.isArray(res.results)
+            ? res.results.map(u => ({
+                label: u.reference ? `${u.description} (${u.reference})` : u.description,
+                value: u.id
+              }))
+            : [])
+        })
+        .finally(() => setUnitsLoading(false))
+    }, [])
     const handleError = errors => {
       // Mostrar solo los primeros 4 errores, como en mantenimiento
       const messages = Object.values(errors)
@@ -117,6 +135,30 @@ export default function Productos() {
               )}
             />
             {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
+          </div>
+          <div className="m-row">
+            <label htmlFor="price">Precio:</label>
+            <Controller
+              name="price"
+              control={control}
+              rules={{ required: 'Precio requerido', pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'Formato: 0.00' } }}
+              render={({ field }) => (
+                <InputText {...field} autoComplete="off" className="p-inputtext p-component" placeholder="0.00" />
+              )}
+            />
+            {errors.price && <div className="error-message">{errors.price.message}</div>}
+          </div>
+          <div className="m-row">
+            <label htmlFor="unit">Unidad:</label>
+            <Controller
+              name="unit"
+              control={control}
+              rules={{ required: 'Unidad requerida' }}
+              render={({ field }) => (
+                <Dropdown {...field} options={units} placeholder="Seleccione unidad" style={{ minWidth: 160 }} loading={unitsLoading} />
+              )}
+            />
+            {errors.unit && <div className="error-message">{errors.unit.message}</div>}
           </div>
           <div className="m-row">
             <label htmlFor="cat">Categoría:</label>
@@ -176,12 +218,18 @@ export default function Productos() {
       if (catValue && typeof catValue === 'object') {
         catValue = catValue.value || catValue.id || ''
       }
+      let unitId = formData.unit
+      if (unitId && typeof unitId === 'object') {
+        unitId = unitId.value || unitId.id || ''
+      }
       // Si rowData existe, es edición
       if (rowData && rowData.id) {
         await ProductoService.put({
           id: rowData.id,
           nombre: formData.nombre,
           cat: catValue,
+          price: formData.price,
+          unit_id: unitId,
           state: formData.state
         })
         setShowAdd(false)
@@ -193,6 +241,8 @@ export default function Productos() {
         await ProductoService.post({
           nombre: formData.nombre,
           cat: catValue,
+          price: formData.price,
+          unit_id: unitId,
           state: formData.state
         })
         setShowAdd(false)
@@ -255,6 +305,8 @@ export default function Productos() {
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Categoría</th>
+                <th>Precio</th>
+                <th>Unidad</th>
                 <th>Estado</th>
                 <th>Acción</th>
               </tr>
@@ -268,6 +320,8 @@ export default function Productos() {
                     <td>{prod.id}</td>
                     <td>{prod.nombre || prod.description}</td>
                     <td>{prod.category_name || '-'}</td>
+                    <td>{typeof prod.price !== 'undefined' ? `${tipoMoneda} ${Number(prod.price).toFixed(2)}` : '-'}</td>
+                    <td>{prod.unit_description ? `${prod.unit_description}${prod.unit_reference ? ` (${prod.unit_reference})` : ''}` : '-'}</td>
                     <td>{prod.state}</td>
                     <td>
                       <div className="actions">
@@ -303,6 +357,8 @@ export default function Productos() {
           defaultValues={rowData ? {
             nombre: rowData.nombre || '',
             cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
+            price: rowData.price || '',
+            unit: rowData.unit_id || (rowData.unit && rowData.unit.id) || '',
             state: rowData.state || 'activo'
           } : undefined}
         />

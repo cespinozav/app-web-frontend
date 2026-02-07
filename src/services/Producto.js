@@ -14,7 +14,7 @@ const ProductoService = {
         const result = res.result || {}
         // Mapear productos para asegurar categoria_nombre
         const results = Array.isArray(result.results) ? result.results.map(prod => {
-          // Si viene como objeto, extraer el nombre y ponerlo en category_name
+          // Adaptar category_name
           let category_name = prod.category_name
           if (!category_name) {
             if (prod.categoria && typeof prod.categoria === 'object') {
@@ -25,24 +25,39 @@ const ProductoService = {
               category_name = '-'
             }
           }
-          return { ...prod, category_name }
+          // Adaptar unidad para mostrar descripción y referencia
+          let unit_id = ''
+          let unit_description = ''
+          let unit_reference = ''
+          if (prod.unit && typeof prod.unit === 'object') {
+            unit_id = prod.unit.id
+            unit_description = prod.unit.description
+            unit_reference = prod.unit.reference
+          }
+          return {
+            ...prod,
+            category_name,
+            unit_id,
+            unit_description,
+            unit_reference
+          }
         }) : []
         return {
           results,
           count: typeof result.count === 'number' ? result.count : 0
         }
       }),
-  post: ({ nombre, cat, state }) =>
+  post: ({ nombre, cat, price, unit_id, state }) =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
-      body: { nombre, cat, state },
+      body: { nombre, cat, price, unit_id, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
 
-  put: ({ id, nombre, cat, state }) =>
+  put: ({ id, nombre, cat, price, unit_id, state }) =>
     makeRequest(`${ENDPOINT}/${id}`, {
       method: 'PUT',
-      body: { nombre, cat, state },
+      body: { nombre, cat, price, unit_id, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
 }
