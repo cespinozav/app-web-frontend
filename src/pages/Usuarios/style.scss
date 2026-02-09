@@ -1,0 +1,64 @@
+@import 'src/components/styles/common.scss';
+.usuarios-listado {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin: 24px auto;
+  max-width: 1100px;
+}
+.header-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid #ecebeb;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+.header-usuarios h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+.filtros-usuarios {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+.tabla-usuarios {
+  margin-bottom: 18px;
+}
+.table {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #fafbfc;
+}
+.table th, .table td {
+  padding: 10px 8px;
+  text-align: left;
+}
+.table th {
+  background: #f5f5f5;
+  color: #007ad9;
+  font-weight: 600;
+}
+.table tr {
+  transition: background 0.2s;
+}
+.table tr:hover {
+  background: #f0f8ff;
+}
+.table td:last-child {
+  text-align: center;
+}
+.paginate {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}

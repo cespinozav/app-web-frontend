@@ -1,0 +1,27 @@
+@import 'src/components/styles/common.scss';
+
+.paginate {
+	display: flex;
+	justify-content: center;
+	margin-top: 12px;
+}
+.buttons {
+	display: flex;
+	align-items: center;
+	margin-left: 16px;
+}
+.add {
+	background: #007ad9;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 6px 16px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s;
+	margin-left: 8px;
+}
+.add:hover {
+	background: #005fa3;
+}

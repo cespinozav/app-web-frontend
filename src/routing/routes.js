@@ -9,6 +9,9 @@ const ROUTES = {
   CLIENTS: '/clientes',
   CLIENTS_MAIN: '/clientes/clientes',
   CLIENTS_MAINTENANCE: '/clientes/mantenimientos',
+  USERS: '/usuarios',
+  USERS_MAIN: '/usuarios/usuarios',
+  USERS_MAINTENANCE: '/usuarios/mantenimientos',
   PROFILE: '/perfil',
 }
 
@@ -21,6 +24,10 @@ export const SUB_ROUTES = {
   CLIENTS: {
     MAIN: `${ROUTES.CLIENTS}/clientes`,
     MAINTENANCE: `${ROUTES.CLIENTS}/mantenimientos`
+  },
+  USERS: {
+    MAIN: `${ROUTES.USERS}/usuarios`,
+    MAINTENANCE: `${ROUTES.USERS}/mantenimientos`
   }
 }
 

@@ -9,3 +9,5 @@ export { default as UnitService } from './Unit'
 
 export { default as CategoriaClienteService } from './CategoriaCliente'
 export { default as CiudadClienteService } from './CiudadCliente'
+
+export { default as CategoriaUsuarioService } from './CategoriaUsuario'
