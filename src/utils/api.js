@@ -44,11 +44,12 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     })
     if (response.ok) return response
     if (response.status === 401) {
-      window.location.href = '/login'
-      return
+      // No redirigir automáticamente, lanzar error para que el mensaje se muestre
+      const err = await response.json();
+      throw err;
     }
-    const err = await response.json()
-    throw err
+    const err = await response.json();
+    throw err;
   } catch (e) {
     const msg = String(e)
     if (msg.includes('Syntax')) {

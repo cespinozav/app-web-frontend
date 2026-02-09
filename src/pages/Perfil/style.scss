@@ -1,0 +1,60 @@
+.perfil-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 0;
+}
+
+.perfil-card {
+  min-width: 340px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  padding: 2rem 2rem 1.5rem 2rem;
+  background: #fff;
+}
+
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.perfil-avatar {
+  background: #007ad9;
+  color: #fff;
+  font-size: 2rem;
+}
+
+.perfil-nombre {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.perfil-rol {
+  color: #007ad9;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.perfil-info {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.perfil-extra {
+  font-size: 0.98rem;
+  color: #666;
+}
+
+.perfil-loading, .perfil-error {
+  text-align: center;
+  margin-top: 2rem;
+  color: #888;
+}

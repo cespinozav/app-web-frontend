@@ -40,11 +40,14 @@ const Login = () => {
       setUserinfo(data)
       navigate('/')
     } catch (e) {
-      let message = 'Hubo un error al iniciar sesión'
-      if ('message' in e) message = e.message
-      toast.error(message)
+      let message = 'Hubo un error al iniciar sesión';
+      if (e && typeof e === 'object') {
+        if (e.result && e.result.detail) message = e.result.detail;
+        else if (e.message) message = e.message;
+      }
+      toast.error(message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 

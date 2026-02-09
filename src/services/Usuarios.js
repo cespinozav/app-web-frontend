@@ -3,9 +3,9 @@ import { makeRequest } from 'utils/api';
 const ENDPOINT = '/personas';
 
 const UsuariosService = {
-  get: ({ page = 1, page_size = 10, search = '', state = '' } = {}) =>
+  get: ({ page = 1, page_size = 10, search = '', categoria = '', state = '' } = {}) =>
     makeRequest(`${ENDPOINT}`, {
-      params: { page, page_size, search, state },
+      params: { page, page_size, search, cat_person: categoria, state },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
       .then(res => res.json())
