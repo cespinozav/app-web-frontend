@@ -3,6 +3,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from 'pages/Login';
+import NewPassword from 'pages/Login/NewPassword';
 import Dashboard from 'pages/Dashboard';
 import InventarioModule from 'pages/Inventario/InventarioModule';
 import Productos from 'pages/Inventario/Productos';
@@ -23,6 +24,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.PASSWORD_RESET_CONFIRM} element={<NewPassword />} />
         <Route element={<AuthGuard />}>
           <Route element={<Layout />}>
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />

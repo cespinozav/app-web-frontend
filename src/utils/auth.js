@@ -33,9 +33,17 @@ export function authenticate({ username, password }) {
       password
     }
   })
-    .then(res => res.json())
+    .then(res => {
+      if (!res || typeof res.json !== 'function') {
+        throw Error('Respuesta inválida del servidor')
+      }
+      return res.json()
+    })
     .then(res => {
       const { result } = res
+      if (!result || !result.access) {
+        throw Error('Credenciales inválidas o usuario sin acceso')
+      }
       localStorage.setItem('accessToken', result.access)
       localStorage.setItem('refreshToken', result.refresh)
       return { username: result.username }

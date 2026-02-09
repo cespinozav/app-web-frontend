@@ -13,6 +13,7 @@ const ROUTES = {
   USERS_MAIN: '/usuarios/usuarios',
   USERS_MAINTENANCE: '/usuarios/mantenimientos',
   PROFILE: '/perfil',
+  PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token',
 }
 
 
