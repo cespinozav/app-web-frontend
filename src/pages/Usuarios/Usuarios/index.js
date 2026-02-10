@@ -6,6 +6,8 @@ import useToast from 'hooks/useToast';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import AutoCompleteStyled from 'components/AutoComplete';
+import { buscarClientesAutocomplete } from 'utils/autocompleteCliente';
 import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
 import { Skeleton } from 'primereact/skeleton';
@@ -37,6 +39,8 @@ export default function Usuarios() {
 	const onSubmitFields = async (formData, resetForm) => {
 		setIsMutating(true);
 		try {
+			setShowAdd(false);
+			setRowData(null);
 			if (rowData && rowData.id) {
 				await UsuariosService.put({
 					id: rowData.id,
@@ -45,7 +49,9 @@ export default function Usuarios() {
 					apellidoMaterno: formData.apellidoMaterno,
 					nombres: formData.nombres,
 					categoria: formData.categoria,
-					correo: formData.correo
+					correo: formData.correo,
+					cliente: formData.cliente,
+					telefono: formData.telefono
 				});
 				toast.success('Usuario actualizado con éxito');
 			} else {
@@ -55,14 +61,13 @@ export default function Usuarios() {
 					apellidoMaterno: formData.apellidoMaterno,
 					nombres: formData.nombres,
 					categoria: formData.categoria,
-					correo: formData.correo
+					correo: formData.correo,
+					cliente: formData.cliente,
+					telefono: formData.telefono
 				});
 				toast.success('Usuario creado con éxito');
 			}
-			setShowAdd(false);
-			setRowData(null);
 			refetch();
-			if (resetForm) resetForm();
 		} catch (err) {
 			toast.error('Error al guardar el usuario');
 		} finally {
@@ -72,13 +77,17 @@ export default function Usuarios() {
 
 	function UsuarioModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
 		const { control, handleSubmit, reset, formState: { errors } } = useForm({
-			defaultValues: defaultValues || { nombres: '', dni: '', correo: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '' }
+			defaultValues: defaultValues || { nombres: '', dni: '', correo: '', telefono: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '', cliente: null }
 		});
 		React.useEffect(() => {
 			if (defaultValues) {
-				reset(defaultValues);
+				let cliente = defaultValues.cliente || null;
+				if (cliente && !cliente.description && cliente.nombre) {
+					cliente = { ...cliente, description: cliente.nombre };
+				}
+				reset({ ...defaultValues, cliente, telefono: defaultValues.telefono || '' });
 			} else {
-				reset({ nombres: '', dni: '', correo: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '' });
+				reset({ nombres: '', dni: '', correo: '', telefono: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '', cliente: null });
 			}
 		}, [defaultValues, reset]);
 		const handleError = errors => {
@@ -90,78 +99,115 @@ export default function Usuarios() {
 		const onSubmit = data => onSubmitFields(data, reset);
 		return (
 			<form onSubmit={handleSubmit(onSubmit, handleError)}>
-				<div className="content">
-					<div className="m-row">
-						<label htmlFor="dni">DNI:</label>
-						<Controller
-							name="dni"
-							control={control}
-							rules={{ required: 'DNI requerido', maxLength: { value: 15, message: 'Máx 15 caracteres' } }}
-							render={({ field }) => (
-								<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-							)}
-						/>
-						{errors.dni && <div className="error-message">{errors.dni.message}</div>}
+				<div className="content" style={{ display: 'flex', gap: 24 }}>
+					<div className="column-form" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+						<div className="m-row">
+							<label htmlFor="dni">DNI:</label>
+							<Controller
+								name="dni"
+								control={control}
+								rules={{ required: 'DNI requerido', maxLength: { value: 15, message: 'Máx 15 caracteres' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+								)}
+							/>
+							{errors.dni && <div className="error-message">{errors.dni.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="correo">Correo:</label>
+							<Controller
+								name="correo"
+								control={control}
+								rules={{ required: 'Correo requerido', pattern: { value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, message: 'Correo inválido' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+								)}
+							/>
+							{errors.correo && <div className="error-message">{errors.correo.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="telefono">Teléfono:</label>
+							<Controller
+								name="telefono"
+								control={control}
+								rules={{ required: 'Teléfono requerido', pattern: { value: /^\+?\d{7,15}$/, message: 'Teléfono inválido' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" placeholder="Ej: +51912345678" />
+								)}
+							/>
+							{errors.telefono && <div className="error-message">{errors.telefono.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="categoria">Categoría:</label>
+							<Controller
+								name="categoria"
+								control={control}
+								rules={{ required: 'Seleccione categoría' }}
+								render={({ field }) => (
+									<Dropdown {...field} options={categorias.map(c => ({ label: c.description, value: c.id }))} placeholder="Seleccione" style={{ minWidth: 160 }} />
+								)}
+							/>
+							{errors.categoria && <div className="error-message">{errors.categoria.message}</div>}
+						</div>
 					</div>
-					<div className="m-row">
-						<label htmlFor="correo">Correo:</label>
-						<Controller
-							name="correo"
-							control={control}
-							rules={{ required: 'Correo requerido', pattern: { value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, message: 'Correo inválido' } }}
-							render={({ field }) => (
-								<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-							)}
-						/>
-						{errors.correo && <div className="error-message">{errors.correo.message}</div>}
-					</div>
-					<div className="m-row">
-						<label htmlFor="nombres">Nombres:</label>
-						<Controller
-							name="nombres"
-							control={control}
-							rules={{ required: 'Nombres requeridos', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
-							render={({ field }) => (
-								<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-							)}
-						/>
-						{errors.nombres && <div className="error-message">{errors.nombres.message}</div>}
-					</div>
-					<div className="m-row">
-						<label htmlFor="apellidoPaterno">Apellido Paterno:</label>
-						<Controller
-							name="apellidoPaterno"
-							control={control}
-							rules={{ required: 'Apellido paterno requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
-							render={({ field }) => (
-								<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-							)}
-						/>
-						{errors.apellidoPaterno && <div className="error-message">{errors.apellidoPaterno.message}</div>}
-					</div>
-					<div className="m-row">
-						<label htmlFor="apellidoMaterno">Apellido Materno:</label>
-						<Controller
-							name="apellidoMaterno"
-							control={control}
-							rules={{ required: 'Apellido materno requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
-							render={({ field }) => (
-								<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-							)}
-						/>
-						{errors.apellidoMaterno && <div className="error-message">{errors.apellidoMaterno.message}</div>}
-					</div>
-					<div className="m-row">
-						<label htmlFor="categoria">Categoría:</label>
-						<Controller
-							name="categoria"
-							control={control}
-							rules={{ required: 'Seleccione categoría' }}
-							render={({ field }) => (
-								<Dropdown {...field} options={categorias.map(c => ({ label: c.description, value: c.id }))} placeholder="Seleccione" style={{ minWidth: 160 }} />
-							)}
-						/>
-						{errors.categoria && <div className="error-message">{errors.categoria.message}</div>}
+					<div className="column-form" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+						<div className="m-row">
+							<label htmlFor="nombres">Nombres:</label>
+							<Controller
+								name="nombres"
+								control={control}
+								rules={{ required: 'Nombres requeridos', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+								)}
+							/>
+							{errors.nombres && <div className="error-message">{errors.nombres.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="apellidoPaterno">Apellido Paterno:</label>
+							<Controller
+								name="apellidoPaterno"
+								control={control}
+								rules={{ required: 'Apellido paterno requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+								)}
+							/>
+							{errors.apellidoPaterno && <div className="error-message">{errors.apellidoPaterno.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="apellidoMaterno">Apellido Materno:</label>
+							<Controller
+								name="apellidoMaterno"
+								control={control}
+								rules={{ required: 'Apellido materno requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
+								render={({ field }) => (
+									<InputText {...field} autoComplete="off" className="p-inputtext p-component" />
+								)}
+							/>
+							{errors.apellidoMaterno && <div className="error-message">{errors.apellidoMaterno.message}</div>}
+						</div>
+						<div className="m-row">
+							<label htmlFor="cliente">Cliente:</label>
+							<Controller
+								name="cliente"
+								control={control}
+								rules={{ required: 'Seleccione cliente' }}
+								render={({ field }) => (
+									<AutoCompleteStyled
+										{...field}
+										request={buscarClientesAutocomplete}
+										value={field.value}
+										setValue={field.onChange}
+										name="cliente"
+										minLength={2}
+										placeholder="Buscar cliente..."
+										style={{ width: '100%' }}
+									/>
+								)}
+							/>
+							{errors.cliente && <div className="error-message">{errors.cliente.message}</div>}
+						</div>
 					</div>
 				</div>
 				<div className="buttons">
@@ -214,10 +260,12 @@ export default function Usuarios() {
 								<th>ID</th>
 								<th>DNI</th>
 								<th>Correo</th>
+								<th>Teléfono</th>
 								<th>Nombres</th>
 								<th>Apellido Paterno</th>
 								<th>Apellido Materno</th>
 								<th>Categoría</th>
+								<th>Cliente</th>
 								<th>Usuario creado</th>
 								<th>Fecha creada</th>
 								<th>Acción</th>
@@ -232,10 +280,12 @@ export default function Usuarios() {
 										<td>{usuario.id}</td>
 										<td>{usuario.dni}</td>
 										<td>{usuario.correo}</td>
+										<td>{usuario.telefono || '-'}</td>
 										<td>{usuario.nombres}</td>
 										<td>{usuario.apellidoPaterno}</td>
 										<td>{usuario.apellidoMaterno}</td>
 										<td>{usuario.categoria?.description || '-'}</td>
+										<td>{usuario.cliente?.description || '-'}</td>
 										<td>{usuario.usuarioCreado}</td>
 										<td>{usuario.fechaCreada || '-'}</td>
 										<td>
@@ -275,7 +325,9 @@ export default function Usuarios() {
 						nombres: rowData.nombres || '',
 						apellidoPaterno: rowData.apellidoPaterno || '',
 						apellidoMaterno: rowData.apellidoMaterno || '',
-						categoria: rowData.categoria && rowData.categoria.id ? rowData.categoria.id : ''
+						categoria: rowData.categoria && rowData.categoria.id ? rowData.categoria.id : '',
+						cliente: rowData.cliente || null,
+						telefono: rowData.telefono || ''
 					} : undefined}
 				/>
 			</Dialog>

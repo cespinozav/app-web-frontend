@@ -46,3 +46,22 @@
     }
   }
 }
+
+.inventario-listado {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10 12px;
+}
+
+.tabla-inventario {
+  margin-top: 16px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.tabla-inventario table {
+  min-width: 1200px;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}

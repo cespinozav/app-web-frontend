@@ -16,12 +16,19 @@ const UsuariosService = {
               id: u.id,
               dni: u.dni,
               correo: u.email || '',
+              telefono: u.phone_number || '',
               nombres: u.names,
               apellidoPaterno: u.lastname_p,
               apellidoMaterno: u.lastname_m,
               categoria: u.cat_person ? {
                 id: u.cat_person.id,
                 description: u.cat_person.description
+              } : null,
+              cliente: u.cliente ? {
+                id: u.cliente.id,
+                description: u.cliente.description,
+                abreviatura: u.cliente.abreviatura,
+                ruc: u.cliente.ruc
               } : null,
               usuarioCreado: u.user_created?.username || '',
               fechaCreada: u.date_created || ''
@@ -33,7 +40,7 @@ const UsuariosService = {
         };
       }),
 
-  post: ({ dni, apellidoPaterno, apellidoMaterno, nombres, categoria, correo }) =>
+  post: ({ dni, apellidoPaterno, apellidoMaterno, nombres, categoria, correo, cliente, telefono }) =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
       body: {
@@ -41,13 +48,15 @@ const UsuariosService = {
         lastname_p: apellidoPaterno,
         lastname_m: apellidoMaterno,
         names: nombres,
+        phone_number: telefono,
         cat_person_id: categoria,
+        cliente_id: cliente?.id || cliente,
         email: correo
       },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
 
-  put: ({ id, dni, apellidoPaterno, apellidoMaterno, nombres, categoria, correo }) =>
+  put: ({ id, dni, apellidoPaterno, apellidoMaterno, nombres, categoria, correo, cliente, telefono }) =>
     makeRequest(`${ENDPOINT}/${id}`, {
       method: 'PUT',
       body: {
@@ -55,7 +64,9 @@ const UsuariosService = {
         lastname_p: apellidoPaterno,
         lastname_m: apellidoMaterno,
         names: nombres,
+        phone_number: telefono,
         cat_person_id: categoria,
+        cliente_id: cliente?.id || cliente,
         email: correo
       },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
