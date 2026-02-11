@@ -19,7 +19,9 @@ export default function NewPassword() {
       toast.success('Contraseña actualizada correctamente');
       navigate('/login');
     } catch (err) {
-      toast.error('No se pudo actualizar la contraseña');
+      // Display the specific error message from backend if available
+      const errorMessage = err?.result?.error || 'No se pudo actualizar la contraseña';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
