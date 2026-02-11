@@ -1,36 +1,41 @@
-import { useQuery } from 'hooks/useRequest'
-import { Button } from 'primereact/button'
-import { Column } from 'primereact/column'
-import { DataTable } from 'primereact/datatable'
-import { Skeleton } from 'primereact/skeleton'
-import { useEffect, useState } from 'react'
-import ModalForm from './ModalForm'
-import { Paginator } from 'primereact/paginator'
+// Table.js
+import { useQuery } from 'hooks/useRequest';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Skeleton } from 'primereact/skeleton';
+import { useEffect, useState } from 'react';
+import ModalForm from './ModalForm';
+import { Paginator } from 'primereact/paginator';
+import RolesService from 'services/Roles';
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 10;
 const MODAL = {
   NONE: 0,
   EDIT: 1,
-}
+};
 
 export default function Table({ option }) {
-  const { FormComponent, service } = option
-  const [page, setPage] = useState(1)
-  const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }))
-  const data = queryData?.results || []
-  const totalRecords = queryData?.count || 0
-  const [showModal, setShowModal] = useState(MODAL.NONE)
-  const [rowData, setRowData] = useState(null)
+    console.log('Render Table', { option });
+  const { FormComponent, service, schema } = option;
+  const [page, setPage] = useState(1);
+  const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }));
+  const data = queryData?.result?.results || [];
+  const totalRecords = queryData?.result?.count || 0;
+  const [showModal, setShowModal] = useState(MODAL.NONE);
+  const [rowData, setRowData] = useState(null);
 
   const onClose = () => {
-    setShowModal(MODAL.NONE)
-    setRowData(null)
-  }
+      console.log('onClose Table');
+    setShowModal(MODAL.NONE);
+    setRowData(null);
+  };
 
   useEffect(() => {
-    setRowData(null)
-    setPage(1)
-  }, [option])
+      console.log('useEffect Table option:', option);
+    setRowData(null);
+    setPage(1);
+  }, [option]);
 
   return (
     <div className="kit-list maintenance">
@@ -38,16 +43,16 @@ export default function Table({ option }) {
         Array.from({ length: PAGE_SIZE }).map((_, key) => <Skeleton className="table" key={key}></Skeleton>)
       ) : (
         <>
+          {console.log('Render Table JSX', { showModal, rowData })}
           <ModalForm
             isVisible={showModal === MODAL.EDIT}
             onClose={onClose}
             defaultFields={rowData}
-            serviceKey={option.title}
             service={service}
             FormComponent={FormComponent}
           />
           <DataTable value={data} paginator={false} rows={PAGE_SIZE} responsiveLayout="scroll" className="p-datatable-sm">
-            {option.schema.map(col => (
+            {schema.map(col => (
               <Column key={col.field} field={col.field} header={col.label} />
             ))}
             <Column
@@ -57,8 +62,8 @@ export default function Table({ option }) {
                     icon="pi pi-pencil"
                     className="p-button-text p-button-sm"
                     onClick={() => {
-                      setRowData(rowData)
-                      setShowModal(MODAL.EDIT)
+                      setRowData(rowData);
+                      setShowModal(MODAL.EDIT);
                     }}
                     tooltip="Editar"
                   />
@@ -79,8 +84,8 @@ export default function Table({ option }) {
             <div className="buttons">
               <button
                 onClick={() => {
-                  setRowData(null)
-                  setShowModal(MODAL.EDIT)
+                  setRowData(null);
+                  setShowModal(MODAL.EDIT);
                 }}
                 className="add"
               >
@@ -91,5 +96,5 @@ export default function Table({ option }) {
         </>
       )}
     </div>
-  )
+  );
 }
