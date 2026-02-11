@@ -266,8 +266,10 @@ export default function Productos() {
   }
 
   return (
-    <div className="productos-listado">
-      <div className="header-productos">
+    <>
+      <hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
+      <div className="productos-listado">
+        <div className="header-productos">
         <h2>LISTADO GENERAL</h2>
         <div className="acciones">
           <button
@@ -372,5 +374,6 @@ export default function Productos() {
         />
       </div>
     </div>
+    </>
   )
 }

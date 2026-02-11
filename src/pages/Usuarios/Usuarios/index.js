@@ -226,8 +226,10 @@ export default function Usuarios() {
 	}
 
 	return (
-		<div className="usuarios-listado">
-			<div className="header-clientes">
+		<>
+			<hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
+			<div className="usuarios-listado">
+				<div className="header-clientes">
 				<h2>LISTADO DE USUARIOS</h2>
 				<div className="acciones">
 					<button
@@ -340,5 +342,6 @@ export default function Usuarios() {
 				/>
 			</div>
 		</div>
+		</>
 	);
 }

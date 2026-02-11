@@ -204,10 +204,12 @@ export default function MantenimientoClientes() {
   }
   // Return principal restaurado con el listado y los modales
   return (
-    <div className="clientes-listado">
-      <div className="header-clientes">
-        <h2>LISTADO DE CLIENTES</h2>
-        <div className="acciones">
+    <>
+      <hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
+      <div className="clientes-listado">
+        <div className="header-clientes">
+          <h2>LISTADO DE CLIENTES</h2>
+          <div className="acciones">
           <button
             className="add"
             onClick={() => setShowAdd(true)}
@@ -318,6 +320,7 @@ export default function MantenimientoClientes() {
         />
       </div>
     </div>
+    </>
   );
 }
 
