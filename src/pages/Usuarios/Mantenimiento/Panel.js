@@ -32,7 +32,8 @@ const options = [
 export default function Panel() {
   const [selectedOption, setSelectedOption] = React.useState(0);
   return (
-    <div className="device-maintenance" style={{ marginTop: 32 }}>
+    <div className="device-maintenance">
+      <hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
       <section>
         <div className="options">
           {options.map((option, index) => (

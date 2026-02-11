@@ -1,5 +1,5 @@
 import { HTTP_METHODS } from './constants'
-import { getBearer } from './auth'
+import { getBearer, removeSession } from './auth'
 
 function getAPI() {
   if (process.env.REACT_APP_ENV === 'prd') {
@@ -44,7 +44,9 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     })
     if (response.ok) return response
     if (response.status === 401) {
-      // No redirigir automáticamente, lanzar error para que el mensaje se muestre
+      // Cerrar sesión automáticamente cuando se detecta 401
+      removeSession();
+      window.location.href = '/login';
       const err = await response.json();
       throw err;
     }
@@ -68,6 +70,11 @@ export async function makeNoParamRequest(suffix, { headers, signal } = {}) {
       signal
     })
     if (response.ok) return response
+    if (response.status === 401) {
+      // Cerrar sesión automáticamente cuando se detecta 401
+      removeSession();
+      window.location.href = '/login';
+    }
     const err = await response.json()
     throw err
   } catch (e) {

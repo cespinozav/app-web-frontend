@@ -66,6 +66,10 @@ export async function newtworkMultipartRequest(suffix, formData, method = HTTP_M
       headers: { Authorization: getBearer() }
     })
     if (response.ok) return response
+    if (response.status === 401) {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
     const err = await response.json()
     throw err
   } catch (e) {
