@@ -1,17 +1,14 @@
-import NewPassword from './NewPassword'
 import { useState, useEffect, useContext } from 'react'
 import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
 import ResetPasswordService from 'services/ResetPassword'
 import { useNavigate } from 'react-router-dom'
-// import LOADING from 'assets/img/loading.svg'
+import { useForm } from 'react-hook-form'
 import TALMALOGO from 'assets/img/zprime_logo_W.svg'
 import { UserContext } from 'context'
 import useToast from 'hooks/useToast'
 import { hasToken, authenticate } from 'utils/auth'
-import { useForm } from 'react-hook-form'
-
 import ResetPasswordForm from './ResetPasswordForm'
-import { Button } from 'primereact/button'
 
 const DEFAULT_FIELDS = { username: '', password: '' }
 

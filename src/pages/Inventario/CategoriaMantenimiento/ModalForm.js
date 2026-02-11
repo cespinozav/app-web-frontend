@@ -7,12 +7,19 @@ export default function ModalForm({ isVisible, onClose, FormComponent, defaultFi
   const { mutate, isLoading } = useMutation(service.id, isEditing ? service.put : service.post)
   const toast = useToast()
   const onSubmitFields = async formData => {
+    const payload = {
+      ...formData,
+      userCreated: formData.userCreated || 'admin'
+    };
+    if (isEditing && defaultFields?.id) {
+      payload.id = defaultFields.id;
+    }
     mutate(
-      { ...formData, userCreated: formData.userCreated || 'admin' },
+      payload,
       {
         onSuccess: () => {
           onClose()
-          toast.success(isEditing ? `Categoría editada con éxito` : 'Categoría agregada con éxito')
+          toast.success(isEditing ? 'Categoría editada con éxito' : 'Categoría agregada con éxito')
         },
         onError: err => {
           // Si la API responde con un campo description duplicado

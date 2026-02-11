@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import CategoriaClienteService from 'services/CategoriaCliente';
 import { Dialog } from 'primereact/dialog';
-import SedesModal from './components/Modals/SedesModal';
+import { Skeleton } from 'primereact/skeleton';
 import { useForm, Controller } from 'react-hook-form';
 import useToast from 'hooks/useToast';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import CategoriaClienteService from 'services/CategoriaCliente';
 import ClienteService from 'services/Cliente';
 import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
-import { Skeleton } from 'primereact/skeleton';
+import SedesModal from './components/Modals/SedesModal';
 import '../style.scss';
 
 const PAGE_SIZE = 10;
@@ -28,7 +28,7 @@ export default function MantenimientoClientes() {
   const { data, isFetching, refetch } = useQuery([
     'clientes', page, search, state
   ], () => {
-    let params = { page, page_size: PAGE_SIZE, search };
+    const params = { page, page_size: PAGE_SIZE, search };
     if (state !== '') {
       if (Number(state) === 1) params.state = 'activo';
       else if (Number(state) === 0) params.state = 'inactivo';
@@ -42,7 +42,6 @@ export default function MantenimientoClientes() {
   const [showAdd, setShowAdd] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
   const [rowData, setRowData] = useState(null);
-  const [showDelete, setShowDelete] = useState(false);
   const [showSedes, setShowSedes] = useState(false);
   const toast = useToast();
 
@@ -50,7 +49,7 @@ export default function MantenimientoClientes() {
   const onSubmitFields = async (formData, resetForm) => {
     setIsMutating(true);
     try {
-      const categoria = formData.categoria;
+      const { categoria } = formData;
       if (rowData && rowData.id) {
         await ClienteService.put({
           id: rowData.id,
@@ -63,7 +62,7 @@ export default function MantenimientoClientes() {
         });
         setShowAdd(false);
         setRowData(null);
-        resetForm && resetForm();
+        if (resetForm) resetForm();
         toast.success('Cliente editado con éxito');
         refetch();
       } else {
@@ -76,7 +75,7 @@ export default function MantenimientoClientes() {
           user_created: 1 // Ajustar según usuario actual
         });
         setShowAdd(false);
-        resetForm && resetForm();
+        if (resetForm) resetForm();
         toast.success('Cliente agregado con éxito');
         refetch();
       }
@@ -95,7 +94,7 @@ export default function MantenimientoClientes() {
     }
   };
 
-  function ClienteModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
+  function ClienteModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
       defaultValues: defaultValues || { nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 }
     });
@@ -117,13 +116,13 @@ export default function MantenimientoClientes() {
         reset({ nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 });
       }
     }, [defaultValues, reset]);
-    const handleError = errors => {
-      const messages = Object.values(errors)
+    const handleError = formErrors => {
+      const messages = Object.values(formErrors)
         .slice(0, 4)
         .map(e => e.message);
       toast.error(messages);
     };
-    const onSubmit = data => onSubmitFields(data, reset);
+    const onSubmit = formData => onSubmitFieldsHandler(formData, reset);
     return (
       <form onSubmit={handleSubmit(onSubmit, handleError)}>
         <div className="content">
@@ -190,8 +189,8 @@ export default function MantenimientoClientes() {
         </div>
         <div className="buttons">
           <Button
-            loading={isMutating}
-            disabled={isMutating}
+            loading={isMutatingProp}
+            disabled={isMutatingProp}
             className="button p-button p-component"
             loadingIcon="pi pi-spin pi-spinner"
             iconPos="right"
@@ -226,8 +225,8 @@ export default function MantenimientoClientes() {
           </span>
         </div>
         <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label style={{ minWidth: 60 }}>Estado</label>
-          <Dropdown value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
+          <label htmlFor="estado-filter" style={{ minWidth: 60 }}>Estado</label>
+          <Dropdown id="estado-filter" value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
         </div>
       </div>
       <div className="tabla-clientes">

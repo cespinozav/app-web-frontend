@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import { makeRequest } from 'utils/api';
 
 const PerfilService = {

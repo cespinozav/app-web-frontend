@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
-import UsuariosService from 'services/Usuarios';
 import { Dialog } from 'primereact/dialog';
+import { Skeleton } from 'primereact/skeleton';
 import { useForm, Controller } from 'react-hook-form';
 import useToast from 'hooks/useToast';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import AutoCompleteStyled from 'components/AutoComplete';
-import { buscarClientesAutocomplete } from 'utils/autocompleteCliente';
+import buscarClientesAutocomplete from 'utils/autocompleteCliente';
 import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
-import { Skeleton } from 'primereact/skeleton';
+import CategoriaUsuarioService from 'services/CategoriaUsuario';
+import UsuariosService from 'services/Usuarios';
 import './style.scss';
 
 const PAGE_SIZE = 10;
-
-
-import CategoriaUsuarioService from 'services/CategoriaUsuario';
-
 
 export default function Usuarios() {
 	const [page, setPage] = useState(1);
@@ -36,7 +33,7 @@ export default function Usuarios() {
 	const toast = useToast();
 
 	// Lógica para guardar usuario (placeholder)
-	const onSubmitFields = async (formData, resetForm) => {
+	const onSubmitFields = async (formData) => {
 		setIsMutating(true);
 		try {
 			setShowAdd(false);
@@ -75,7 +72,7 @@ export default function Usuarios() {
 		}
 	};
 
-	function UsuarioModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
+	function UsuarioModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
 		const { control, handleSubmit, reset, formState: { errors } } = useForm({
 			defaultValues: defaultValues || { nombres: '', dni: '', correo: '', telefono: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '', cliente: null }
 		});
@@ -90,13 +87,13 @@ export default function Usuarios() {
 				reset({ nombres: '', dni: '', correo: '', telefono: '', apellidoPaterno: '', apellidoMaterno: '', categoria: '', cliente: null });
 			}
 		}, [defaultValues, reset]);
-		const handleError = errors => {
-			const messages = Object.values(errors)
+		const handleError = formErrors => {
+			const messages = Object.values(formErrors)
 				.slice(0, 4)
 				.map(e => e.message);
 			toast.error(messages);
 		};
-		const onSubmit = data => onSubmitFields(data, reset);
+		const onSubmit = formData => onSubmitFieldsHandler(formData, reset);
 		return (
 			<form onSubmit={handleSubmit(onSubmit, handleError)}>
 				<div className="content" style={{ display: 'flex', gap: 24 }}>
@@ -212,8 +209,8 @@ export default function Usuarios() {
 				</div>
 				<div className="buttons">
 					<Button
-						loading={isMutating}
-						disabled={isMutating}
+						loading={isMutatingProp}
+						disabled={isMutatingProp}
 						className="button p-button p-component"
 						loadingIcon="pi pi-spin pi-spinner"
 						iconPos="right"
@@ -248,8 +245,8 @@ export default function Usuarios() {
 					</span>
 				</div>
 				<div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-					<label style={{ minWidth: 60 }}>Categoría</label>
-					<Dropdown value={categoria} options={[{ label: 'Todas', value: '' }, ...categorias.map(c => ({ label: c.description, value: c.id }))]} onChange={e => { setCategoria(e.value); setPage(1); }} placeholder="Categoría" style={{ minWidth: 160 }} />
+					<label htmlFor="categoria-filter" style={{ minWidth: 60 }}>Categoría</label>
+					<Dropdown id="categoria-filter" value={categoria} options={[{ label: 'Todas', value: '' }, ...categorias.map(c => ({ label: c.description, value: c.id }))]} onChange={e => { setCategoria(e.value); setPage(1); }} placeholder="Categoría" style={{ minWidth: 160 }} />
 				</div>
 			</div>
 			<div className="tabla-clientes">

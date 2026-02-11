@@ -1,7 +1,6 @@
-
+import { useState } from 'react'
 import CategoriaMantenimiento from '../CategoriaMantenimiento'
 import UnidadMantenimiento from '../UnidadMantenimiento'
-import { useState } from 'react'
 
 const options = [
   { title: 'Categoría', Component: CategoriaMantenimiento },

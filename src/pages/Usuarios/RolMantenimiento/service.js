@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import RolesService from 'services/Roles';
 
 const options = [

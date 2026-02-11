@@ -1,6 +1,5 @@
 import React from 'react';
 import CategoriaUsuarioService from 'services/CategoriaUsuario';
-import RolesService from 'services/Roles';
 import CategoriaTable from '../CategoriaMantenimiento/Table';
 import RolTable from '../RolMantenimiento/Table';
 import CategoriaForm from '../CategoriaMantenimiento/TypeServiceForm';

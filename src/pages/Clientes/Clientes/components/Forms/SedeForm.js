@@ -1,5 +1,4 @@
 import React from 'react';
-import CountryService from 'services/Country';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
@@ -32,15 +31,15 @@ function SedeForm({ defaultValues, onSubmitFields, toast, isMutating }) {
           state: 'activo',
         }
   });
-  const handleError = errors => {
-    const messages = Object.values(errors)
+  const handleError = formErrors => {
+    const messages = Object.values(formErrors)
       .slice(0, 4)
       .map(e => e.message);
-    toast && toast.error(messages);
+    if (toast) toast.error(messages);
   };
   const onSubmit = data => {
     // Si id_country es un objeto, extrae el id
-    let payload = { ...data };
+    const payload = { ...data };
     if (payload.id_country && typeof payload.id_country === 'object' && 'id' in payload.id_country) {
       payload.id_country = payload.id_country.id;
     }

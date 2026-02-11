@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, global-require, prefer-destructuring */
 import { makeRequest } from 'utils/api'
 
 const ENDPOINT = '/productos'

@@ -17,7 +17,7 @@ export default function MenuItem({ path, name, icon, isDefault, defaultPath, sub
   if (subRoutes && subRoutes.length > 0) {
     return (
       <div className={`item ${isSelected ? 'active' : ''} ${open ? 'open' : ''}`} style={{ flexDirection: 'column', cursor: 'pointer', padding: 0 }}>
-        <div className="item main-item" onClick={() => setOpen(!open)}>
+        <div className="item main-item" onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(!open) }} role="button" tabIndex={0}>
           <div className="logo">
             <img src={icon} alt={`${name} icon`} style={{ width: 16, height: 16 }} />
           </div>

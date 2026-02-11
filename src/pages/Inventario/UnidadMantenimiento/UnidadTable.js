@@ -1,11 +1,11 @@
 import { useQuery } from 'hooks/useRequest'
+import { Paginator } from 'primereact/paginator'
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
 import ModalForm from './ModalForm'
-import { Paginator } from 'primereact/paginator'
 
 const PAGE_SIZE = 10
 const MODAL = {

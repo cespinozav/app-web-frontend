@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, global-require */
 import { makeRequest } from 'utils/api'
 
 const ENDPOINT = '/categorias-usuario'
@@ -21,7 +22,11 @@ const CategoriaUsuarioService = {
       body: { description, user_created },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
-  put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, { method: 'PUT', body: { description } }),
+  put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, {
+    method: 'PUT',
+    body: { description },
+    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+  }),
   delete: ({ id }) => makeRequest(`${ENDPOINT}/${id}/delete`, {
     method: 'DELETE',
     headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined

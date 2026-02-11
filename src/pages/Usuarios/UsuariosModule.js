@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import CLIENTS_ICON from 'assets/img/icons/active-user.svg';
 import MAINTENANCE_ICON from 'assets/img/icons/settings.svg';
-import ROUTES, { SUB_ROUTES } from 'routing/routes';
+import { SUB_ROUTES } from 'routing/routes';
 import './style.scss';
 
 function UsuariosModule() {

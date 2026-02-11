@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, global-require */
 import { makeRequest } from 'utils/api'
 
 const ENDPOINT = '/countries'
@@ -35,7 +36,11 @@ const CiudadClienteService = {
       body: { nombre: description },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
-  put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, { method: 'PUT', body: { nombre: description } }),
+  put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, {
+    method: 'PUT',
+    body: { nombre: description },
+    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+  }),
   delete: ({ id }) => makeRequest(`${ENDPOINT}/${id}/delete`, {
     method: 'DELETE',
     headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined

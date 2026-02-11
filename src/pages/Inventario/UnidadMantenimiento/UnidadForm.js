@@ -1,4 +1,4 @@
-import { FormInput } from 'components/FormControls'
+import FormInput from 'components/FormControls'
 import { Button } from 'primereact/button'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,15 +10,14 @@ const DEFAULT_FIELDS = {
   state: 'activo'
 }
 
-function UnidadForm({ defaultFields, onClose, service, onSubmitFields, isMutating }) {
+function UnidadForm({ defaultFields, onClose, onSubmitFields, isMutating }) {
   const toast = useToast()
   const {
     control,
     handleSubmit,
     reset,
     setValue,
-    register,
-    formState: { dirtyFields, errors }
+    register
   } = useForm({
     defaultValues: DEFAULT_FIELDS
   })
@@ -28,8 +27,8 @@ function UnidadForm({ defaultFields, onClose, service, onSubmitFields, isMutatin
   }, [defaultFields])
 
   const isEditing = Boolean(defaultFields && defaultFields.id)
-  const handleError = errors => {
-    const messages = Object.values(errors)
+  const handleError = formErrors => {
+    const messages = Object.values(formErrors)
       .slice(0, 4)
       .map(e => e.message)
     toast.error(messages)

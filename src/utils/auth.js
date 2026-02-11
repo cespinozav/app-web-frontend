@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { makeRequest } from 'utils/api'
 import { HTTP_METHODS } from './constants'
 import { parseJwt } from './misc'
@@ -7,6 +8,8 @@ const MOCK_DATA = {
   result: { user: 'JohnDoe', name: 'John Doe', job: 'Analista de Sistemas', token: 'asdasd', role: 'ADMIN' }
 }
 
+// Unused but kept for potential mock purposes
+/* eslint-disable no-unused-vars */
 const sessionDummy = () =>
   new Promise(resolve => {
     setTimeout(() => {
@@ -24,6 +27,7 @@ const authDummy = () =>
       resolve(data)
     }, 1000)
   })
+/* eslint-enable no-unused-vars */
 
 export function authenticate({ username, password }) {
   return makeRequest('/login', {

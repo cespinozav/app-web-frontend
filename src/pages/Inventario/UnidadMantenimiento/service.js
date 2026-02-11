@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import { UnitService } from 'services'
 
 const options = [

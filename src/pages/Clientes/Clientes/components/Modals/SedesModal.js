@@ -2,23 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
+import useToast from 'hooks/useToast';
 import SedesClienteService from 'services/SedesCliente';
 import SedeForm from '../Forms/SedeForm';
-import useToast from 'hooks/useToast';
 
 const PAGE_SIZE = 10;
 
 export default function SedesModal({ visible, onHide, cliente }) {
   const [sedes, setSedes] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(0);
+  const [page] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
   const [rowData, setRowData] = useState(null);
   const toast = useToast();
-  // Para paginación y estilo tipo mantenimiento
-  const PAGE_SIZE = 10;
 
   useEffect(() => {
     if (visible && cliente?.id) {
@@ -26,7 +23,6 @@ export default function SedesModal({ visible, onHide, cliente }) {
       SedesClienteService.get({ id_client: cliente.id, page, page_size: PAGE_SIZE })
         .then(res => {
           setSedes(res.results);
-          setTotalRecords(res.count);
         })
         .finally(() => setIsFetching(false));
     }
@@ -54,7 +50,7 @@ export default function SedesModal({ visible, onHide, cliente }) {
         toast.success('Sede agregada con éxito');
       }
       setShowForm(false);
-      resetForm && resetForm();
+      if (resetForm) resetForm();
     } catch (e) {
       toast.error(e.message || 'Error al guardar sede');
     } finally {

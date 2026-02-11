@@ -1,6 +1,6 @@
-import { FormInput } from 'components/FormControls'
+import FormInput from 'components/FormControls'
 import { Button } from 'primereact/button'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import useToast from 'hooks/useToast'
 
@@ -9,15 +9,13 @@ const DEFAULT_FIELDS = {
   userCreated: ''
 }
 
-import { useRef } from 'react'
-
-function CategoriaServiceForm({ defaultFields, onSubmitFields, isMutating, onClose }) {
+function CategoriaServiceForm({ defaultFields, onSubmitFields, isMutating }) {
   const toast = useToast()
   const {
     control,
     handleSubmit,
     reset,
-    formState: { dirtyFields, errors }
+    formState: { dirtyFields }
   } = useForm({
     defaultValues: DEFAULT_FIELDS
   })
@@ -26,9 +24,8 @@ function CategoriaServiceForm({ defaultFields, onSubmitFields, isMutating, onClo
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
   }, [defaultFields])
 
-  const isEditing = Boolean(defaultFields)
-  const handleError = errors => {
-    const messages = Object.values(errors)
+  const handleError = formErrors => {
+    const messages = Object.values(formErrors)
       .slice(0, 4)
       .map(e => e.message)
     toast.error(messages)
@@ -61,9 +58,6 @@ function CategoriaServiceForm({ defaultFields, onSubmitFields, isMutating, onClo
             autoComplete="off"
           />
         </div>
-        {errors.description && (
-          <div className="error-message">{errors.description.message}</div>
-        )}
       </div>
       <div className="buttons">
         <Button

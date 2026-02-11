@@ -36,10 +36,14 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     }
   }
   try {
+    let bodyValue = null;
+    if (body) {
+      bodyValue = typeof body === 'string' ? body : JSON.stringify(body);
+    }
     const response = await fetch(url, {
       method,
       headers: headers ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) } : HEADERS,
-      body: body ? (typeof body === 'string' ? body : JSON.stringify(body)) : null,
+      body: bodyValue,
       signal
     })
     if (response.ok) return response

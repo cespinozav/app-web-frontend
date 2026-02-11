@@ -7,12 +7,16 @@ export default function ModalForm({ isVisible, onClose, FormComponent, defaultFi
   const { mutate, isLoading } = useMutation(service.id, isEditing ? service.put : service.post)
   const toast = useToast()
   const onSubmitFields = async formData => {
+    const payload = { ...formData };
+    if (isEditing && defaultFields?.id) {
+      payload.id = defaultFields.id;
+    }
     mutate(
-      { ...formData },
+      payload,
       {
         onSuccess: () => {
           onClose()
-          toast.success(isEditing ? `Unidad editada con éxito` : 'Unidad agregada con éxito')
+          toast.success(isEditing ? 'Unidad editada con éxito' : 'Unidad agregada con éxito')
         },
         onError: err => {
           if (err?.result?.description && Array.isArray(err.result.description)) {

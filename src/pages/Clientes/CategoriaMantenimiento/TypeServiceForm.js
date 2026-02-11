@@ -1,5 +1,6 @@
-import { FormInput } from 'components/FormControls'
+import FormInput from 'components/FormControls'
 import { Button } from 'primereact/button'
+import { useMutation } from 'hooks/useRequest'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import useToast from 'hooks/useToast'
@@ -9,8 +10,6 @@ const DEFAULT_FIELDS = {
   userCreated: ''
 }
 
-import { useMutation } from 'hooks/useRequest'
-
 function CategoriaClienteServiceForm({ defaultFields, onClose, service }) {
   const isEditing = Boolean(defaultFields)
   const { mutate, isLoading } = useMutation(service.id, isEditing ? service.put : service.post)
@@ -19,7 +18,7 @@ function CategoriaClienteServiceForm({ defaultFields, onClose, service }) {
     control,
     handleSubmit,
     reset,
-    formState: { dirtyFields, errors }
+    formState: { dirtyFields }
   } = useForm({
     defaultValues: DEFAULT_FIELDS
   })
@@ -28,8 +27,8 @@ function CategoriaClienteServiceForm({ defaultFields, onClose, service }) {
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
   }, [defaultFields])
 
-  const handleError = errors => {
-    const messages = Object.values(errors)
+  const handleError = formErrors => {
+    const messages = Object.values(formErrors)
       .slice(0, 4)
       .map(e => e.message)
     toast.error(messages)

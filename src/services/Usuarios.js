@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, global-require */
 import { makeRequest } from 'utils/api';
 
 const ENDPOINT = '/personas';

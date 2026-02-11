@@ -1,5 +1,3 @@
-// Variable global para el tipo de moneda
-export const tipoMoneda = 'S/';
 import React, { useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { useForm, Controller } from 'react-hook-form'
@@ -15,26 +13,10 @@ import { useQuery } from 'hooks/useRequest'
 import { Skeleton } from 'primereact/skeleton'
 import './style.scss'
 
-const PAGE_SIZE = 10
+// Variable global para el tipo de moneda
+export const tipoMoneda = 'S/';
 
-function fetchProductos({ page = 1, search = '', cat = '', active = '' }) {
-  const params = []
-  if (search) params.push(`search=${encodeURIComponent(search)}`)
-  if (cat) params.push(`cat=${cat}`)
-  if (active !== '') params.push(`active=${active}`)
-  params.push(`page=${page}`)
-  params.push(`page_size=${PAGE_SIZE}`)
-  const query = params.length ? `?${params.join('&')}` : ''
-  return fetch(`/api/v1/productos/${query}`)
-    .then(res => res.json())
-    .then(res => {
-      const result = res.result || {}
-      return {
-        results: Array.isArray(result.results) ? result.results : [],
-        count: typeof result.count === 'number' ? result.count : 0
-      }
-    })
-}
+const PAGE_SIZE = 10
 
 export default function Productos() {
   const [page, setPage] = useState(1)
@@ -66,7 +48,7 @@ export default function Productos() {
   }, [])
 
   const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, state], () => {
-    let params = { page, page_size: PAGE_SIZE, search, cat };
+    const params = { page, page_size: PAGE_SIZE, search, cat };
     if (state !== '') params.state = state;
     return ProductoService.get(params);
   });
@@ -79,8 +61,8 @@ export default function Productos() {
   const [rowData, setRowData] = useState(null)
   const toast = useToast()
   // Formulario separado como en categoría
-  function ProductModalForm({ onClose, onSubmitFields, isMutating, defaultValues }) {
-    const { control, handleSubmit, reset, formState: { errors }, setValue } = useForm({
+  function ProductModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
       defaultValues: defaultValues || { nombre: '', cat: '', price: '', unit: '', active: 0 }
     })
     const [units, setUnits] = React.useState([])
@@ -107,20 +89,14 @@ export default function Productos() {
         })
         .finally(() => setUnitsLoading(false))
     }, [])
-    const handleError = errors => {
+    const handleError = formErrors => {
       // Mostrar solo los primeros 4 errores, como en mantenimiento
-      const messages = Object.values(errors)
+      const messages = Object.values(formErrors)
         .slice(0, 4)
         .map(e => e.message)
       toast.error(messages)
     }
-    const onSubmit = data => onSubmitFields(data, reset)
-    // Simula fetch de categorías, reemplaza por API real si es necesario
-    const fetchCategorias = async (query) => {
-      // Aquí deberías hacer un fetch real a tu API de categorías filtrando por query
-      // Por ahora, filtra las categorías simuladas
-      return categoriasSinTodas.filter(c => c.label.toLowerCase().includes(query.toLowerCase()))
-    }
+    const onSubmit = formData => onSubmitFieldsHandler(formData, reset)
     return (
       <form onSubmit={handleSubmit(onSubmit, handleError)}>
         <div className="content">
@@ -198,8 +174,8 @@ export default function Productos() {
           <Button
             aria-label="Guardar"
             label="Guardar"
-            loading={isMutating}
-            disabled={isMutating}
+            loading={isMutatingProp}
+            disabled={isMutatingProp}
             className="button p-button p-component"
             loadingIcon="pi pi-spin pi-spinner"
             iconPos="right"
@@ -234,7 +210,7 @@ export default function Productos() {
         })
         setShowAdd(false)
         setRowData(null)
-        resetForm && resetForm()
+        if (resetForm) resetForm();
         toast.success('Producto editado con éxito')
         refetch()
       } else {
@@ -245,9 +221,9 @@ export default function Productos() {
           unit_id: unitId,
           state: formData.state
         })
-        setShowAdd(false)
-        resetForm && resetForm()
-        toast.success('Producto agregado con éxito')
+        setShowAdd(false);
+        if (resetForm) resetForm();
+        toast.success('Producto agregado con éxito');
         refetch()
       }
     } catch (e) {
@@ -289,12 +265,12 @@ export default function Productos() {
           </span>
         </div>
         <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label style={{ minWidth: 70 }}>Categoría</label>
-          <Dropdown value={cat} options={categorias} onChange={e => { setCat(e.value); setPage(1) }} placeholder="Categoría" style={{ minWidth: 160 }} loading={catLoading} />
+          <label htmlFor="categoria-filter" style={{ minWidth: 70 }}>Categoría</label>
+          <Dropdown id="categoria-filter" value={cat} options={categorias} onChange={e => { setCat(e.value); setPage(1) }} placeholder="Categoría" style={{ minWidth: 160 }} loading={catLoading} />
         </div>
         <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label style={{ minWidth: 60 }}>Estado</label>
-          <Dropdown value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
+          <label htmlFor="estado-filter" style={{ minWidth: 60 }}>Estado</label>
+          <Dropdown id="estado-filter" value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
         </div>
       </div>
       <div className="tabla-productos">

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { makeRequest } from 'utils/api';
 
 const ResetPasswordService = {

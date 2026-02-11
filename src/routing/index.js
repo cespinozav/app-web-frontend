@@ -1,7 +1,6 @@
-
-
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from 'components/Layout';
 import Login from 'pages/Login';
 import NewPassword from 'pages/Login/NewPassword';
 import Dashboard from 'pages/Dashboard';
@@ -17,7 +16,6 @@ import MantenimientoUsuarios from 'pages/Usuarios/Mantenimiento';
 import Perfil from 'pages/Perfil';
 import ROUTES from 'routing/routes';
 import AuthGuard from './AuthGuard';
-import Layout from 'components/Layout';
 
 export default function AppRoutes() {
   return (

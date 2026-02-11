@@ -39,7 +39,6 @@ export default function ResetPasswordForm({ loading, onSend }) {
         onChange={e => setValue(e.target.value)}
         placeholder={type === 'email' ? 'Ingresa tu correo electrónico' : 'Ingresa tu usuario'}
         style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-        autoFocus
       />
       <Button
         label="Enviar enlace"

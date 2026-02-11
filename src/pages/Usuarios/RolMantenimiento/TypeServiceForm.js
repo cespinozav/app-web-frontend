@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import { useForm } from 'react-hook-form';
 import useToast from 'hooks/useToast';
 import { useMutation } from 'hooks/useRequest';
-import { FormInput } from 'components/FormControls';
+import FormInput from 'components/FormControls';
 
 const DEFAULT_FIELDS = {
   description: '',
@@ -19,7 +19,7 @@ export default function TypeServiceForm({ defaultFields, onClose, service }) {
     control,
     handleSubmit,
     reset,
-    formState: { dirtyFields, errors }
+    formState: { dirtyFields }
   } = useForm({
     defaultValues: DEFAULT_FIELDS
   });
@@ -30,8 +30,8 @@ export default function TypeServiceForm({ defaultFields, onClose, service }) {
     reset({ ...DEFAULT_FIELDS, ...defaultFields });
   }, [defaultFields, reset]);
 
-  const handleError = errors => {
-    const messages = Object.values(errors)
+  const handleError = formErrors => {
+    const messages = Object.values(formErrors)
       .slice(0, 4)
       .map(e => e.message);
     toast.error(messages);

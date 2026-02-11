@@ -1,4 +1,4 @@
-import { KitService } from 'services'
+/* eslint-disable global-require, import/no-duplicates */
 import { CategoriaService } from 'services'
 
 const options = [

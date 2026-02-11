@@ -1,9 +1,10 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import INVENTORY_ICON from 'assets/img/icons/file.svg'
-import PRODUCT_ICON from 'assets/img/icons/file.svg'
 import MAINTENANCE_ICON from 'assets/img/icons/settings.svg'
-import ROUTES, { SUB_ROUTES } from 'routing/routes'
+import { SUB_ROUTES } from 'routing/routes'
 import './style.scss'
+
+const PRODUCT_ICON = INVENTORY_ICON
 
 function InventarioModule() {
   const { pathname } = useLocation()
