@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import useToast from 'hooks/useToast';
 import SedesClienteService from 'services/SedesCliente';
+import EstadoBadge from 'components/styles/EstadoBadge';
 import SedeForm from '../Forms/SedeForm';
 
 const PAGE_SIZE = 10;
@@ -113,7 +114,7 @@ export default function SedesModal({ visible, onHide, cliente }) {
                       <td>{sede.id}</td>
                       <td>{sede.name_client}</td>
                       <td>{sede.nombre}</td>
-                      <td>{sede.state}</td>
+                      <td><EstadoBadge estado={sede.state} /></td>
                       <td>{sede.name_country}</td>
                       <td>{sede.adress}</td>
                       {/* <td>{sede.lat}</td>

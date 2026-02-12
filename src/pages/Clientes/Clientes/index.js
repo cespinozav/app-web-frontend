@@ -10,6 +10,7 @@ import CategoriaClienteService from 'services/CategoriaCliente';
 import ClienteService from 'services/Cliente';
 import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
+import EstadoBadge from 'components/styles/EstadoBadge';
 import SedesModal from './components/Modals/SedesModal';
 import '../style.scss';
 
@@ -258,7 +259,7 @@ export default function MantenimientoClientes() {
                     <td>{cli.abreviatura}</td>
                     <td>{cli.categoria || '-'}</td>
                     <td>{cli.ruc}</td>
-                    <td>{cli.active}</td>
+                    <td><EstadoBadge estado={cli.active} /></td>
                     <td>{cli.usuario_creado || '-'}</td>
                     <td>{cli.fecha_creada ? cli.fecha_creada : '-'}</td>
                     <td>

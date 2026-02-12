@@ -37,7 +37,7 @@ const GlobalProvider = ({ children }) => {
       <UserContext.Provider value={[userinfo, updateUserinfo]}>
         <ToastContext.Provider value={showToast}>
           {children}
-          <Toast ref={toastRef} position="bottom-right" />
+          <Toast ref={toastRef} position="bottom-right" life={5000} />
         </ToastContext.Provider>
       </UserContext.Provider>
       <ReactQueryDevtools initialIsOpen={false} />

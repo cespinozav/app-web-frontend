@@ -12,6 +12,7 @@ import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
 import CategoriaUsuarioService from 'services/CategoriaUsuario';
 import UsuariosService from 'services/Usuarios';
+import SedesAsignadasModal from './components/Modals/SedesAsignadasModal';
 import './style.scss';
 
 const PAGE_SIZE = 10;
@@ -30,6 +31,7 @@ export default function Usuarios() {
 	const [showAdd, setShowAdd] = useState(false);
 	const [isMutating, setIsMutating] = useState(false);
 	const [rowData, setRowData] = useState(null);
+	const [showSedesAsignadas, setShowSedesAsignadas] = useState(false);
 	const toast = useToast();
 
 	// Lógica para guardar usuario (placeholder)
@@ -296,6 +298,13 @@ export default function Usuarios() {
 													onClick={() => { setRowData(usuario); setShowAdd(true); }}
 													aria-label="Editar"
 												/>
+												<Button
+													icon="pi pi-map-marker"
+													className="p-button p-component p-button-icon-only"
+													style={{ background: 'transparent', marginLeft: 8 }}
+													onClick={() => { setRowData(usuario); setShowSedesAsignadas(true); }}
+													aria-label="Sedes Asignadas"
+												/>
 											</div>
 										</td>
 									</tr>
@@ -330,6 +339,12 @@ export default function Usuarios() {
 					} : undefined}
 				/>
 			</Dialog>
+			{/* Modal de Sedes Asignadas */}
+			<SedesAsignadasModal 
+				visible={showSedesAsignadas} 
+				onHide={() => setShowSedesAsignadas(false)} 
+				usuario={rowData} 
+			/>
 			<div className="paginate">
 				<Paginator
 					first={(page - 1) * PAGE_SIZE}

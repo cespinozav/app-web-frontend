@@ -50,7 +50,10 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     if (response.status === 401) {
       // Cerrar sesión automáticamente cuando se detecta 401
       removeSession();
-      window.location.href = '/login';
+      // No redirigir si ya estamos en login para permitir mostrar el mensaje de error
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
       const err = await response.json();
       throw err;
     }
@@ -77,7 +80,10 @@ export async function makeNoParamRequest(suffix, { headers, signal } = {}) {
     if (response.status === 401) {
       // Cerrar sesión automáticamente cuando se detecta 401
       removeSession();
-      window.location.href = '/login';
+      // No redirigir si ya estamos en login para permitir mostrar el mensaje de error
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     }
     const err = await response.json()
     throw err

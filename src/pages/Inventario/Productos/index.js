@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import { Dialog } from 'primereact/dialog'
+import { Skeleton } from 'primereact/skeleton'
 import { useForm, Controller } from 'react-hook-form'
 import useToast from 'hooks/useToast'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
-import ProductoService from 'services/Producto'
-import CategoriaService from 'services/Categoria'
-import UnitService from 'services/Unit'
 import { Paginator } from 'primereact/paginator'
 import { useQuery } from 'hooks/useRequest'
-import { Skeleton } from 'primereact/skeleton'
+import CategoriaService from 'services/Categoria'
+import ProductoService from 'services/Producto'
+import UnitService from 'services/Unit'
+import EstadoBadge from 'components/styles/EstadoBadge'
 import './style.scss'
 
 // Variable global para el tipo de moneda
@@ -300,7 +301,7 @@ export default function Productos() {
                     <td>{prod.category_name || '-'}</td>
                     <td>{typeof prod.price !== 'undefined' ? `${tipoMoneda} ${Number(prod.price).toFixed(2)}` : '-'}</td>
                     <td>{prod.unit_description ? `${prod.unit_description}${prod.unit_reference ? ` (${prod.unit_reference})` : ''}` : '-'}</td>
-                    <td>{prod.state}</td>
+                    <td><EstadoBadge estado={prod.state} /></td>
                     <td>
                       <div className="actions">
                         <Button

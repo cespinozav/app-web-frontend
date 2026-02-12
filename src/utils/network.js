@@ -68,7 +68,10 @@ export async function newtworkMultipartRequest(suffix, formData, method = HTTP_M
     if (response.ok) return response
     if (response.status === 401) {
       localStorage.clear();
-      window.location.href = '/login';
+      // No redirigir si ya estamos en login
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     }
     const err = await response.json()
     throw err

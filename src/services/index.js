@@ -11,3 +11,4 @@ export { default as CategoriaClienteService } from './CategoriaCliente'
 export { default as CiudadClienteService } from './CiudadCliente'
 
 export { default as CategoriaUsuarioService } from './CategoriaUsuario'
+export { default as PersonaSedeClienteService } from './PersonaSedeCliente'
