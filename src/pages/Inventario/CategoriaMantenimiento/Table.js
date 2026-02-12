@@ -3,11 +3,11 @@ import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 // ...existing code...
+import { Paginator } from 'primereact/paginator'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
 // Permite usar un ModalForm personalizado si se provee en option
-// import DeleteModal from './DeleteModal'
-import { Paginator } from 'primereact/paginator'
+import ModalForm from './ModalForm'
 
 const PAGE_SIZE = 10
 const MODAL = {
@@ -39,7 +39,7 @@ export default function Table({ option }) {
     setPage(1)
   }, [option])
 
-  const ModalFormComponent = CustomModalForm || require('./ModalForm').default
+  const ModalFormComponent = CustomModalForm || ModalForm
   return (
     <div className="kit-list maintenance">
       {isFetching ? (
