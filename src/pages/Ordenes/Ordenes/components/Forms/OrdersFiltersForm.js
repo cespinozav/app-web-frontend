@@ -1,5 +1,6 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
+import { Button } from 'primereact/button'
 
 export default function OrdersFiltersForm({
   search,
@@ -11,7 +12,9 @@ export default function OrdersFiltersForm({
   dateIni,
   setDateIni,
   dateFin,
-  setDateFin
+  setDateFin,
+  onExport,
+  isExporting
 }) {
   return (
     <div className="filtros-ordenes">
@@ -73,6 +76,17 @@ export default function OrdersFiltersForm({
           placeholder="Estado"
           style={{ minWidth: 180 }}
         />
+        <div className="orders-export-action">
+          <Button
+            icon="pi pi-file-excel"
+            className="p-button-success p-button-outlined"
+            onClick={onExport}
+            tooltip="Exportar Excel"
+            tooltipOptions={{ position: 'top' }}
+            aria-label="Exportar Excel"
+            loading={isExporting}
+          />
+        </div>
       </div>
     </div>
   )

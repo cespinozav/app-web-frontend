@@ -1,5 +1,6 @@
 /* eslint-disable camelcase, global-require */
-import { makeRequest } from 'utils/api'
+import { API, makeRequest } from 'utils/api'
+import { getBearer } from 'utils/auth'
 
 const ENDPOINT = '/ordenes-generales'
 
@@ -65,6 +66,37 @@ const GeneralOrdersService = {
     })
       .then(res => res.json())
       .then(parseResponse),
+
+  exportExcel: async ({ search = '', state = '', date_ini = '', date_fin = '' } = {}) => {
+    const params = new URLSearchParams()
+    if (search) params.set('search', search)
+    if (state) params.set('state', state)
+    if (date_ini) params.set('date_ini', date_ini)
+    if (date_fin) params.set('date_fin', date_fin)
+
+    const queryString = params.toString()
+    const url = `${API}/ordenes-generales/reporte-excel/${queryString ? `?${queryString}` : ''}`
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: getBearer()
+      }
+    })
+
+    if (!response.ok) {
+      let message = 'No se pudo exportar el reporte de órdenes'
+      try {
+        const errorData = await response.json()
+        message = errorData?.message || errorData?.detail || message
+      } catch (_e) {
+        // mantener mensaje por defecto si no hay json
+      }
+      throw new Error(message)
+    }
+
+    return response.blob()
+  },
 
   create: payload =>
     makeRequest('/ordenes/create', {

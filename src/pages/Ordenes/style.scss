@@ -107,6 +107,13 @@
   align-items: center;
 }
 
+.orders-export-action {
+  .p-button {
+    min-width: 42px;
+    height: 42px;
+  }
+}
+
 .tabla-ordenes {
   margin-bottom: 18px;
   overflow-x: auto;
