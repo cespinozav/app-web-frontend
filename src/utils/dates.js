@@ -1,9 +1,32 @@
 import moment from 'moment'
 import { DATE_STR_FORMAT } from './constants'
 
+const KNOWN_DATE_FORMATS = [
+  DATE_STR_FORMAT,
+  'DD-MM-YYYY',
+  'DD/MM/YYYY',
+  'YYYY-MM-DD',
+  'YYYY/MM/DD',
+  'YYYY-MM-DD HH:mm:ss',
+  'YYYY/MM/DD HH:mm:ss',
+  moment.ISO_8601
+]
+
+function parseDateValue(date) {
+  if (!date) return null
+  if (typeof date === 'string') {
+    const strictParsed = moment(date, KNOWN_DATE_FORMATS, true)
+    if (strictParsed.isValid()) return strictParsed
+    const fallbackParsed = moment(date)
+    return fallbackParsed.isValid() ? fallbackParsed : null
+  }
+  const parsed = moment(date)
+  return parsed.isValid() ? parsed : null
+}
+
 export function formatDate(date, sep = '/') {
-  const parsedDate = moment(date)
-  if (!parsedDate.isValid()) return '-'
+  const parsedDate = parseDateValue(date)
+  if (!parsedDate || !parsedDate.isValid()) return '-'
   return parsedDate.format(`DD${sep}MM${sep}YYYY`)
 }
 
@@ -27,8 +50,8 @@ export function parseStrToDate(date) {
 }
 
 export function formatDateMin(date) {
-  const parsedDate = moment(date)
-  if (!parsedDate.isValid()) return '-'
+  const parsedDate = parseDateValue(date)
+  if (!parsedDate || !parsedDate.isValid()) return '-'
   return parsedDate.format('DD/MM/YYYY HH:mm')
 }
 
