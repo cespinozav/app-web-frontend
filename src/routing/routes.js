@@ -3,6 +3,9 @@
 const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/',
+  ORDERS: '/ordenes',
+  ORDERS_MAIN: '/ordenes/listado',
+  ORDERS_CREATE: '/ordenes/agregar',
   INVENTORY: '/inventario',
   INVENTORY_PRODUCTS: '/inventario/productos',
   INVENTORY_MAINTENANCE: '/inventario/mantenimientos',
@@ -18,6 +21,10 @@ const ROUTES = {
 
 
 export const SUB_ROUTES = {
+  ORDERS: {
+    MAIN: `${ROUTES.ORDERS}/listado`,
+    CREATE: `${ROUTES.ORDERS}/agregar`
+  },
   INVENTORY: {
     PRODUCTS: `${ROUTES.INVENTORY}/productos`,
     MAINTENANCE: `${ROUTES.INVENTORY}/mantenimientos`

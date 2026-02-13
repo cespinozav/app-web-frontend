@@ -1,0 +1,155 @@
+import { Dialog } from 'primereact/dialog'
+import EstadoBadge from 'components/styles/EstadoBadge'
+
+export default function OrderDetailModal({ visible, onHide, selectedOrder, formatDate, formatCurrency }) {
+  const selectedOrderDetails = selectedOrder?.details || []
+  const shippingSteps = ['pendiente', 'confirmado', 'en camino', 'entregado']
+  const normalizedOrderState = String(selectedOrder?.state || '')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+  const currentStepIndex = shippingSteps.findIndex(step => step === normalizedOrderState)
+
+  const formatProductDetail = detail => {
+    const productInfo = detail?.producto_info || detail?.product_info || detail?.producto || detail?.product || {}
+    const name = productInfo?.nombre || productInfo?.description || productInfo?.name || `Producto ${productInfo?.id || detail?.producto || ''}`.trim()
+    const category = productInfo?.category_name || productInfo?.categoria_nombre || productInfo?.categoria || productInfo?.category?.name || productInfo?.category || 'Sin categoría'
+    const unitDescription = productInfo?.unit?.description || productInfo?.unidad?.description || productInfo?.unidad_info?.description || productInfo?.unidad_nombre || productInfo?.unit_name || productInfo?.unit || productInfo?.unidad || 'Sin unidad'
+    const unitReference = productInfo?.unit?.reference || productInfo?.unidad?.reference || productInfo?.unidad_info?.reference || productInfo?.referencia || productInfo?.unit_reference || ''
+
+    return `${name || '-'} - ${category || 'Sin categoría'} - ${unitDescription || 'Sin unidad'}${unitReference ? ` (${unitReference})` : ''}`
+  }
+
+  return (
+    <Dialog
+      visible={visible}
+      onHide={onHide}
+      header={'Detalle de Orden'}
+      style={{ width: '900px', maxWidth: '95vw' }}
+      modal
+    >
+      {selectedOrder && (
+        <div className="order-detail-modal">
+          <div className="order-detail-head">
+            <div className="order-detail-head-item">
+              <span>Orden</span>
+              <strong>{selectedOrder.code || '-'}</strong>
+            </div>
+            <div className="order-detail-head-item">
+              <span>Fecha</span>
+              <strong>{formatDate(selectedOrder.date)}</strong>
+            </div>
+            <div className="order-detail-head-item">
+              <span>Estado</span>
+              <EstadoBadge estado={selectedOrder.state} />
+            </div>
+          </div>
+
+          <div className="order-detail-grid">
+            <section className="order-detail-card">
+              <h4>Información de la orden</h4>
+              <div className="order-detail-info">
+                <div className="order-detail-field">
+                  <span>Cliente</span>
+                  <strong>{selectedOrder.client || '-'}</strong>
+                </div>
+                <div className="order-detail-field">
+                  <span>Sede</span>
+                  <strong>{selectedOrder.site || '-'}</strong>
+                </div>
+              </div>
+            </section>
+
+            <section className="order-detail-card order-detail-summary">
+              <h4>Pago</h4>
+              <div className="order-detail-summary-row">
+                <span>Subtotal</span>
+                <strong>{formatCurrency(selectedOrder.subtotal)}</strong>
+              </div>
+              <div className="order-detail-summary-row">
+                <span>Descuento</span>
+                <strong>{formatCurrency(selectedOrder.discount)}</strong>
+              </div>
+              <div className="order-detail-summary-row order-detail-summary-total">
+                <span>Total General</span>
+                <strong>{formatCurrency(selectedOrder.total)}</strong>
+              </div>
+              <div className="order-detail-summary-row">
+                <span>Método de Pago</span>
+                <strong>{selectedOrder.payment_method || '-'}</strong>
+              </div>
+            </section>
+          </div>
+
+          <section className="order-detail-card">
+            <h4>Productos</h4>
+            <div className="order-detail-table-wrap">
+              <table className="p-datatable table order-detail-table">
+                <thead>
+                  <tr>
+                    <th>Cantidad</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Descuento</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedOrderDetails.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} style={{ textAlign: 'center' }}>
+                        Sin detalles
+                      </td>
+                    </tr>
+                  ) : (
+                    selectedOrderDetails.map(detail => (
+                      <tr key={detail.id}>
+                        <td>{detail.cantidad || 0}</td>
+                        <td>{formatProductDetail(detail)}</td>
+                        <td>{formatCurrency(detail.precio_unitario)}</td>
+                        <td>{formatCurrency(detail.descuento_unitario)}</td>
+                        <td>{formatCurrency(detail.subtotal)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+          </section>
+
+          <div className="order-detail-shipping order-detail-card">
+            <h4>Envío</h4>
+            <div className="order-detail-field">
+              <span>Estado del envío</span>
+              {/* <div>
+                <EstadoBadge estado={selectedOrder.state} />
+              </div> */}
+            </div>
+
+            <div className="order-shipping-progress" role="list" aria-label="Progreso de envío">
+              {shippingSteps.map((step, index) => {
+                const isCompleted = currentStepIndex >= 0 && index < currentStepIndex
+                const isCurrent = currentStepIndex === index
+                let statusClass = 'is-pending'
+                if (isCurrent) {
+                  statusClass = 'is-current'
+                } else if (isCompleted) {
+                  statusClass = 'is-completed'
+                }
+                const stepLabel = step.charAt(0).toUpperCase() + step.slice(1)
+
+                return (
+                  <div className={`order-shipping-step ${statusClass}`} key={step} role="listitem">
+                    <span className="order-shipping-step-dot" />
+                    <span className="order-shipping-step-label">{stepLabel}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </Dialog>
+  )
+}

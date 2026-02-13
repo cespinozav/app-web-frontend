@@ -15,6 +15,9 @@ import Usuarios from 'pages/Usuarios/Usuarios';
 import MantenimientoUsuarios from 'pages/Usuarios/Mantenimiento';
 import Perfil from 'pages/Perfil';
 import ROUTES from 'routing/routes';
+import OrdenesModule from '../pages/Ordenes/OrdenesModule';
+import Ordenes from '../pages/Ordenes/Ordenes';
+import NuevaOrden from '../pages/Ordenes/NuevaOrden';
 import AuthGuard from './AuthGuard';
 
 export default function AppRoutes() {
@@ -26,6 +29,11 @@ export default function AppRoutes() {
         <Route element={<AuthGuard />}>
           <Route element={<Layout />}>
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.ORDERS} element={<OrdenesModule />}>
+              <Route index element={<Navigate to={ROUTES.ORDERS_MAIN} replace />} />
+              <Route path={ROUTES.ORDERS_MAIN} element={<Ordenes />} />
+              <Route path={ROUTES.ORDERS_CREATE} element={<NuevaOrden />} />
+            </Route>
             <Route path={ROUTES.INVENTORY} element={<InventarioModule />}>
               <Route index element={<Navigate to={ROUTES.INVENTORY_PRODUCTS} replace />} />
               <Route path={ROUTES.INVENTORY_PRODUCTS} element={<Productos />} />

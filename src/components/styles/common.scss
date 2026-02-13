@@ -3,7 +3,8 @@
   display: flex;
   gap: 5px;
 }
-.actions .p-button.p-button-icon-only {
+.actions .p-button.p-button-icon-only 
+{  background: transparent !important;
   transition: background 0.2s;
   border-radius: 50%;
 }
