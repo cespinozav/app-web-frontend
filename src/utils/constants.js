@@ -1,6 +1,6 @@
 export const APP_VERSION = '0.2.19'
 
-export const DATE_STR_FORMAT = 'DD-MM-YYYY'
+export const DATE_STR_FORMAT = 'DD/MM/YYYY'
 
 export const HTTP_METHODS = {
   GET: 'GET',

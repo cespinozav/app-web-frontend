@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Paginator } from 'primereact/paginator'
 import { useQuery } from 'hooks/useRequest'
+import { formatDate } from 'utils/dates'
 import { SUB_ROUTES } from 'routing/routes'
 import GeneralOrdersService from 'services/GeneralOrders'
 import OrdersFiltersForm from './components/Forms/OrdersFiltersForm'
@@ -19,13 +20,6 @@ const stateOptions = [
   { label: 'Entregado', value: 'entregado' }
 ]
 
-const formatDate = value => {
-  if (!value) return '-'
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return date.toLocaleDateString('es-PE')
-}
-
 const formatCurrency = value => `S/ ${Number(value || 0).toFixed(2)}`
 
 export default function Ordenes() {
@@ -33,11 +27,20 @@ export default function Ordenes() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [state, setState] = useState('')
+  const [dateIni, setDateIni] = useState('')
+  const [dateFin, setDateFin] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
 
-  const { data, isFetching } = useQuery(['general-orders', page, search, state], () =>
-    GeneralOrdersService.get({ page, page_size: PAGE_SIZE, search, state })
+  const { data, isFetching } = useQuery(['general-orders', page, search, state, dateIni, dateFin], () =>
+    GeneralOrdersService.get({
+      page,
+      page_size: PAGE_SIZE,
+      search,
+      state,
+      date_ini: dateIni,
+      date_fin: dateFin
+    })
   )
 
   const orders = data?.results || []
@@ -63,6 +66,10 @@ export default function Ordenes() {
           state={state}
           setState={setState}
           stateOptions={stateOptions}
+          dateIni={dateIni}
+          setDateIni={setDateIni}
+          dateFin={dateFin}
+          setDateFin={setDateFin}
         />
 
         <OrdersTable

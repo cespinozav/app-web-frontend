@@ -30,7 +30,7 @@ export default function OrderForm({
         <div className="order-section-header">
           <div>
             <h4 className="orden-form-title">Generar Orden</h4>
-            <p className="order-form-subtitle">Agrega productos al carrito y confirma la orden.</p>
+            <p className="order-form-subtitle">Agrega productos al carrito y genera la orden.</p>
           </div>
           <div className="order-kpis">
             <div className="order-kpi-item">
@@ -46,7 +46,9 @@ export default function OrderForm({
 
         <section className="order-block">
           <div className="mb-3 search-wrapper">
-            <label htmlFor="buscar_producto" className="form-label">Buscar Producto</label>
+            <label htmlFor="buscar_producto" className="form-label">
+              Buscar Producto
+            </label>
             <AutoComplete
               inputId="buscar_producto"
               value={productQuery}
@@ -65,7 +67,9 @@ export default function OrderForm({
 
         <section className="order-block">
           <div className="order-block-header">
-            <h5><i className="pi pi-shopping-cart" /> Carrito</h5>
+            <h5>
+              <i className="pi pi-shopping-cart" /> Carrito
+            </h5>
             <span className="order-chip">{cart.length} productos</span>
           </div>
 
@@ -85,7 +89,9 @@ export default function OrderForm({
 
         <section className="order-block">
           <div className="mb-3">
-            <label htmlFor="id_cliente" className="form-label">Cliente</label>
+            <label htmlFor="id_cliente" className="form-label">
+              Cliente
+            </label>
             <Dropdown
               inputId="id_cliente"
               value={selectedClient}
@@ -100,7 +106,9 @@ export default function OrderForm({
           </div>
 
           <div className="mb-3">
-            <label htmlFor="id_sede" className="form-label">Sede</label>
+            <label htmlFor="id_sede" className="form-label">
+              Sede
+            </label>
             <Dropdown
               inputId="id_sede"
               value={selectedSite}

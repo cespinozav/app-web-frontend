@@ -1,5 +1,7 @@
 import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
 import EstadoBadge from 'components/styles/EstadoBadge'
+import { openGoogleMapsByCoordinates } from 'components/Maps/maps'
 
 export default function OrderDetailModal({ visible, onHide, selectedOrder, formatDate, formatCurrency }) {
   const selectedOrderDetails = selectedOrder?.details || []
@@ -9,15 +11,52 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase()
   const currentStepIndex = shippingSteps.findIndex(step => step === normalizedOrderState)
+  const siteAddress =
+    selectedOrder?.site_address ||
+    selectedOrder?.raw?.sede_info?.adress ||
+    selectedOrder?.raw?.sede_info?.address ||
+    '-'
+  const siteLat = selectedOrder?.site_lat || selectedOrder?.raw?.sede_info?.lat || ''
+  const siteLong = selectedOrder?.site_long || selectedOrder?.raw?.sede_info?.long || ''
+
+  const openSiteInMaps = () => {
+    openGoogleMapsByCoordinates(siteLat, siteLong)
+  }
 
   const formatProductDetail = detail => {
     const productInfo = detail?.producto_info || detail?.product_info || detail?.producto || detail?.product || {}
-    const name = productInfo?.nombre || productInfo?.description || productInfo?.name || `Producto ${productInfo?.id || detail?.producto || ''}`.trim()
-    const category = productInfo?.category_name || productInfo?.categoria_nombre || productInfo?.categoria || productInfo?.category?.name || productInfo?.category || 'Sin categoría'
-    const unitDescription = productInfo?.unit?.description || productInfo?.unidad?.description || productInfo?.unidad_info?.description || productInfo?.unidad_nombre || productInfo?.unit_name || productInfo?.unit || productInfo?.unidad || 'Sin unidad'
-    const unitReference = productInfo?.unit?.reference || productInfo?.unidad?.reference || productInfo?.unidad_info?.reference || productInfo?.referencia || productInfo?.unit_reference || ''
+    const name =
+      productInfo?.nombre ||
+      productInfo?.description ||
+      productInfo?.name ||
+      `Producto ${productInfo?.id || detail?.producto || ''}`.trim()
+    const category =
+      productInfo?.category_name ||
+      productInfo?.categoria_nombre ||
+      productInfo?.categoria ||
+      productInfo?.category?.name ||
+      productInfo?.category ||
+      'Sin categoría'
+    const unitDescription =
+      productInfo?.unit?.description ||
+      productInfo?.unidad?.description ||
+      productInfo?.unidad_info?.description ||
+      productInfo?.unidad_nombre ||
+      productInfo?.unit_name ||
+      productInfo?.unit ||
+      productInfo?.unidad ||
+      'Sin unidad'
+    const unitReference =
+      productInfo?.unit?.reference ||
+      productInfo?.unidad?.reference ||
+      productInfo?.unidad_info?.reference ||
+      productInfo?.referencia ||
+      productInfo?.unit_reference ||
+      ''
 
-    return `${name || '-'} - ${category || 'Sin categoría'} - ${unitDescription || 'Sin unidad'}${unitReference ? ` (${unitReference})` : ''}`
+    return `${name || '-'} - ${category || 'Sin categoría'} - ${unitDescription || 'Sin unidad'}${
+      unitReference ? ` (${unitReference})` : ''
+    }`
   }
 
   return (
@@ -47,7 +86,7 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
 
           <div className="order-detail-grid">
             <section className="order-detail-card">
-              <h4>Información de la orden</h4>
+              <h4>Información de Cliente</h4>
               <div className="order-detail-info">
                 <div className="order-detail-field">
                   <span>Cliente</span>
@@ -56,6 +95,24 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
                 <div className="order-detail-field">
                   <span>Sede</span>
                   <strong>{selectedOrder.site || '-'}</strong>
+                </div>
+                <div className="order-detail-field">
+                  <span>Dirección de Sede</span>
+                  <strong>{siteAddress || '-'}</strong>
+                </div>
+                <div className="order-detail-field">
+                  <span>Ubicación</span>
+                  <div className="actions">
+                    <Button
+                      icon="pi pi-map-marker"
+                      className="p-button p-component p-button-icon-only"
+                      style={{ background: 'transparent', color: '#007bff' }}
+                      title="Ver ubicación en Google Maps"
+                      aria-label="Ver ubicación en Google Maps"
+                      onClick={openSiteInMaps}
+                      disabled={!(siteLat && siteLong)}
+                    />
+                  </div>
                 </div>
               </div>
             </section>
@@ -115,7 +172,6 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
                 </tbody>
               </table>
             </div>
-
           </section>
 
           <div className="order-detail-shipping order-detail-card">

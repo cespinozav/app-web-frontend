@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import EstadoBadge from 'components/styles/EstadoBadge';
+import { formatDate } from 'utils/dates';
 
 const PAGE_SIZE = 10;
 
@@ -38,7 +39,7 @@ export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }
                   <td>{cli.ruc}</td>
                   <td><EstadoBadge estado={cli.active} /></td>
                   <td>{cli.usuario_creado || '-'}</td>
-                  <td>{cli.fecha_creada ? cli.fecha_creada : '-'}</td>
+                  <td>{formatDate(cli.fecha_creada)}</td>
                   <td>
                     <div className="actions">
                       <Button

@@ -1,8 +1,10 @@
 import moment from 'moment'
 import { DATE_STR_FORMAT } from './constants'
 
-export function formatDate(date, sep = '-') {
-  return moment(date).format(`DD${sep}MM${sep}YYYY`)
+export function formatDate(date, sep = '/') {
+  const parsedDate = moment(date)
+  if (!parsedDate.isValid()) return '-'
+  return parsedDate.format(`DD${sep}MM${sep}YYYY`)
 }
 
 export function formatSearchDate(date) {
@@ -15,14 +17,19 @@ export function addDays(date, daysNum = 1) {
 
 export function parseStrToDate(date) {
   if (date) {
-    const momentDate = typeof date === 'string' ? moment(date, DATE_STR_FORMAT) : moment(date)
+    const momentDate =
+      typeof date === 'string'
+        ? moment(date, [DATE_STR_FORMAT, 'DD-MM-YYYY', 'YYYY-MM-DD', moment.ISO_8601], true)
+        : moment(date)
     return momentDate.toDate()
   }
   return null
 }
 
 export function formatDateMin(date) {
-  return moment(date).format('DD-MM-YYYY HH:mm')
+  const parsedDate = moment(date)
+  if (!parsedDate.isValid()) return '-'
+  return parsedDate.format('DD/MM/YYYY HH:mm')
 }
 
 export function parseToDate(dateStr, sep = '/') {

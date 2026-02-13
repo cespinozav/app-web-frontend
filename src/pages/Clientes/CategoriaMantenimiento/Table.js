@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
+import { formatDate } from 'utils/dates'
 import ModalForm from './ModalForm'
 
 const PAGE_SIZE = 10
@@ -54,7 +55,12 @@ export default function Table({ option }) {
           {/* Eliminar modal de eliminación */}
           <DataTable value={data} paginator={false} rows={PAGE_SIZE} responsiveLayout="scroll" className="p-datatable-sm">
             {option.schema.map(col => (
-              <Column key={col.field} field={col.field} header={col.label} />
+              <Column
+                key={col.field}
+                field={col.field}
+                header={col.label}
+                body={col.field === 'date_created' ? row => formatDate(row[col.field]) : undefined}
+              />
             ))}
             <Column
               body={row => (

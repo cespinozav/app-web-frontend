@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
+import { formatDate } from 'utils/dates'
 import ModalForm from './ModalForm'
 
 const PAGE_SIZE = 10
@@ -52,7 +53,7 @@ export default function UnidadTable({ option }) {
             <Column field="reference" header="Referencia" />
             <Column field="state" header="Estado" />
             <Column field="user_created" header="Creador" />
-            <Column field="date_created" header="Fecha Creación" />
+            <Column field="date_created" header="Fecha Creación" body={row => formatDate(row.date_created)} />
             <Column
               header="Acción"
               body={row => (

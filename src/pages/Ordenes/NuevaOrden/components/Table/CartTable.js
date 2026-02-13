@@ -18,7 +18,9 @@ export default function CartTable({ cart, toCurrency, updateCartItem, removeProd
         <tbody>
           {cart.length === 0 ? (
             <tr>
-              <td colSpan={6} style={{ textAlign: 'center' }}>No hay productos en el carrito</td>
+              <td colSpan={6} style={{ textAlign: 'center' }}>
+                No hay productos en el carrito
+              </td>
             </tr>
           ) : (
             cart.map(item => {

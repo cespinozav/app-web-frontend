@@ -5,6 +5,7 @@ import { Skeleton } from 'primereact/skeleton';
 import useToast from 'hooks/useToast';
 import PersonaSedeClienteService from 'services/PersonaSedeCliente';
 import EstadoBadge from 'components/styles/EstadoBadge';
+import { formatDateMin } from 'utils/dates';
 import AsignacionSedeForm from '../Forms/AsignacionSedeForm';
 
 const PAGE_SIZE = 10;
@@ -150,17 +151,7 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
                       <td>{sede.sede_cliente_name || '-'}</td>
                       <td>{sede.rol_name || '-'}</td>
                       <td><EstadoBadge estado={sede.state} /></td>
-                      <td>
-                        {sede.date_joined 
-                          ? new Date(sede.date_joined).toLocaleDateString('es-PE', {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })
-                          : '-'}
-                      </td>
+                      <td>{formatDateMin(sede.date_joined)}</td>
                       <td>
                         <div className="actions">
                           <Button

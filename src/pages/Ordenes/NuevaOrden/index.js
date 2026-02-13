@@ -80,8 +80,12 @@ export default function NuevaOrden() {
         const options = (response?.results || []).map(product => ({
           id: product.id,
           code: product.codigo || product.code || product.sku || '',
-        //   name: product.nombre || product.description || `Producto ${product.id}`,
-          description: `${product.nombre || product.description || `Producto ${product.id}`} - ${product.category_name || 'Sin categoría'} - ${product.unit?.description || 'Sin unidad'}${product.unit?.reference ? ` (${product.unit.reference})` : ''}`,
+          //   name: product.nombre || product.description || `Producto ${product.id}`,
+          description: `${product.nombre || product.description || `Producto ${product.id}`} - ${
+            product.category_name || 'Sin categoría'
+          } - ${product.unit?.description || 'Sin unidad'}${
+            product.unit?.reference ? ` (${product.unit.reference})` : ''
+          }`,
           price: Number(product.price || 0)
         }))
         setProductSuggestions(options)
@@ -96,18 +100,19 @@ export default function NuevaOrden() {
     setCart(currentCart => {
       const existing = currentCart.find(item => item.id === product.id)
       if (existing) {
-        return currentCart.map(item => (
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        ))
+        return currentCart.map(item => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
       }
 
-      return [...currentCart, {
-        id: product.id,
-        description: product.description,
-        price: Number(product.price || 0),
-        discount: 0,
-        quantity: 1
-      }]
+      return [
+        ...currentCart,
+        {
+          id: product.id,
+          description: product.description,
+          price: Number(product.price || 0),
+          discount: 0,
+          quantity: 1
+        }
+      ]
     })
   }
 
@@ -116,14 +121,12 @@ export default function NuevaOrden() {
   }
 
   const updateCartItem = (productId, patch) => {
-    setCart(currentCart => currentCart.map(item => (
-      item.id === productId ? { ...item, ...patch } : item
-    )))
+    setCart(currentCart => currentCart.map(item => (item.id === productId ? { ...item, ...patch } : item)))
   }
 
   const summary = useMemo(() => {
-    const subtotal = cart.reduce((acc, item) => acc + (Number(item.price) * Number(item.quantity)), 0)
-    const discount = cart.reduce((acc, item) => acc + (Number(item.discount) * Number(item.quantity)), 0)
+    const subtotal = cart.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0)
+    const discount = cart.reduce((acc, item) => acc + Number(item.discount) * Number(item.quantity), 0)
     const total = Math.max(subtotal - discount, 0)
     return { subtotal, discount, total }
   }, [cart])

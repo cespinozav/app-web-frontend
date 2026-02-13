@@ -12,6 +12,7 @@ import { Paginator } from 'primereact/paginator';
 import { useQuery } from 'hooks/useRequest';
 import CategoriaUsuarioService from 'services/CategoriaUsuario';
 import UsuariosService from 'services/Usuarios';
+import { formatDate } from 'utils/dates';
 import SedesAsignadasModal from './components/Modals/SedesAsignadasModal';
 import './style.scss';
 
@@ -288,7 +289,7 @@ export default function Usuarios() {
 										<td>{usuario.categoria?.description || '-'}</td>
 										<td>{usuario.cliente?.description || '-'}</td>
 										<td>{usuario.usuarioCreado}</td>
-										<td>{usuario.fechaCreada || '-'}</td>
+										<td>{formatDate(usuario.fechaCreada)}</td>
 										<td>
 											<div className="actions">
 												<Button

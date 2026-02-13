@@ -35,13 +35,11 @@ const parseResponse = response => {
         order.cliente?.nombre ||
         order.cliente ||
         '-',
-      site:
-        order.sede_info?.nombre ||
-        order.site_name ||
-        order.sede_nombre ||
-        order.sede?.nombre ||
-        order.sede ||
-        '-',
+      site: order.sede_info?.nombre || order.site_name || order.sede_nombre || order.sede?.nombre || order.sede || '-',
+      site_address:
+        order.sede_info?.adress || order.sede_info?.address || order.sede_adress || order.sede_address || '-',
+      site_lat: order.sede_info?.lat || order.sede?.lat || '',
+      site_long: order.sede_info?.long || order.sede?.long || '',
       subtotal: Number(order.subtotal ?? 0),
       discount: Number(order.descuento ?? order.discount ?? 0),
       total: Number(order.total ?? order.total_amount ?? order.monto_total ?? 0),
@@ -60,9 +58,9 @@ const parseResponse = response => {
 }
 
 const GeneralOrdersService = {
-  get: ({ page = 1, page_size = 10, search = '', state = '' } = {}) =>
+  get: ({ page = 1, page_size = 10, search = '', state = '', date_ini = '', date_fin = '' } = {}) =>
     makeRequest(`${ENDPOINT}`, {
-      params: { page, page_size, search, state },
+      params: { page, page_size, search, state, date_ini, date_fin },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
       .then(res => res.json())

@@ -6,6 +6,7 @@ import { DataTable } from 'primereact/datatable'
 import { Paginator } from 'primereact/paginator'
 import { Skeleton } from 'primereact/skeleton'
 import { useEffect, useState } from 'react'
+import { formatDate } from 'utils/dates'
 // Permite usar un ModalForm personalizado si se provee en option
 import ModalForm from './ModalForm'
 
@@ -59,7 +60,7 @@ export default function Table({ option }) {
             <Column field="id" header="ID" />
             <Column field="description" header="Nombre" />
             <Column field="user_created" header="Creador" />
-            <Column field="date_created" header="Fecha Creación" />
+            <Column field="date_created" header="Fecha Creación" body={row => formatDate(row.date_created)} />
             <Column
               header="Acción"
               body={row => (
