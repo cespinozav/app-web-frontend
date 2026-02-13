@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Button } from 'primereact/button';
+import { useState } from 'react'
+import { Button } from 'primereact/button'
 
 export default function ResetPasswordForm({ loading, onSend }) {
-  const [value, setValue] = useState('');
-  const [type, setType] = useState('email');
+  const [value, setValue] = useState('')
+  const [type, setType] = useState('email')
   return (
     <form
       onSubmit={e => {
-        e.preventDefault();
+        e.preventDefault()
         if (value) {
-          if (type === 'email') onSend({ email: value });
-          else onSend({ username: value });
+          if (type === 'email') onSend({ email: value })
+          else onSend({ username: value })
         }
       }}
       style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
@@ -49,5 +49,5 @@ export default function ResetPasswordForm({ loading, onSend }) {
         icon="pi pi-envelope"
       />
     </form>
-  );
+  )
 }

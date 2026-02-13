@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import RolesService from 'services/Roles';
+import RolesService from 'services/Roles'
 
 const options = [
   {
@@ -19,6 +19,6 @@ const options = [
       delete: RolesService.delete
     }
   }
-];
+]
 
-export default options;
+export default options

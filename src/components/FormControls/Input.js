@@ -9,9 +9,7 @@ export default function FormInput({ control, name, rules, ...inputProps }) {
       render={({ field, fieldState }) => (
         <>
           <input {...field} {...inputProps} />
-          {fieldState.error && (
-            <span style={{ color: 'red', fontSize: 12 }}>{fieldState.error.message}</span>
-          )}
+          {fieldState.error && <span style={{ color: 'red', fontSize: 12 }}>{fieldState.error.message}</span>}
         </>
       )}
     />

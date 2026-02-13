@@ -7,35 +7,32 @@ export default function ModalForm({ isVisible, onClose, FormComponent, defaultFi
   const { mutate, isLoading } = useMutation(service.id, isEditing ? service.put : service.post)
   const toast = useToast()
   const onSubmitFields = async formData => {
-    const payload = { ...formData };
+    const payload = { ...formData }
     if (isEditing && defaultFields?.id) {
-      payload.id = defaultFields.id;
+      payload.id = defaultFields.id
     }
-    mutate(
-      payload,
-      {
-        onSuccess: () => {
-          onClose()
-          toast.success(isEditing ? 'Unidad editada con éxito' : 'Unidad agregada con éxito')
-        },
-        onError: err => {
-          if (err?.result?.description && Array.isArray(err.result.description)) {
-            toast.error(err.result.description[0])
-            return
-          }
-          if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
-            window.location.href = '/login'
-            return
-          }
-          const strMessage = String(err)
-          if (strMessage.includes('already exists')) {
-            toast.error('La unidad ya existe')
-          } else {
-            toast.error(err?.message || err)
-          }
+    mutate(payload, {
+      onSuccess: () => {
+        onClose()
+        toast.success(isEditing ? 'Unidad editada con éxito' : 'Unidad agregada con éxito')
+      },
+      onError: err => {
+        if (err?.result?.description && Array.isArray(err.result.description)) {
+          toast.error(err.result.description[0])
+          return
+        }
+        if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
+          window.location.href = '/login'
+          return
+        }
+        const strMessage = String(err)
+        if (strMessage.includes('already exists')) {
+          toast.error('La unidad ya existe')
+        } else {
+          toast.error(err?.message || err)
         }
       }
-    )
+    })
   }
   const headerTitle = isEditing ? 'Editar unidad' : 'Agregar unidad'
   return (

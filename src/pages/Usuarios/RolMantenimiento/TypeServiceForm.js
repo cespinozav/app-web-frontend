@@ -1,20 +1,19 @@
-import React from 'react';
-import { Button } from 'primereact/button';
-import { useForm } from 'react-hook-form';
-import useToast from 'hooks/useToast';
-import { useMutation } from 'hooks/useRequest';
-import FormInput from 'components/FormControls';
+import React from 'react'
+import { Button } from 'primereact/button'
+import { useForm } from 'react-hook-form'
+import useToast from 'hooks/useToast'
+import { useMutation } from 'hooks/useRequest'
+import FormInput from 'components/FormControls'
 
 const DEFAULT_FIELDS = {
   description: '',
   user_created: ''
-};
+}
 
 export default function TypeServiceForm({ defaultFields, onClose, service }) {
-    console.log('Render TypeServiceForm', { defaultFields, service });
-  const isEditing = Boolean(defaultFields && defaultFields.id);
-  const { mutate, isLoading } = useMutation('roles', isEditing ? service.put : service.post);
-  const toast = useToast();
+  const isEditing = Boolean(defaultFields && defaultFields.id)
+  const { mutate, isLoading } = useMutation('roles', isEditing ? service.put : service.post)
+  const toast = useToast()
   const {
     control,
     handleSubmit,
@@ -22,72 +21,65 @@ export default function TypeServiceForm({ defaultFields, onClose, service }) {
     formState: { dirtyFields }
   } = useForm({
     defaultValues: DEFAULT_FIELDS
-  });
-  const formRef = React.useRef(null);
+  })
+  const formRef = React.useRef(null)
 
   React.useEffect(() => {
-    console.log('useEffect defaultFields:', defaultFields);
-    reset({ ...DEFAULT_FIELDS, ...defaultFields });
-  }, [defaultFields, reset]);
+    reset({ ...DEFAULT_FIELDS, ...defaultFields })
+  }, [defaultFields, reset])
 
   const handleError = formErrors => {
     const messages = Object.values(formErrors)
       .slice(0, 4)
-      .map(e => e.message);
-    toast.error(messages);
-  };
+      .map(e => e.message)
+    toast.error(messages)
+  }
 
   const onSubmit = formData => {
-      console.log('onSubmit', { formData, isEditing, dirtyFields });
     if (isEditing) {
-      const dirtyList = Object.keys(dirtyFields);
+      const dirtyList = Object.keys(dirtyFields)
       if (dirtyList.length === 0) {
-        toast.error('Debe cambiar algún campo');
-        return;
+        toast.error('Debe cambiar algún campo')
+        return
       }
     }
-    let payload;
+    let payload
     if (isEditing) {
       payload = {
         id: defaultFields?.id,
         description: formData.description,
         state: 1
-      };
+      }
     } else {
       payload = {
         description: formData.description,
         state: 1,
         user_created: defaultFields?.user_created || '72553586'
-      };
+      }
     }
-    mutate(
-      payload,
-      {
-        onSuccess: () => {
-          console.log('onSuccess');
-          onClose();
-          toast.success(isEditing ? 'Rol actualizado con éxito' : 'Rol creado con éxito');
-        },
-        onError: err => {
-          console.error('onError', err);
-          if (err?.result?.description && Array.isArray(err.result.description)) {
-            toast.error(err.result.description[0]);
-            return;
-          }
-          if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
-            window.location.href = '/login';
-            return;
-          }
-          const strMessage = String(err);
-          if (strMessage.includes('already exists')) {
-            toast.error('El rol ya existe');
-          } else {
-            toast.error(err?.message || err);
-          }
+    mutate(payload, {
+      onSuccess: () => {
+        onClose()
+        toast.success(isEditing ? 'Rol actualizado con éxito' : 'Rol creado con éxito')
+      },
+      onError: err => {
+        if (err?.result?.description && Array.isArray(err.result.description)) {
+          toast.error(err.result.description[0])
+          return
+        }
+        if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
+          window.location.href = '/login'
+          return
+        }
+        const strMessage = String(err)
+        if (strMessage.includes('already exists')) {
+          toast.error('El rol ya existe')
+        } else {
+          toast.error(err?.message || err)
         }
       }
-    );
-  };
+    })
+  }
 
   return (
     <form ref={formRef} onSubmit={handleSubmit(onSubmit, handleError)}>
@@ -116,5 +108,5 @@ export default function TypeServiceForm({ defaultFields, onClose, service }) {
         <Button label="Cancelar" type="button" className="p-button-secondary" onClick={onClose} />
       </div>
     </form>
-  );
+  )
 }

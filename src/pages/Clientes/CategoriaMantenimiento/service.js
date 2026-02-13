@@ -1,4 +1,5 @@
 import { CategoriaClienteService } from 'services'
+import TypeServiceForm from './TypeServiceForm'
 
 const options = [
   {
@@ -10,7 +11,7 @@ const options = [
       { field: 'user_created', label: 'Creador' },
       { field: 'date_created', label: 'Fecha de creación' }
     ],
-    FormComponent: require('./TypeServiceForm').default,
+    FormComponent: TypeServiceForm,
     service: {
       id: 'categorias_cliente',
       post: CategoriaClienteService.post,

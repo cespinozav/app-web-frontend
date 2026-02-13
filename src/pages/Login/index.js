@@ -27,7 +27,7 @@ const Login = () => {
       navigate('/')
     }
     // Si no hay token, no hacer nada, mostrar login
-  }, [])
+  }, [navigate])
 
   const toast = useToast()
   const onLogin = async formData => {
@@ -37,14 +37,14 @@ const Login = () => {
       setUserinfo(data)
       navigate('/')
     } catch (e) {
-      let message = 'Hubo un error al iniciar sesión';
+      let message = 'Hubo un error al iniciar sesión'
       if (e && typeof e === 'object') {
-        if (e.result && e.result.detail) message = e.result.detail;
-        else if (e.message) message = e.message;
+        if (e.result && e.result.detail) message = e.result.detail
+        else if (e.message) message = e.message
       }
-      toast.error(message);
+      toast.error(message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -103,10 +103,17 @@ const Login = () => {
                 label="¿Olvidaste tu contraseña?"
                 className="p-button-link"
                 onClick={e => {
-                  e.preventDefault();
-                  setShowResetModal(true);
+                  e.preventDefault()
+                  setShowResetModal(true)
                 }}
-                style={{ background: '#f8d7da', color: '#721c24', fontWeight: 600, fontSize: '0.85rem', padding: '4px 12px', borderRadius: 4 }}
+                style={{
+                  background: '#f8d7da',
+                  color: '#721c24',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  padding: '4px 12px',
+                  borderRadius: 4
+                }}
               />
             </div>
           </div>
@@ -115,22 +122,25 @@ const Login = () => {
           visible={showResetModal}
           modal
           header="Recuperar contraseña"
-          onHide={() => { setShowResetModal(false); setResetSent(false); }}
+          onHide={() => {
+            setShowResetModal(false)
+            setResetSent(false)
+          }}
           closable={true}
         >
           {!resetSent ? (
             <ResetPasswordForm
               loading={resetLoading}
               onSend={async data => {
-                setResetLoading(true);
+                setResetLoading(true)
                 try {
-                  await ResetPasswordService.requestReset(data);
-                  setResetSent(true);
-                  toast.success('Se ha enviado el enlace de recuperación a tu correo o usuario');
+                  await ResetPasswordService.requestReset(data)
+                  setResetSent(true)
+                  toast.success('Se ha enviado el enlace de recuperación a tu correo o usuario')
                 } catch (e) {
-                  toast.error('No se pudo enviar el enlace');
+                  toast.error('No se pudo enviar el enlace')
                 } finally {
-                  setResetLoading(false);
+                  setResetLoading(false)
                 }
               }}
             />

@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { CategoriaClienteService, CiudadClienteService } from 'services'
 import CategoriaTable from '../CategoriaMantenimiento/Table'
@@ -62,11 +61,7 @@ export default function Panel() {
             </button>
           ))}
         </div>
-        {selectedOption === 0 ? (
-          <CategoriaTable option={options[0]} />
-        ) : (
-          <CiudadTable option={options[1]} />
-        )}
+        {selectedOption === 0 ? <CategoriaTable option={options[0]} /> : <CiudadTable option={options[1]} />}
       </section>
     </div>
   )

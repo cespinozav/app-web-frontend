@@ -10,13 +10,13 @@ const SedesClienteService = {
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         return {
           results: Array.isArray(result.results) ? result.results : [],
           count: typeof result.count === 'number' ? result.count : 0
-        };
-        }),
-  create: (data) =>
+        }
+      }),
+  create: data =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
       body: data,
@@ -24,8 +24,7 @@ const SedesClienteService = {
         'Content-Type': 'application/json',
         ...(localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : {})
       }
-    })
-      .then(res => res.json()),
+    }).then(res => res.json()),
   update: (id, data) =>
     makeRequest(`${ENDPOINT}/${id}`, {
       method: 'PUT',
@@ -34,8 +33,7 @@ const SedesClienteService = {
         'Content-Type': 'application/json',
         ...(localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : {})
       }
-    })
-      .then(res => res.json()),
+    }).then(res => res.json())
 }
 
 export default SedesClienteService

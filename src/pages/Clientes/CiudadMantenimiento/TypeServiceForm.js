@@ -25,7 +25,7 @@ function CiudadClienteServiceForm({ defaultFields, onClose, service }) {
   const formRef = useRef(null)
   useEffect(() => {
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
-  }, [defaultFields])
+  }, [defaultFields, reset])
 
   const handleError = formErrors => {
     const messages = Object.values(formErrors)

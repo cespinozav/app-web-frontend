@@ -15,7 +15,7 @@ import EstadoBadge from 'components/styles/EstadoBadge'
 import './style.scss'
 
 // Variable global para el tipo de moneda
-export const tipoMoneda = 'S/';
+export const tipoMoneda = 'S/'
 
 const PAGE_SIZE = 10
 
@@ -49,10 +49,10 @@ export default function Productos() {
   }, [])
 
   const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, state], () => {
-    const params = { page, page_size: PAGE_SIZE, search, cat };
-    if (state !== '') params.state = state;
-    return ProductoService.get(params);
-  });
+    const params = { page, page_size: PAGE_SIZE, search, cat }
+    if (state !== '') params.state = state
+    return ProductoService.get(params)
+  })
   const productos = data?.results || []
   const totalRecords = data?.count || 0
 
@@ -63,7 +63,12 @@ export default function Productos() {
   const toast = useToast()
   // Formulario separado como en categoría
   function ProductModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
-    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+    const {
+      control,
+      handleSubmit,
+      reset,
+      formState: { errors }
+    } = useForm({
       defaultValues: defaultValues || { nombre: '', cat: '', price: '', unit: '', active: 0 }
     })
     const [units, setUnits] = React.useState([])
@@ -81,12 +86,14 @@ export default function Productos() {
       setUnitsLoading(true)
       UnitService.get({ page: 1, page_size: 100 })
         .then(res => {
-          setUnits(Array.isArray(res.results)
-            ? res.results.map(u => ({
-                label: u.reference ? `${u.description} (${u.reference})` : u.description,
-                value: u.id
-              }))
-            : [])
+          setUnits(
+            Array.isArray(res.results)
+              ? res.results.map(u => ({
+                  label: u.reference ? `${u.description} (${u.reference})` : u.description,
+                  value: u.id
+                }))
+              : []
+          )
         })
         .finally(() => setUnitsLoading(false))
     }, [])
@@ -107,9 +114,7 @@ export default function Productos() {
               name="nombre"
               control={control}
               rules={{ required: 'Nombre requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
-              render={({ field }) => (
-                <InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-              )}
+              render={({ field }) => <InputText {...field} autoComplete="off" className="p-inputtext p-component" />}
             />
             {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
           </div>
@@ -118,7 +123,10 @@ export default function Productos() {
             <Controller
               name="price"
               control={control}
-              rules={{ required: 'Precio requerido', pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'Formato: 0.00' } }}
+              rules={{
+                required: 'Precio requerido',
+                pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'Formato: 0.00' }
+              }}
               render={({ field }) => (
                 <InputText {...field} autoComplete="off" className="p-inputtext p-component" placeholder="0.00" />
               )}
@@ -132,7 +140,13 @@ export default function Productos() {
               control={control}
               rules={{ required: 'Unidad requerida' }}
               render={({ field }) => (
-                <Dropdown {...field} options={units} placeholder="Seleccione unidad" style={{ minWidth: 160 }} loading={unitsLoading} />
+                <Dropdown
+                  {...field}
+                  options={units}
+                  placeholder="Seleccione unidad"
+                  style={{ minWidth: 160 }}
+                  disabled={unitsLoading}
+                />
               )}
             />
             {errors.unit && <div className="error-message">{errors.unit.message}</div>}
@@ -149,7 +163,7 @@ export default function Productos() {
                   options={categoriasSinTodas}
                   placeholder="Seleccione categoría"
                   style={{ minWidth: 160 }}
-                  loading={catLoading}
+                  disabled={catLoading}
                 />
               )}
             />
@@ -162,10 +176,15 @@ export default function Productos() {
               control={control}
               rules={{ required: 'Seleccione estado' }}
               render={({ field }) => (
-                <Dropdown {...field} options={[
-                  { label: 'Activo', value: 'activo' },
-                  { label: 'Inactivo', value: 'inactivo' }
-                ]} placeholder="Seleccione" style={{ minWidth: 160 }} />
+                <Dropdown
+                  {...field}
+                  options={[
+                    { label: 'Activo', value: 'activo' },
+                    { label: 'Inactivo', value: 'inactivo' }
+                  ]}
+                  placeholder="Seleccione"
+                  style={{ minWidth: 160 }}
+                />
               )}
             />
             {errors.state && <div className="error-message">{errors.state.message}</div>}
@@ -211,7 +230,7 @@ export default function Productos() {
         })
         setShowAdd(false)
         setRowData(null)
-        if (resetForm) resetForm();
+        if (resetForm) resetForm()
         toast.success('Producto editado con éxito')
         refetch()
       } else {
@@ -222,9 +241,9 @@ export default function Productos() {
           unit_id: unitId,
           state: formData.state
         })
-        setShowAdd(false);
-        if (resetForm) resetForm();
-        toast.success('Producto agregado con éxito');
+        setShowAdd(false)
+        if (resetForm) resetForm()
+        toast.success('Producto agregado con éxito')
         refetch()
       }
     } catch (e) {
@@ -247,110 +266,168 @@ export default function Productos() {
       <hr style={{ border: 'none', borderBottom: '1.5px solid #ecebeb', margin: '16px 0' }} />
       <div className="productos-listado">
         <div className="header-productos">
-        <h2>LISTADO GENERAL</h2>
-        <div className="acciones">
-          <button
-            className="add"
-            onClick={() => setShowAdd(true)}
-          >
-            Agregar +
-          </button>
+          <h2>LISTADO GENERAL</h2>
+          <div className="acciones">
+            <button className="add" onClick={() => setShowAdd(true)}>
+              Agregar +
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="filtros-productos">
-        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {/* <label style={{ minWidth: 90 }}>Nombre producto</label> */}
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText placeholder="Nombre producto" value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} />
-          </span>
+        <div className="filtros-productos">
+          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* <label style={{ minWidth: 90 }}>Nombre producto</label> */}
+            <span className="p-input-icon-left">
+              <i className="pi pi-search" />
+              <InputText
+                placeholder="Nombre producto"
+                value={search}
+                onChange={e => {
+                  setSearch(e.target.value)
+                  setPage(1)
+                }}
+              />
+            </span>
+          </div>
+          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <label htmlFor="categoria-filter" style={{ minWidth: 70 }}>
+              Categoría
+            </label>
+            <Dropdown
+              id="categoria-filter"
+              value={cat}
+              options={categorias}
+              onChange={e => {
+                setCat(e.value)
+                setPage(1)
+              }}
+              placeholder="Categoría"
+              style={{ minWidth: 160 }}
+              disabled={catLoading}
+            />
+          </div>
+          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <label htmlFor="estado-filter" style={{ minWidth: 60 }}>
+              Estado
+            </label>
+            <Dropdown
+              id="estado-filter"
+              value={state}
+              options={estados}
+              onChange={e => {
+                setState(e.value)
+                setPage(1)
+              }}
+              placeholder="Estado"
+              style={{ minWidth: 160 }}
+            />
+          </div>
         </div>
-        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label htmlFor="categoria-filter" style={{ minWidth: 70 }}>Categoría</label>
-          <Dropdown id="categoria-filter" value={cat} options={categorias} onChange={e => { setCat(e.value); setPage(1) }} placeholder="Categoría" style={{ minWidth: 160 }} loading={catLoading} />
-        </div>
-        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label htmlFor="estado-filter" style={{ minWidth: 60 }}>Estado</label>
-          <Dropdown id="estado-filter" value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
-        </div>
-      </div>
-      <div className="tabla-productos">
-        {isFetching ? (
-          Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
-        ) : (
-          <table className="p-datatable table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Unidad</th>
-                <th>Estado</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {productos.length === 0 ? (
-                <tr><td colSpan={5} style={{ textAlign: 'center' }}>No hay resultados</td></tr>
-              ) : (
-                productos.map(prod => (
-                  <tr key={prod.id}>
-                    <td>{prod.id}</td>
-                    <td>{prod.nombre || prod.description}</td>
-                    <td>{prod.category_name || '-'}</td>
-                    <td>{typeof prod.price !== 'undefined' ? `${tipoMoneda} ${Number(prod.price).toFixed(2)}` : '-'}</td>
-                    <td>{prod.unit_description ? `${prod.unit_description}${prod.unit_reference ? ` (${prod.unit_reference})` : ''}` : '-'}</td>
-                    <td><EstadoBadge estado={prod.state} /></td>
-                    <td>
-                      <div className="actions">
-                        <Button
-                          icon="pi pi-pencil"
-                          className="p-button p-component p-button-icon-only"
-                          style={{ background: 'transparent' }}
-                          onClick={() => { setRowData(prod); setShowAdd(true); }}
-                          aria-label="Editar"
-                        />
-                      </div>
+        <div className="tabla-productos">
+          {isFetching ? (
+            Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
+          ) : (
+            <table className="p-datatable table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Unidad</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productos.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: 'center' }}>
+                      No hay resultados
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
+                ) : (
+                  productos.map(prod => (
+                    <tr key={prod.id}>
+                      <td>{prod.id}</td>
+                      <td>{prod.nombre || prod.description}</td>
+                      <td>{prod.category_name || '-'}</td>
+                      <td>
+                        {typeof prod.price !== 'undefined' ? `${tipoMoneda} ${Number(prod.price).toFixed(2)}` : '-'}
+                      </td>
+                      <td>
+                        {prod.unit_description
+                          ? `${prod.unit_description}${prod.unit_reference ? ` (${prod.unit_reference})` : ''}`
+                          : '-'}
+                      </td>
+                      <td>
+                        <EstadoBadge estado={prod.state} />
+                      </td>
+                      <td>
+                        <div className="actions">
+                          <Button
+                            icon="pi pi-pencil"
+                            className="p-button p-component p-button-icon-only"
+                            style={{ background: 'transparent' }}
+                            onClick={() => {
+                              setRowData(prod)
+                              setShowAdd(true)
+                            }}
+                            aria-label="Editar"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <Dialog
+          className="dialog licenses-dialog maintenance"
+          draggable={false}
+          visible={showAdd}
+          modal
+          onHide={() => {
+            setShowAdd(false)
+            setRowData(null)
+          }}
+          header={
+            <span style={{ fontWeight: 600, fontSize: '1.2rem' }}>
+              {rowData ? 'Editar producto' : 'Agregar producto'}
+            </span>
+          }
+          closable={true}
+        >
+          <ProductModalForm
+            onClose={() => {
+              setShowAdd(false)
+              setRowData(null)
+            }}
+            onSubmitFields={onSubmitFields}
+            isMutating={isMutating}
+            defaultValues={
+              rowData
+                ? {
+                    nombre: rowData.nombre || '',
+                    cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
+                    price: rowData.price || '',
+                    unit: rowData.unit_id || (rowData.unit && rowData.unit.id) || '',
+                    state: rowData.state || 'activo'
+                  }
+                : undefined
+            }
+          />
+        </Dialog>
+        <div className="paginate">
+          <Paginator
+            first={(page - 1) * PAGE_SIZE}
+            rows={PAGE_SIZE}
+            onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
+            totalRecords={totalRecords}
+          />
+        </div>
       </div>
-      <Dialog
-        className="dialog licenses-dialog maintenance"
-        draggable={false}
-        visible={showAdd}
-        modal
-        onHide={() => { setShowAdd(false); setRowData(null); }}
-        header={<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{rowData ? 'Editar producto' : 'Agregar producto'}</span>}
-        closable={true}
-      >
-        <ProductModalForm
-          onClose={() => { setShowAdd(false); setRowData(null); }}
-          onSubmitFields={onSubmitFields}
-          isMutating={isMutating}
-          defaultValues={rowData ? {
-            nombre: rowData.nombre || '',
-            cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
-            price: rowData.price || '',
-            unit: rowData.unit_id || (rowData.unit && rowData.unit.id) || '',
-            state: rowData.state || 'activo'
-          } : undefined}
-        />
-      </Dialog>
-      <div className="paginate">
-        <Paginator
-          first={(page - 1) * PAGE_SIZE}
-          rows={PAGE_SIZE}
-          onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
-          totalRecords={totalRecords}
-        />
-      </div>
-    </div>
     </>
   )
 }

@@ -25,7 +25,7 @@ function CategoriaUsuarioServiceForm({ defaultFields, onClose, service }) {
   const formRef = useRef(null)
   useEffect(() => {
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
-  }, [defaultFields])
+  }, [defaultFields, reset])
 
   const handleError = formErrors => {
     const messages = Object.values(formErrors)
@@ -45,32 +45,29 @@ function CategoriaUsuarioServiceForm({ defaultFields, onClose, service }) {
     // Al crear, solo enviar { description }
     const payload = isEditing
       ? { id: defaultFields.id, description: formData.description }
-      : { description: formData.description };
-    mutate(
-      payload,
-      {
-        onSuccess: () => {
-          onClose()
-          toast.success(isEditing ? 'Categoría editada con éxito' : 'Categoría agregada con éxito')
-        },
-        onError: err => {
-          if (err?.result?.description && Array.isArray(err.result.description)) {
-            toast.error(err.result.description[0])
-            return
-          }
-          if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
-            window.location.href = '/login'
-            return
-          }
-          const strMessage = String(err)
-          if (strMessage.includes('already exists')) {
-            toast.error('La categoría ya existe')
-          } else {
-            toast.error(err?.message || err)
-          }
+      : { description: formData.description }
+    mutate(payload, {
+      onSuccess: () => {
+        onClose()
+        toast.success(isEditing ? 'Categoría editada con éxito' : 'Categoría agregada con éxito')
+      },
+      onError: err => {
+        if (err?.result?.description && Array.isArray(err.result.description)) {
+          toast.error(err.result.description[0])
+          return
+        }
+        if (err?.status === 401 || (err?.message && String(err.message).includes('401'))) {
+          window.location.href = '/login'
+          return
+        }
+        const strMessage = String(err)
+        if (strMessage.includes('already exists')) {
+          toast.error('La categoría ya existe')
+        } else {
+          toast.error(err?.message || err)
         }
       }
-    )
+    })
   }
 
   return (

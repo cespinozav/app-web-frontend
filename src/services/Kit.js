@@ -140,8 +140,7 @@ export function formatAssignmentInput({
   documents,
   comment
 }) {
-  const getDocumentByIndex = index =>
-    documents?.length > index - 1 ? documents[index - 1]?.filepath : null
+  const getDocumentByIndex = index => (documents?.length > index - 1 ? documents[index - 1]?.filepath : null)
 
   return {
     id,
@@ -909,11 +908,7 @@ const KitService = {
   },
   uploadFile: {
     get(filepath) {
-      return networkRequest('/upload-document/movil', { params: { filepath } })
-        .then(res => res.json())
-        .then(res => {
-          console.log(res)
-        })
+      return networkRequest('/upload-document/movil', { params: { filepath } }).then(res => res.json())
     },
     post(document) {
       const formData = new FormData()

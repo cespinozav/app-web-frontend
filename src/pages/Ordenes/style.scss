@@ -269,10 +269,19 @@
 
 .search-wrapper {
   position: relative;
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+  }
 }
 
 .product-search {
-  width: 100%;
+  width: 50%;
+
+  .p-inputtext {
+    width: 100%;
+  }
 }
 
 .cart-table-wrap {
@@ -589,6 +598,10 @@
 
   .order-kpi-item {
     flex: 1;
+  }
+
+  .product-search {
+    width: 100%;
   }
 
   .order-form-side {

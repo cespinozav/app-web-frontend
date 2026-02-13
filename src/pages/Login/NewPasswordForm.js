@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Button } from 'primereact/button';
+import { useState } from 'react'
+import { Button } from 'primereact/button'
 
 export default function NewPasswordForm({ loading, onSubmit }) {
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
+  const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
 
   return (
     <form
       onSubmit={e => {
-        e.preventDefault();
-        if (password && password === confirm) onSubmit(password);
+        e.preventDefault()
+        if (password && password === confirm) onSubmit(password)
       }}
       style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
     >
@@ -38,5 +38,5 @@ export default function NewPasswordForm({ loading, onSubmit }) {
         type="submit"
       />
     </form>
-  );
+  )
 }

@@ -12,19 +12,13 @@ const DEFAULT_FIELDS = {
 
 function UnidadForm({ defaultFields, onClose, onSubmitFields, isMutating }) {
   const toast = useToast()
-  const {
-    control,
-    handleSubmit,
-    reset,
-    setValue,
-    register
-  } = useForm({
+  const { control, handleSubmit, reset, setValue, register } = useForm({
     defaultValues: DEFAULT_FIELDS
   })
   const formRef = useRef(null)
   useEffect(() => {
     reset({ ...DEFAULT_FIELDS, ...defaultFields })
-  }, [defaultFields])
+  }, [defaultFields, reset])
 
   const isEditing = Boolean(defaultFields && defaultFields.id)
   const handleError = formErrors => {
@@ -38,9 +32,7 @@ function UnidadForm({ defaultFields, onClose, onSubmitFields, isMutating }) {
     if (isEditing) {
       // Comparar los valores actuales con los iniciales
       const initial = { ...DEFAULT_FIELDS, ...defaultFields }
-      const changed = Object.keys(formData).some(
-        key => String(formData[key]) !== String(initial[key])
-      )
+      const changed = Object.keys(formData).some(key => String(formData[key]) !== String(initial[key]))
       if (!changed) {
         toast.error('Debe cambiar algún campo')
         return

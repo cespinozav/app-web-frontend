@@ -10,11 +10,11 @@ const SedeService = {
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         return {
           results: Array.isArray(result.results) ? result.results : [],
           count: typeof result.count === 'number' ? result.count : 0
-        };
+        }
       }),
   post: ({ description, user_created }) =>
     makeRequest(`${ENDPOINT}/create`, {
@@ -23,10 +23,11 @@ const SedeService = {
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
   put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, { method: 'PUT', body: { description } }),
-  delete: ({ id }) => makeRequest(`${ENDPOINT}/${id}/delete`, {
-    method: 'DELETE',
-    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-  })
+  delete: ({ id }) =>
+    makeRequest(`${ENDPOINT}/${id}/delete`, {
+      method: 'DELETE',
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    })
 }
 
 export default SedeService

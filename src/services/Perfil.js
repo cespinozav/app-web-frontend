@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import { makeRequest } from 'utils/api';
+import { makeRequest } from 'utils/api'
 
 const PerfilService = {
   getPerfil: () =>
@@ -7,7 +7,7 @@ const PerfilService = {
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
       .then(res => res.json())
-      .then(res => res.result),
-};
+      .then(res => res.result)
+}
 
-export default PerfilService;
+export default PerfilService

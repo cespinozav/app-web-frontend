@@ -1,51 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Dialog } from 'primereact/dialog';
-import { Button } from 'primereact/button';
-import { Skeleton } from 'primereact/skeleton';
-import useToast from 'hooks/useToast';
-import PersonaSedeClienteService from 'services/PersonaSedeCliente';
-import EstadoBadge from 'components/styles/EstadoBadge';
-import { formatDateMin } from 'utils/dates';
-import AsignacionSedeForm from '../Forms/AsignacionSedeForm';
+import React, { useEffect, useState } from 'react'
+import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
+import { Skeleton } from 'primereact/skeleton'
+import useToast from 'hooks/useToast'
+import PersonaSedeClienteService from 'services/PersonaSedeCliente'
+import EstadoBadge from 'components/styles/EstadoBadge'
+import { formatDateMin } from 'utils/dates'
+import AsignacionSedeForm from '../Forms/AsignacionSedeForm'
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 10
 
 export default function SedesAsignadasModal({ visible, onHide, usuario }) {
-  const [sedes, setSedes] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [page] = useState(1);
-  const [showForm, setShowForm] = useState(false);
-  const [isMutating, setIsMutating] = useState(false);
-  const [rowData, setRowData] = useState(null);
-  const toast = useToast();
+  const [sedes, setSedes] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
+  const [page] = useState(1)
+  const [showForm, setShowForm] = useState(false)
+  const [isMutating, setIsMutating] = useState(false)
+  const [rowData, setRowData] = useState(null)
+  const toast = useToast()
 
   useEffect(() => {
     if (visible && usuario?.id) {
-      setIsFetching(true);
+      setIsFetching(true)
       PersonaSedeClienteService.get({ person: usuario.id, page, page_size: PAGE_SIZE })
         .then(res => {
-          setSedes(res.results);
+          setSedes(res.results)
         })
         .catch(() => {
-          toast.error('Error al cargar las sedes asignadas');
-          setSedes([]);
+          toast.error('Error al cargar las sedes asignadas')
+          setSedes([])
         })
-        .finally(() => setIsFetching(false));
+        .finally(() => setIsFetching(false))
     }
-  }, [visible, usuario, page, showForm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, usuario?.id, page, showForm])
 
   const handleAdd = () => {
-    setRowData(null);
-    setShowForm(true);
-  };
+    setRowData(null)
+    setShowForm(true)
+  }
 
-  const handleEdit = (sede) => {
-    setRowData(sede);
-    setShowForm(true);
-  };
+  const handleEdit = sede => {
+    setRowData(sede)
+    setShowForm(true)
+  }
 
   const onSubmitFields = async (formData, resetForm) => {
-    setIsMutating(true);
+    setIsMutating(true)
     try {
       if (rowData && rowData.id) {
         // Editar asignación existente
@@ -54,36 +55,36 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
           sede_cliente: formData.sede_cliente,
           rol: formData.rol,
           state: formData.state
-        });
-        toast.success('Asignación editada con éxito');
+        })
+        toast.success('Asignación editada con éxito')
       } else {
         // Crear nueva asignación
-        await PersonaSedeClienteService.create({ 
+        await PersonaSedeClienteService.create({
           person: usuario.id,
-          sede_cliente: formData.sede_cliente, 
+          sede_cliente: formData.sede_cliente,
           rol: formData.rol,
-          state: formData.state 
-        });
-        toast.success('Asignación agregada con éxito');
+          state: formData.state
+        })
+        toast.success('Asignación agregada con éxito')
       }
-      setShowForm(false);
-      if (resetForm) resetForm();
+      setShowForm(false)
+      if (resetForm) resetForm()
     } catch (e) {
       // Manejar mensajes de validación del API
       if (e?.result?.detail && Array.isArray(e.result.detail)) {
         // Mostrar todos los mensajes de validación
-        e.result.detail.forEach(msg => toast.error(msg));
+        e.result.detail.forEach(msg => toast.error(msg))
       } else if (e?.detail && Array.isArray(e.detail)) {
-        e.detail.forEach(msg => toast.error(msg));
+        e.detail.forEach(msg => toast.error(msg))
       } else if (e?.message) {
-        toast.error(e.message);
+        toast.error(e.message)
       } else {
-        toast.error('Error al guardar asignación');
+        toast.error('Error al guardar asignación')
       }
     } finally {
-      setIsMutating(false);
+      setIsMutating(false)
     }
-  };
+  }
 
   return (
     <Dialog
@@ -111,7 +112,11 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
               visible={showForm}
               modal
               onHide={() => setShowForm(false)}
-              header={<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{rowData ? 'Editar asignación de sede' : 'Agregar asignación de sede'}</span>}
+              header={
+                <span style={{ fontWeight: 600, fontSize: '1.2rem' }}>
+                  {rowData ? 'Editar asignación de sede' : 'Agregar asignación de sede'}
+                </span>
+              }
               closable={true}
             >
               <AsignacionSedeForm
@@ -150,7 +155,9 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
                       <td>{sede.cliente_name || '-'}</td>
                       <td>{sede.sede_cliente_name || '-'}</td>
                       <td>{sede.rol_name || '-'}</td>
-                      <td><EstadoBadge estado={sede.state} /></td>
+                      <td>
+                        <EstadoBadge estado={sede.state} />
+                      </td>
                       <td>{formatDateMin(sede.date_joined)}</td>
                       <td>
                         <div className="actions">
@@ -170,10 +177,7 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
             </table>
             <div className="paginate">
               <div className="buttons">
-                <button
-                  onClick={handleAdd}
-                  className="add"
-                >
+                <button onClick={handleAdd} className="add">
                   Agregar +
                 </button>
               </div>
@@ -182,5 +186,5 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
         )}
       </div>
     </Dialog>
-  );
+  )
 }

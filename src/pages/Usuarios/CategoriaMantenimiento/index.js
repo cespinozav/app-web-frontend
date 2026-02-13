@@ -1,13 +1,13 @@
+import { useState } from 'react'
+import options from './service'
+import Table from './Table'
+import './style.scss'
 
-import options from './service';
-import Table from './Table';
-import { useState } from 'react';
-import './style.scss';
+export default function CategoriaUsuarioMantenimiento() {
+  const [selectedOption, setSelectedOption] = useState(0)
 
-  const [selectedOption, setSelectedOption] = useState(0);
   return (
     <div className="device-maintenance">
-      
       <section>
         <div className="options">
           {options.map((option, index) => (
@@ -24,4 +24,5 @@ import './style.scss';
         <Table option={options[selectedOption]} />
       </section>
     </div>
-  );
+  )
+}

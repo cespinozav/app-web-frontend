@@ -1,4 +1,3 @@
-
 export { default as KitService } from './Kit'
 export { default as CategoriaService } from './Categoria'
 export { default as LicenseService } from './License'

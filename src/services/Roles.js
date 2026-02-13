@@ -1,14 +1,14 @@
 /* eslint-disable camelcase, global-require */
-import { makeRequest } from 'utils/api';
+import { makeRequest } from 'utils/api'
 
-const ENDPOINT = '/roles';
+const ENDPOINT = '/roles'
 
 const RolesService = {
   get: async ({ page = 1, page_size = 10 } = {}) => {
     const response = await makeRequest(`${ENDPOINT}?page=${page}&page_size=${page_size}`, {
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-    });
-    return response.json();
+    })
+    return response.json()
   },
   post: ({ description, state }) =>
     makeRequest(`${ENDPOINT}/create`, {
@@ -27,6 +27,6 @@ const RolesService = {
       method: 'DELETE',
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
-};
+}
 
-export default RolesService;
+export default RolesService

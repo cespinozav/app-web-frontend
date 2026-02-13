@@ -16,11 +16,7 @@ export default function MantenimientoInventario() {
       <section>
         <div className="options">
           {options.map((opt, idx) => (
-            <button
-              key={opt.title}
-              className={selected === idx ? 'active' : ''}
-              onClick={() => setSelected(idx)}
-            >
+            <button key={opt.title} className={selected === idx ? 'active' : ''} onClick={() => setSelected(idx)}>
               {opt.title}
             </button>
           ))}

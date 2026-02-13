@@ -1,12 +1,12 @@
-import React from 'react';
-import { Button } from 'primereact/button';
-import { Skeleton } from 'primereact/skeleton';
-import EstadoBadge from 'components/styles/EstadoBadge';
-import { formatDate } from 'utils/dates';
+import React from 'react'
+import { Button } from 'primereact/button'
+import { Skeleton } from 'primereact/skeleton'
+import EstadoBadge from 'components/styles/EstadoBadge'
+import { formatDate } from 'utils/dates'
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 10
 
-export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }) {
+export default function ClientesTable({ clientes, isFetching, onEdit }) {
   return (
     <div className="tabla-clientes">
       {isFetching ? (
@@ -28,7 +28,11 @@ export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }
           </thead>
           <tbody>
             {clientes.length === 0 ? (
-              <tr><td colSpan={8} style={{ textAlign: 'center' }}>No hay resultados</td></tr>
+              <tr>
+                <td colSpan={8} style={{ textAlign: 'center' }}>
+                  No hay resultados
+                </td>
+              </tr>
             ) : (
               clientes.map(cli => (
                 <tr key={cli.id}>
@@ -37,7 +41,9 @@ export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }
                   <td>{cli.abreviatura}</td>
                   <td>{cli.categoria || '-'}</td>
                   <td>{cli.ruc}</td>
-                  <td><EstadoBadge estado={cli.active} /></td>
+                  <td>
+                    <EstadoBadge estado={cli.active} />
+                  </td>
                   <td>{cli.usuario_creado || '-'}</td>
                   <td>{formatDate(cli.fecha_creada)}</td>
                   <td>
@@ -58,5 +64,5 @@ export default function ClientesTable({ clientes, isFetching, onEdit, onDelete }
         </table>
       )}
     </div>
-  );
+  )
 }

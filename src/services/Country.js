@@ -10,11 +10,11 @@ const CountryService = {
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         return {
           results: Array.isArray(result.results) ? result.results : [],
           count: typeof result.count === 'number' ? result.count : 0
-        };
+        }
       })
 }
 

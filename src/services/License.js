@@ -158,7 +158,21 @@ const LicenseService = {
   },
   assignments: {
     id: 'assigns-license',
-    get({ signal, personId, email, licenseType, fromDate, toDate, ceco, cecoDesc, emailType, page, userRed, userState, excel }) {
+    get({
+      signal,
+      personId,
+      email,
+      licenseType,
+      fromDate,
+      toDate,
+      ceco,
+      cecoDesc,
+      emailType,
+      page,
+      userRed,
+      userState,
+      excel
+    }) {
       const params = {
         id_person: personId,
         email,
@@ -234,7 +248,7 @@ const LicenseService = {
               lastname: r.apellido,
               created: r.cuando_se_crea,
               country: r.ubicacion_pais ?? '',
-              observation: r.valide_observation,
+              observation: r.valide_observation
             })) || []
         )
     },
@@ -511,11 +525,7 @@ const LicenseService = {
   },
   uploadFile: {
     get(filepath) {
-      return networkRequest('/upload-document/license', { params: { filepath } })
-        .then(res => res.json())
-        .then(res => {
-          console.log(res)
-        })
+      return networkRequest('/upload-document/license', { params: { filepath } }).then(res => res.json())
     },
     post(document) {
       const formData = new FormData()

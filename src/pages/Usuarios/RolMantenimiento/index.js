@@ -1,12 +1,10 @@
-
-
-import options from './service';
-import Table from './Table';
-import { useState } from 'react';
-import './style.scss';
+import { useState } from 'react'
+import options from './service'
+import Table from './Table'
+import './style.scss'
 
 export default function RolMantenimiento() {
-  const [selectedOption, setSelectedOption] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(0)
   return (
     <div className="device-maintenance">
       <section>
@@ -25,5 +23,5 @@ export default function RolMantenimiento() {
         <Table option={options[selectedOption]} />
       </section>
     </div>
-  );
+  )
 }

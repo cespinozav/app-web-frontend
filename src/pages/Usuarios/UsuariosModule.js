@@ -1,13 +1,13 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import CLIENTS_ICON from 'assets/img/icons/active-user.svg';
-import MAINTENANCE_ICON from 'assets/img/icons/settings.svg';
-import { SUB_ROUTES } from 'routing/routes';
-import './style.scss';
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import CLIENTS_ICON from 'assets/img/icons/active-user.svg'
+import MAINTENANCE_ICON from 'assets/img/icons/settings.svg'
+import { SUB_ROUTES } from 'routing/routes'
+import './style.scss'
 
 function UsuariosModule() {
-  const { pathname } = useLocation();
-  const isUsuariosActive = pathname === SUB_ROUTES.USERS.MAIN;
-  const isMaintenanceActive = pathname === SUB_ROUTES.USERS.MAINTENANCE;
+  const { pathname } = useLocation()
+  const isUsuariosActive = pathname === SUB_ROUTES.USERS.MAIN
+  const isMaintenanceActive = pathname === SUB_ROUTES.USERS.MAINTENANCE
   return (
     <div>
       <h1>
@@ -29,6 +29,6 @@ function UsuariosModule() {
       </div>
       <Outlet />
     </div>
-  );
+  )
 }
-export default UsuariosModule;
+export default UsuariosModule

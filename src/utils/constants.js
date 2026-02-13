@@ -28,7 +28,7 @@ export const ACCOUNT_TYPES = [
 ]
 
 export const CURRENCY = [
-  { value: 'PEN', label: 's/.' },
+  { value: 'PEN', label: 's/.' }
   // { value: 'USD', label: '$' }
 ]
 
@@ -121,7 +121,7 @@ export const ASSETS = {
     },
     ip: {
       label: 'Activo',
-      select: false,
+      select: false
       // rules: {
       //   pattern: { value: /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, message: 'IP no válida' }
       // }

@@ -10,7 +10,7 @@ const UnitService = {
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         return {
           results: Array.isArray(result.results) ? result.results : [],
           count: typeof result.count === 'number' ? result.count : 0
@@ -22,15 +22,17 @@ const UnitService = {
       body: { description, reference, state, user_created },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
-  put: ({ id, description, reference, state }) => makeRequest(`${ENDPOINT}/${id}`, {
-    method: 'PUT',
-    body: { description, reference, state },
-    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-  }),
-  delete: ({ id }) => makeRequest(`${ENDPOINT}/${id}/delete`, {
-    method: 'DELETE',
-    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-  })
+  put: ({ id, description, reference, state }) =>
+    makeRequest(`${ENDPOINT}/${id}`, {
+      method: 'PUT',
+      body: { description, reference, state },
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    }),
+  delete: ({ id }) =>
+    makeRequest(`${ENDPOINT}/${id}/delete`, {
+      method: 'DELETE',
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    })
 }
 
 export default UnitService

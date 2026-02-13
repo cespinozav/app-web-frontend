@@ -11,14 +11,16 @@ import ModalForm from './ModalForm'
 const PAGE_SIZE = 10
 const MODAL = {
   NONE: 0,
-  EDIT: 1,
+  EDIT: 1
   // DELETE: 2
 }
 
 export default function Table({ option }) {
   const { FormComponent, service } = option
   const [page, setPage] = useState(1)
-  const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }))
+  const { data: queryData, isFetching } = useQuery([service.id, page], () =>
+    option.request({ page, page_size: PAGE_SIZE })
+  )
   const data = queryData?.results || []
   const totalRecords = queryData?.count || 0
   const [showModal, setShowModal] = useState(MODAL.NONE)
@@ -52,7 +54,13 @@ export default function Table({ option }) {
             FormComponent={FormComponent}
           />
           {/* Eliminar modal de eliminación */}
-          <DataTable value={data} paginator={false} rows={PAGE_SIZE} responsiveLayout="scroll" className="p-datatable-sm">
+          <DataTable
+            value={data}
+            paginator={false}
+            rows={PAGE_SIZE}
+            responsiveLayout="scroll"
+            className="p-datatable-sm"
+          >
             {option.schema.map(col => (
               <Column
                 key={col.field}
@@ -64,7 +72,16 @@ export default function Table({ option }) {
             <Column
               body={row => (
                 <div className="actions">
-                  <Button icon="pi pi-pencil" className="p-button p-component p-button-icon-only" style={{ background: 'transparent' }} onClick={() => { setRowData(row); setShowModal(MODAL.EDIT) }} aria-label="Editar" />
+                  <Button
+                    icon="pi pi-pencil"
+                    className="p-button p-component p-button-icon-only"
+                    style={{ background: 'transparent' }}
+                    onClick={() => {
+                      setRowData(row)
+                      setShowModal(MODAL.EDIT)
+                    }}
+                    aria-label="Editar"
+                  />
                 </div>
               )}
               header="Acciones"

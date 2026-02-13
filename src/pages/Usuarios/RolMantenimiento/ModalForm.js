@@ -1,9 +1,8 @@
-import { Dialog } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog'
 
 export default function ModalForm({ isVisible, onClose, defaultFields, service, FormComponent }) {
-    console.log('Render ModalForm', { isVisible, defaultFields, service, FormComponent });
-  const isEditing = Boolean(defaultFields);
-  const headerTitle = isEditing ? 'Editar rol' : 'Agregar rol';
+  const isEditing = Boolean(defaultFields)
+  const headerTitle = isEditing ? 'Editar rol' : 'Agregar rol'
   return (
     <Dialog
       className="dialog licenses-dialog maintenance"
@@ -14,13 +13,7 @@ export default function ModalForm({ isVisible, onClose, defaultFields, service, 
       header={headerTitle}
       closable={true}
     >
-      {FormComponent && (
-        <FormComponent
-          onClose={onClose}
-          defaultFields={defaultFields}
-          service={service}
-        />
-      )}
+      {FormComponent && <FormComponent onClose={onClose} defaultFields={defaultFields} service={service} />}
     </Dialog>
-  );
+  )
 }

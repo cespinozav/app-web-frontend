@@ -1,5 +1,5 @@
-import MantenimientoInventario from '../Mantenimiento';
+import MantenimientoInventario from '../Mantenimiento'
 
 export default function Mantenimientos() {
-  return <MantenimientoInventario />;
+  return <MantenimientoInventario />
 }

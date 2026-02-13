@@ -5,17 +5,17 @@ const ENDPOINT = '/countries'
 
 const CiudadClienteService = {
   get: ({ page = 1, page_size = 10, search = '' } = {}) => {
-    const cleanPage = typeof page === 'string' ? page.replace(/\/+$/, '') : page;
-    const cleanPageSize = typeof page_size === 'string' ? page_size.replace(/\/+$/, '') : page_size;
-    const cleanSearch = typeof search === 'string' ? search.replace(/\/+$/, '') : search;
-    let url = `${ENDPOINT}?page=${cleanPage}&page_size=${cleanPageSize}`;
-    if (cleanSearch) url += `&search=${encodeURIComponent(cleanSearch)}`;
+    const cleanPage = typeof page === 'string' ? page.replace(/\/+$/, '') : page
+    const cleanPageSize = typeof page_size === 'string' ? page_size.replace(/\/+$/, '') : page_size
+    const cleanSearch = typeof search === 'string' ? search.replace(/\/+$/, '') : search
+    let url = `${ENDPOINT}?page=${cleanPage}&page_size=${cleanPageSize}`
+    if (cleanSearch) url += `&search=${encodeURIComponent(cleanSearch)}`
     return makeRequest(url, {
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         return {
           results: Array.isArray(result.results)
             ? result.results.map(item => ({
@@ -27,8 +27,8 @@ const CiudadClienteService = {
               }))
             : [],
           count: typeof result.count === 'number' ? result.count : 0
-        };
-      });
+        }
+      })
   },
   post: ({ description }) =>
     makeRequest(`${ENDPOINT}/create`, {
@@ -36,15 +36,17 @@ const CiudadClienteService = {
       body: { nombre: description },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
     }),
-  put: ({ id, description }) => makeRequest(`${ENDPOINT}/${id}`, {
-    method: 'PUT',
-    body: { nombre: description },
-    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-  }),
-  delete: ({ id }) => makeRequest(`${ENDPOINT}/${id}/delete`, {
-    method: 'DELETE',
-    headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
-  })
+  put: ({ id, description }) =>
+    makeRequest(`${ENDPOINT}/${id}`, {
+      method: 'PUT',
+      body: { nombre: description },
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    }),
+  delete: ({ id }) =>
+    makeRequest(`${ENDPOINT}/${id}/delete`, {
+      method: 'DELETE',
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    })
 }
 
 export default CiudadClienteService

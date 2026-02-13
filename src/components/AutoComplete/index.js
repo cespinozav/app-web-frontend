@@ -8,16 +8,16 @@ function AutoCompleteStyled({ request, value, setValue, name, minLength, ...prop
   }
 
   // Normaliza el valor para mostrar correctamente en el input
-  let normalizedValue = value;
+  let normalizedValue = value
   if (value == null) {
-    normalizedValue = null;
+    normalizedValue = null
   } else if (typeof value === 'number') {
     // Si el valor es un id, busca el objeto en las sugerencias
-    normalizedValue = suggestions.find(s => s.id === value) || null;
+    normalizedValue = suggestions.find(s => s.id === value) || null
   } else if (typeof value === 'object' && value !== null) {
     // Si el objeto no tiene description, usa nombre
     if (!('description' in value) && 'nombre' in value) {
-      normalizedValue = { ...value, description: value.nombre };
+      normalizedValue = { ...value, description: value.nombre }
     }
   }
 

@@ -4,7 +4,7 @@ import LOGO from 'assets/img/logo.png'
 import DASHBOARD_ICON from 'assets/img/icons/dashboard.svg'
 import ORDERS_ICON from 'assets/img/icons/files.svg'
 import INVENTORY_ICON from 'assets/img/icons/file.svg'
-import CLIENTS_ICON from 'assets/img/icons/folder-shared.svg';
+import CLIENTS_ICON from 'assets/img/icons/folder-shared.svg'
 import SETTINGS_ICON from 'assets/img/icons/settings.svg'
 // Puedes cambiar el ícono por uno específico de usuarios si lo tienes
 import USERS_ICON from 'assets/img/icons/active-user-inventory-color.svg'
@@ -48,37 +48,12 @@ function Layout() {
             </div>
           </header>
           <div className="options">
-            <MenuItem
-              path="/"
-              name="Dashboard"
-              icon={DASHBOARD_ICON}
-              isDefault={true}
-            />
-            <MenuItem
-              path="/ordenes"
-              name="Ordenes"
-              icon={ORDERS_ICON}
-            />
-            <MenuItem
-              path="/inventario"
-              name="Inventario"
-              icon={INVENTORY_ICON}
-            />
-            <MenuItem
-              path="/clientes"
-              name="Clientes"
-              icon={CLIENTS_ICON}
-            />
-            <MenuItem
-              path="/usuarios"
-              name="Usuarios"
-              icon={USERS_ICON}
-            />
-            <MenuItem
-              path="/perfil"
-              name="Perfil"
-              icon={SETTINGS_ICON}
-            />
+            <MenuItem path="/" name="Dashboard" icon={DASHBOARD_ICON} isDefault={true} />
+            <MenuItem path="/ordenes" name="Ordenes" icon={ORDERS_ICON} />
+            <MenuItem path="/inventario" name="Inventario" icon={INVENTORY_ICON} />
+            <MenuItem path="/clientes" name="Clientes" icon={CLIENTS_ICON} />
+            <MenuItem path="/usuarios" name="Usuarios" icon={USERS_ICON} />
+            <MenuItem path="/perfil" name="Perfil" icon={SETTINGS_ICON} />
           </div>
         </div>
         <div className="action">

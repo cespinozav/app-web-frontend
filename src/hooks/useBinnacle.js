@@ -28,8 +28,7 @@ export default function useBinnacle(assignId, service) {
       onSuccess: res => {
         if (res.length === 0) toast.warn('No hay registros con los parámetros ingresados')
       },
-      onError: err => {
-        console.log(err)
+      onError: () => {
         toast.error('No se pudo cargar la bitácora')
       }
     }

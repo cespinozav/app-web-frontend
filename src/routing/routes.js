@@ -1,5 +1,3 @@
-
-
 const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/',
@@ -16,9 +14,8 @@ const ROUTES = {
   USERS_MAIN: '/usuarios/usuarios',
   USERS_MAINTENANCE: '/usuarios/mantenimientos',
   PROFILE: '/perfil',
-  PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token',
+  PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token'
 }
-
 
 export const SUB_ROUTES = {
   ORDERS: {

@@ -1,19 +1,18 @@
-import React from 'react';
+import React from 'react'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    super(props)
+    this.state = { hasError: false, error: null, errorInfo: null }
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, error };
+    return { hasError: true, error }
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({ errorInfo });
+    this.setState({ errorInfo })
     // Puedes enviar el error a un servicio externo aquí
-    console.error('ErrorBoundary:', error, errorInfo);
   }
 
   render() {
@@ -24,10 +23,10 @@ class ErrorBoundary extends React.Component {
           <pre>{String(this.state.error)}</pre>
           <pre>{this.state.errorInfo ? this.state.errorInfo.componentStack : ''}</pre>
         </div>
-      );
+      )
     }
-    return this.props.children;
+    return this.props.children
   }
 }
 
-export default ErrorBoundary;
+export default ErrorBoundary

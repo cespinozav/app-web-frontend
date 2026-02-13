@@ -11,7 +11,7 @@ const ClienteService = {
     })
       .then(res => res.json())
       .then(res => {
-        const result = res.result || {};
+        const result = res.result || {}
         const results = Array.isArray(result.results)
           ? result.results.map(cli => ({
               id: cli.id,
@@ -24,11 +24,11 @@ const ClienteService = {
               usuario_creado: cli.user_created,
               fecha_creada: cli.date_created
             }))
-          : [];
+          : []
         return {
           results,
           count: typeof result.count === 'number' ? result.count : 0
-        };
+        }
       }),
   post: ({ nombre, abrev, cod_ruc, categoria, state, user_created }) =>
     makeRequest(`${ENDPOINT}/create`, {

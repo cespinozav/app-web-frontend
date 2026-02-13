@@ -11,13 +11,15 @@ import ModalForm from './ModalForm'
 const PAGE_SIZE = 10
 const MODAL = {
   NONE: 0,
-  EDIT: 1,
+  EDIT: 1
 }
 
 export default function Table({ option }) {
   const { FormComponent, service } = option
   const [page, setPage] = useState(1)
-  const { data: queryData, isFetching } = useQuery([service.id, page], () => option.request({ page, page_size: PAGE_SIZE }))
+  const { data: queryData, isFetching } = useQuery([service.id, page], () =>
+    option.request({ page, page_size: PAGE_SIZE })
+  )
   const data = queryData?.results || []
   const totalRecords = queryData?.count || 0
   const [showModal, setShowModal] = useState(MODAL.NONE)
@@ -47,7 +49,13 @@ export default function Table({ option }) {
             service={service}
             FormComponent={FormComponent}
           />
-          <DataTable value={data} paginator={false} rows={PAGE_SIZE} responsiveLayout="scroll" className="p-datatable-sm">
+          <DataTable
+            value={data}
+            paginator={false}
+            rows={PAGE_SIZE}
+            responsiveLayout="scroll"
+            className="p-datatable-sm"
+          >
             {option.schema.map(col => (
               <Column
                 key={col.field}

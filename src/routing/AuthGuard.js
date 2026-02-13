@@ -32,6 +32,7 @@ export default function AuthGuard() {
           setAuthState(AUTH_STATE.FETCHED)
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if (authState === AUTH_STATE.FETCHING || authState === AUTH_STATE.MOUNTING) return <LoadingScreen />
   if (isSessionExpired()) return <SessionExpired />

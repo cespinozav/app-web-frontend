@@ -1,96 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import FormAutoComplete from 'components/FormControls/FormAutoComplete';
-import SedesClienteService from 'services/SedesCliente';
-import RolesService from 'services/Roles';
-import { Button } from 'primereact/button';
+import React, { useState, useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import FormAutoComplete from 'components/FormControls/FormAutoComplete'
+import SedesClienteService from 'services/SedesCliente'
+import RolesService from 'services/Roles'
+import { Button } from 'primereact/button'
 
 const estados = [
   { label: 'Activo', value: 'activo' },
   { label: 'Inactivo', value: 'inactivo' }
-];
+]
 
 function AsignacionSedeForm({ defaultValues, onSubmitFields, toast, isMutating, usuario }) {
-  const [roles, setRoles] = useState([]);
-  const [loadingRoles, setLoadingRoles] = useState(false);
+  const [roles, setRoles] = useState([])
+  const [loadingRoles, setLoadingRoles] = useState(false)
 
-  const { control, handleSubmit, reset, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
     defaultValues: defaultValues || {
       sede_cliente: null,
       rol: null,
-      state: 'activo',
+      state: 'activo'
     }
-  });
+  })
 
   useEffect(() => {
     if (defaultValues) {
       // Preparar sede_cliente para el autocomplete
-      let sedeCliente = defaultValues.sede_cliente;
+      let sedeCliente = defaultValues.sede_cliente
       if (typeof sedeCliente === 'number' && defaultValues.sede_cliente_name) {
         sedeCliente = {
           id: defaultValues.sede_cliente,
           nombre: defaultValues.sede_cliente_name,
           description: defaultValues.sede_cliente_name
-        };
+        }
       }
       reset({
         sede_cliente: sedeCliente,
         rol: defaultValues.rol,
         state: defaultValues.state || 'activo'
-      });
+      })
     } else {
       reset({
         sede_cliente: null,
         rol: null,
         state: 'activo'
-      });
+      })
     }
-  }, [defaultValues, reset]);
+  }, [defaultValues, reset])
 
   useEffect(() => {
-    setLoadingRoles(true);
+    setLoadingRoles(true)
     RolesService.get({ page: 1, page_size: 100 })
       .then(res => {
-        const rolesData = res.result?.results || res.results || [];
-        setRoles(rolesData.map(r => ({ 
-          label: r.description || r.nombre || r.label, 
-          value: r.id 
-        })));
+        const rolesData = res.result?.results || res.results || []
+        setRoles(
+          rolesData.map(r => ({
+            label: r.description || r.nombre || r.label,
+            value: r.id
+          }))
+        )
       })
       .catch(() => setRoles([]))
-      .finally(() => setLoadingRoles(false));
-  }, []);
+      .finally(() => setLoadingRoles(false))
+  }, [])
 
   const handleError = formErrors => {
     const messages = Object.values(formErrors)
       .slice(0, 4)
-      .map(e => e.message);
-    if (toast) toast.error(messages);
-  };
+      .map(e => e.message)
+    if (toast) toast.error(messages)
+  }
 
   const onSubmit = data => {
     // Si sede_cliente es un objeto, extrae el id
-    const payload = { ...data };
+    const payload = { ...data }
     if (payload.sede_cliente && typeof payload.sede_cliente === 'object' && 'id' in payload.sede_cliente) {
-      payload.sede_cliente = payload.sede_cliente.id;
+      payload.sede_cliente = payload.sede_cliente.id
     }
-    onSubmitFields(payload, reset);
-  };
+    onSubmitFields(payload, reset)
+  }
 
-  const clienteNombre = usuario?.cliente?.nombre || usuario?.cliente?.description || '-';
-  const clienteId = usuario?.cliente?.id || usuario?.cliente?.value || null;
+  const clienteNombre = usuario?.cliente?.nombre || usuario?.cliente?.description || '-'
+  const clienteId = usuario?.cliente?.id || usuario?.cliente?.value || null
 
   return (
     <form onSubmit={handleSubmit(onSubmit, handleError)}>
       <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div className="m-row">
           <label htmlFor="cliente">Cliente:</label>
-          <InputText 
+          <InputText
             value={clienteNombre}
-            disabled 
-            className="p-inputtext p-component" 
+            disabled
+            className="p-inputtext p-component"
             style={{ backgroundColor: '#f5f5f5' }}
           />
         </div>
@@ -102,26 +109,26 @@ function AsignacionSedeForm({ defaultValues, onSubmitFields, toast, isMutating, 
             control={control}
             rules={{ required: 'Sede requerida' }}
             placeholder="Buscar sede del cliente"
-            request={async (search) => {
-              if (!clienteId) return [];
+            request={async search => {
+              if (!clienteId) return []
               if (typeof search !== 'string' || search.length < 2) {
                 // Si no hay búsqueda, traer todas las sedes del cliente
-                const res = await SedesClienteService.get({ id_client: clienteId, page: 1, page_size: 50 });
+                const res = await SedesClienteService.get({ id_client: clienteId, page: 1, page_size: 50 })
                 // Transformar resultados para agregar campo description
                 return (res.results || []).map(s => ({
                   ...s,
                   description: s.nombre || s.description
-                }));
+                }))
               }
-              const res = await SedesClienteService.get({ id_client: clienteId, page: 1, page_size: 50 });
-              const results = res.results || [];
+              const res = await SedesClienteService.get({ id_client: clienteId, page: 1, page_size: 50 })
+              const results = res.results || []
               // Filtrar localmente por el nombre de la sede y agregar description
               return results
                 .filter(s => s.nombre && s.nombre.toLowerCase().includes(search.toLowerCase()))
                 .map(s => ({
                   ...s,
                   description: s.nombre || s.description
-                }));
+                }))
             }}
             minLength={0}
             style={{ minWidth: 160 }}
@@ -136,12 +143,12 @@ function AsignacionSedeForm({ defaultValues, onSubmitFields, toast, isMutating, 
             control={control}
             rules={{ required: 'Seleccione un rol' }}
             render={({ field }) => (
-              <Dropdown 
-                {...field} 
-                options={roles} 
-                placeholder={loadingRoles ? 'Cargando...' : 'Seleccione'} 
+              <Dropdown
+                {...field}
+                options={roles}
+                placeholder={loadingRoles ? 'Cargando...' : 'Seleccione'}
                 loading={loadingRoles}
-                style={{ minWidth: 160 }} 
+                style={{ minWidth: 160 }}
               />
             )}
           />
@@ -175,7 +182,7 @@ function AsignacionSedeForm({ defaultValues, onSubmitFields, toast, isMutating, 
         />
       </div>
     </form>
-  );
+  )
 }
 
-export default AsignacionSedeForm;
+export default AsignacionSedeForm

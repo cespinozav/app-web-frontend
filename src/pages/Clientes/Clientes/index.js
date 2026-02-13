@@ -1,57 +1,55 @@
-import React, { useState } from 'react';
-import { Dialog } from 'primereact/dialog';
-import { Skeleton } from 'primereact/skeleton';
-import { useForm, Controller } from 'react-hook-form';
-import useToast from 'hooks/useToast';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import CategoriaClienteService from 'services/CategoriaCliente';
-import ClienteService from 'services/Cliente';
-import { Paginator } from 'primereact/paginator';
-import { useQuery } from 'hooks/useRequest';
-import EstadoBadge from 'components/styles/EstadoBadge';
-import { formatDate } from 'utils/dates';
-import SedesModal from './components/Modals/SedesModal';
-import '../style.scss';
+import React, { useState } from 'react'
+import { Dialog } from 'primereact/dialog'
+import { Skeleton } from 'primereact/skeleton'
+import { useForm, Controller } from 'react-hook-form'
+import useToast from 'hooks/useToast'
+import { Button } from 'primereact/button'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import CategoriaClienteService from 'services/CategoriaCliente'
+import ClienteService from 'services/Cliente'
+import { Paginator } from 'primereact/paginator'
+import { useQuery } from 'hooks/useRequest'
+import EstadoBadge from 'components/styles/EstadoBadge'
+import { formatDate } from 'utils/dates'
+import SedesModal from './components/Modals/SedesModal'
+import '../style.scss'
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 10
 
 const estados = [
   { label: 'Todos', value: '' },
   { label: 'Activo', value: 1 },
   { label: 'Inactivo', value: 0 }
-];
+]
 
 export default function MantenimientoClientes() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [state, setState] = useState(1); // Por defecto, mostrar solo activos
-  const { data, isFetching, refetch } = useQuery([
-    'clientes', page, search, state
-  ], () => {
-    const params = { page, page_size: PAGE_SIZE, search };
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [state, setState] = useState(1) // Por defecto, mostrar solo activos
+  const { data, isFetching, refetch } = useQuery(['clientes', page, search, state], () => {
+    const params = { page, page_size: PAGE_SIZE, search }
     if (state !== '') {
-      if (Number(state) === 1) params.state = 'activo';
-      else if (Number(state) === 0) params.state = 'inactivo';
+      if (Number(state) === 1) params.state = 'activo'
+      else if (Number(state) === 0) params.state = 'inactivo'
     }
-    return ClienteService.get(params);
-  });
-  const clientes = data?.results || [];
-  const totalRecords = data?.count || 0;
+    return ClienteService.get(params)
+  })
+  const clientes = data?.results || []
+  const totalRecords = data?.count || 0
 
   // Modal de agregar/editar cliente
-  const [showAdd, setShowAdd] = useState(false);
-  const [isMutating, setIsMutating] = useState(false);
-  const [rowData, setRowData] = useState(null);
-  const [showSedes, setShowSedes] = useState(false);
-  const toast = useToast();
+  const [showAdd, setShowAdd] = useState(false)
+  const [isMutating, setIsMutating] = useState(false)
+  const [rowData, setRowData] = useState(null)
+  const [showSedes, setShowSedes] = useState(false)
+  const toast = useToast()
 
   // Lógica para guardar cliente (faltante en el return principal)
   const onSubmitFields = async (formData, resetForm) => {
-    setIsMutating(true);
+    setIsMutating(true)
     try {
-      const { categoria } = formData;
+      const { categoria } = formData
       if (rowData && rowData.id) {
         await ClienteService.put({
           id: rowData.id,
@@ -61,12 +59,12 @@ export default function MantenimientoClientes() {
           categoria,
           state: formData.active === 1 ? 'activo' : 'inactivo',
           user_created: 1 // Ajustar según usuario actual
-        });
-        setShowAdd(false);
-        setRowData(null);
-        if (resetForm) resetForm();
-        toast.success('Cliente editado con éxito');
-        refetch();
+        })
+        setShowAdd(false)
+        setRowData(null)
+        if (resetForm) resetForm()
+        toast.success('Cliente editado con éxito')
+        refetch()
       } else {
         await ClienteService.post({
           nombre: formData.nombre,
@@ -75,56 +73,61 @@ export default function MantenimientoClientes() {
           categoria,
           state: formData.active === 1 ? 'activo' : 'inactivo',
           user_created: 1 // Ajustar según usuario actual
-        });
-        setShowAdd(false);
-        if (resetForm) resetForm();
-        toast.success('Cliente agregado con éxito');
-        refetch();
+        })
+        setShowAdd(false)
+        if (resetForm) resetForm()
+        toast.success('Cliente agregado con éxito')
+        refetch()
       }
     } catch (e) {
       if (e?.result?.nombre && Array.isArray(e.result.nombre)) {
-        toast.error(e.result.nombre[0]);
-        return;
+        toast.error(e.result.nombre[0])
+        return
       }
       if (e?.status === 401 || (e?.message && String(e.message).includes('401'))) {
-        window.location.href = '/login';
-        return;
+        window.location.href = '/login'
+        return
       }
-      toast.error(e.message || 'Error al guardar cliente');
+      toast.error(e.message || 'Error al guardar cliente')
     } finally {
-      setIsMutating(false);
+      setIsMutating(false)
     }
-  };
+  }
 
   function ClienteModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
-    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+    const {
+      control,
+      handleSubmit,
+      reset,
+      formState: { errors }
+    } = useForm({
       defaultValues: defaultValues || { nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 }
-    });
-    const [categorias, setCategorias] = React.useState([]);
-    const [loadingCategorias, setLoadingCategorias] = React.useState(false);
+    })
+    const [categorias, setCategorias] = React.useState([])
+    const [loadingCategorias, setLoadingCategorias] = React.useState(false)
     React.useEffect(() => {
-      setLoadingCategorias(true);
+      setLoadingCategorias(true)
       CategoriaClienteService.get({ page: 1, page_size: 100 })
         .then(res => {
-          setCategorias(res.results.map(cat => ({ label: cat.description || cat.nombre || cat.label, value: cat.id })));
+          setCategorias(res.results.map(cat => ({ label: cat.description || cat.nombre || cat.label, value: cat.id })))
         })
         .catch(() => setCategorias([]))
-        .finally(() => setLoadingCategorias(false));
-    }, []);
+        .finally(() => setLoadingCategorias(false))
+    }, [])
     React.useEffect(() => {
       if (defaultValues) {
-        reset(defaultValues);
+        reset(defaultValues)
       } else {
-        reset({ nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 });
+        reset({ nombre: '', abreviatura: '', categoria: null, ruc: '', active: 1 })
       }
-    }, [defaultValues, reset]);
+    }, [defaultValues, reset])
     const handleError = formErrors => {
       const messages = Object.values(formErrors)
         .slice(0, 4)
-        .map(e => e.message);
-      toast.error(messages);
-    };
-    const onSubmit = formData => onSubmitFieldsHandler(formData, reset);
+        .map(e => e.message)
+      toast.error(messages)
+    }
+    const onSubmit = formData => onSubmitFieldsHandler(formData, reset)
     return (
       <form onSubmit={handleSubmit(onSubmit, handleError)}>
         <div className="content">
@@ -134,9 +137,7 @@ export default function MantenimientoClientes() {
               name="nombre"
               control={control}
               rules={{ required: 'Nombre requerido', maxLength: { value: 50, message: 'Máx 50 caracteres' } }}
-              render={({ field }) => (
-                <InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-              )}
+              render={({ field }) => <InputText {...field} autoComplete="off" className="p-inputtext p-component" />}
             />
             {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
           </div>
@@ -146,9 +147,7 @@ export default function MantenimientoClientes() {
               name="abreviatura"
               control={control}
               rules={{ required: 'Abreviatura requerida', maxLength: { value: 10, message: 'Máx 10 caracteres' } }}
-              render={({ field }) => (
-                <InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-              )}
+              render={({ field }) => <InputText {...field} autoComplete="off" className="p-inputtext p-component" />}
             />
             {errors.abreviatura && <div className="error-message">{errors.abreviatura.message}</div>}
           </div>
@@ -159,7 +158,13 @@ export default function MantenimientoClientes() {
               control={control}
               rules={{ required: 'Seleccione una categoría' }}
               render={({ field }) => (
-                <Dropdown {...field} options={categorias} placeholder={loadingCategorias ? 'Cargando...' : 'Seleccione'} loading={loadingCategorias} style={{ minWidth: 160 }} />
+                <Dropdown
+                  {...field}
+                  options={categorias}
+                  placeholder={loadingCategorias ? 'Cargando...' : 'Seleccione'}
+                  loading={loadingCategorias}
+                  style={{ minWidth: 160 }}
+                />
               )}
             />
             {errors.categoria && <div className="error-message">{errors.categoria.message}</div>}
@@ -170,9 +175,7 @@ export default function MantenimientoClientes() {
               name="ruc"
               control={control}
               rules={{ required: 'RUC requerido', maxLength: { value: 15, message: 'Máx 15 caracteres' } }}
-              render={({ field }) => (
-                <InputText {...field} autoComplete="off" className="p-inputtext p-component" />
-              )}
+              render={({ field }) => <InputText {...field} autoComplete="off" className="p-inputtext p-component" />}
             />
             {errors.ruc && <div className="error-message">{errors.ruc.message}</div>}
           </div>
@@ -201,7 +204,7 @@ export default function MantenimientoClientes() {
           />
         </div>
       </form>
-    );
+    )
   }
   // Return principal restaurado con el listado y los modales
   return (
@@ -211,117 +214,158 @@ export default function MantenimientoClientes() {
         <div className="header-clientes">
           <h2>LISTADO DE CLIENTES</h2>
           <div className="acciones">
-          <button
-            className="add"
-            onClick={() => setShowAdd(true)}
-          >
-            Agregar +
-          </button>
+            <button className="add" onClick={() => setShowAdd(true)}>
+              Agregar +
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="filtros-clientes">
-        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText placeholder="Nombre cliente" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
-          </span>
+        <div className="filtros-clientes">
+          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="p-input-icon-left">
+              <i className="pi pi-search" />
+              <InputText
+                placeholder="Nombre cliente"
+                value={search}
+                onChange={e => {
+                  setSearch(e.target.value)
+                  setPage(1)
+                }}
+              />
+            </span>
+          </div>
+          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <label htmlFor="estado-filter" style={{ minWidth: 60 }}>
+              Estado
+            </label>
+            <Dropdown
+              id="estado-filter"
+              value={state}
+              options={estados}
+              onChange={e => {
+                setState(e.value)
+                setPage(1)
+              }}
+              placeholder="Estado"
+              style={{ minWidth: 160 }}
+            />
+          </div>
         </div>
-        <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label htmlFor="estado-filter" style={{ minWidth: 60 }}>Estado</label>
-          <Dropdown id="estado-filter" value={state} options={estados} onChange={e => { setState(e.value); setPage(1); }} placeholder="Estado" style={{ minWidth: 160 }} />
-        </div>
-      </div>
-      <div className="tabla-clientes">
-        {isFetching ? (
-          Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
-        ) : (
-          <table className="p-datatable table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Abreviatura</th>
-                <th>Categoría</th>
-                <th>RUC</th>
-                <th>Estado</th>
-                <th>Usuario creado</th>
-                <th>Fecha creada</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientes.length === 0 ? (
-                <tr><td colSpan={8} style={{ textAlign: 'center' }}>No hay resultados</td></tr>
-              ) : (
-                clientes.map(cli => (
-                  <tr key={cli.id}>
-                    <td>{cli.id}</td>
-                    <td>{cli.nombre}</td>
-                    <td>{cli.abreviatura}</td>
-                    <td>{cli.categoria || '-'}</td>
-                    <td>{cli.ruc}</td>
-                    <td><EstadoBadge estado={cli.active} /></td>
-                    <td>{cli.usuario_creado || '-'}</td>
-                    <td>{formatDate(cli.fecha_creada)}</td>
-                    <td>
-                      <div className="actions">
-                        <Button
-                          icon="pi pi-pencil"
-                          className="p-button p-component p-button-icon-only"
-                          style={{ background: 'transparent' }}
-                          onClick={() => { setRowData(cli); setShowAdd(true); }}
-                          aria-label="Editar"
-                        />
-                        <Button
-                          icon="pi pi-map-marker"
-                          className="p-button p-component p-button-icon-only"
-                          style={{ background: 'transparent', marginLeft: 8 }}
-                          onClick={() => { setRowData(cli); setShowSedes(true); }}
-                          aria-label="Sedes"
-                        />
-                      </div>
+        <div className="tabla-clientes">
+          {isFetching ? (
+            Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
+          ) : (
+            <table className="p-datatable table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Abreviatura</th>
+                  <th>Categoría</th>
+                  <th>RUC</th>
+                  <th>Estado</th>
+                  <th>Usuario creado</th>
+                  <th>Fecha creada</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clientes.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} style={{ textAlign: 'center' }}>
+                      No hay resultados
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
+                ) : (
+                  clientes.map(cli => (
+                    <tr key={cli.id}>
+                      <td>{cli.id}</td>
+                      <td>{cli.nombre}</td>
+                      <td>{cli.abreviatura}</td>
+                      <td>{cli.categoria || '-'}</td>
+                      <td>{cli.ruc}</td>
+                      <td>
+                        <EstadoBadge estado={cli.active} />
+                      </td>
+                      <td>{cli.usuario_creado || '-'}</td>
+                      <td>{formatDate(cli.fecha_creada)}</td>
+                      <td>
+                        <div className="actions">
+                          <Button
+                            icon="pi pi-pencil"
+                            className="p-button p-component p-button-icon-only"
+                            style={{ background: 'transparent' }}
+                            onClick={() => {
+                              setRowData(cli)
+                              setShowAdd(true)
+                            }}
+                            aria-label="Editar"
+                          />
+                          <Button
+                            icon="pi pi-map-marker"
+                            className="p-button p-component p-button-icon-only"
+                            style={{ background: 'transparent', marginLeft: 8 }}
+                            onClick={() => {
+                              setRowData(cli)
+                              setShowSedes(true)
+                            }}
+                            aria-label="Sedes"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <Dialog
+          className="dialog clientes-dialog maintenance"
+          draggable={false}
+          visible={showAdd}
+          modal
+          onHide={() => {
+            setShowAdd(false)
+            setRowData(null)
+          }}
+          header={
+            <span style={{ fontWeight: 600, fontSize: '1.2rem' }}>
+              {rowData ? 'Editar cliente' : 'Agregar cliente'}
+            </span>
+          }
+          closable={true}
+        >
+          <ClienteModalForm
+            onClose={() => {
+              setShowAdd(false)
+              setRowData(null)
+            }}
+            onSubmitFields={onSubmitFields}
+            isMutating={isMutating}
+            defaultValues={
+              rowData
+                ? {
+                    nombre: rowData.nombre || '',
+                    abreviatura: rowData.abreviatura || '',
+                    categoria: rowData.categoria_id || null,
+                    ruc: rowData.ruc || '',
+                    active: rowData.active === 'inactivo' ? 0 : 1
+                  }
+                : undefined
+            }
+          />
+        </Dialog>
+        {/* Modal de Sedes */}
+        <SedesModal visible={showSedes} onHide={() => setShowSedes(false)} cliente={rowData} />
+        <div className="paginate">
+          <Paginator
+            first={(page - 1) * PAGE_SIZE}
+            rows={PAGE_SIZE}
+            onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
+            totalRecords={totalRecords}
+          />
+        </div>
       </div>
-      <Dialog
-        className="dialog clientes-dialog maintenance"
-        draggable={false}
-        visible={showAdd}
-        modal
-        onHide={() => { setShowAdd(false); setRowData(null); }}
-        header={<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{rowData ? 'Editar cliente' : 'Agregar cliente'}</span>}
-        closable={true}
-      >
-        <ClienteModalForm
-          onClose={() => { setShowAdd(false); setRowData(null); }}
-          onSubmitFields={onSubmitFields}
-          isMutating={isMutating}
-          defaultValues={rowData ? {
-            nombre: rowData.nombre || '',
-            abreviatura: rowData.abreviatura || '',
-            categoria: rowData.categoria_id || null,
-            ruc: rowData.ruc || '',
-            active: rowData.active === 'inactivo' ? 0 : 1
-          } : undefined}
-        />
-      </Dialog>
-      {/* Modal de Sedes */}
-      <SedesModal visible={showSedes} onHide={() => setShowSedes(false)} cliente={rowData} />
-      <div className="paginate">
-        <Paginator
-          first={(page - 1) * PAGE_SIZE}
-          rows={PAGE_SIZE}
-          onPageChange={e => setPage(Math.floor(e.first / PAGE_SIZE) + 1)}
-          totalRecords={totalRecords}
-        />
-      </div>
-    </div>
     </>
-  );
+  )
 }
-

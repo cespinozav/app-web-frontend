@@ -1,18 +1,18 @@
 /* eslint-disable camelcase */
-import { makeRequest } from 'utils/api';
+import { makeRequest } from 'utils/api'
 
 const ResetPasswordService = {
-  requestReset: (data) =>
+  requestReset: data =>
     makeRequest('/send-email-reset-password', {
       method: 'POST',
-      body: data,
+      body: data
     }),
 
   confirmReset: ({ uid, token, new_password }) =>
     makeRequest(`/reset-password/${uid}/${token}/`, {
       method: 'POST',
-      body: { new_password },
-    }),
-};
+      body: { new_password }
+    })
+}
 
-export default ResetPasswordService;
+export default ResetPasswordService

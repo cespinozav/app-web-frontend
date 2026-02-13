@@ -10,13 +10,13 @@ const useKitAssignment = () => {
   const [rowCount, setRowCount] = useState(0)
   const paramsRef = useRef({})
 
-  const searchAssignments = (formData) => {
+  const searchAssignments = formData => {
     setIsLoading(true)
     const { page } = formData
     paramsRef.current = formData
     KitService.assignments
       .get(formData)
-      .then((res) => {
+      .then(res => {
         if (!page || page === 0) {
           setFirstRow(0)
         }
@@ -27,7 +27,7 @@ const useKitAssignment = () => {
         }
         setAssignments(rows)
       })
-      .catch((e) => {
+      .catch(e => {
         toast.error(String(e))
       })
       .finally(() => {
@@ -45,7 +45,7 @@ const useKitAssignment = () => {
       setAssignments([])
     }
   }
-  const onPageChange = (e) => {
+  const onPageChange = e => {
     const { page, first } = e
     const newParams = { ...paramsRef.current, page }
     searchAssignments(newParams)
@@ -62,7 +62,7 @@ const useKitAssignment = () => {
     searchAssignments,
     clearAssignments,
     pageHandling,
-    isLoading,
+    isLoading
   }
 }
 export default useKitAssignment

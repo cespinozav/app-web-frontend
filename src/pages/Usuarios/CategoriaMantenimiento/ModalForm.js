@@ -13,13 +13,7 @@ export default function ModalForm({ isVisible, onClose, defaultFields, service, 
       header={headerTitle}
       closable={true}
     >
-      {FormComponent && (
-        <FormComponent
-          onClose={onClose}
-          defaultFields={defaultFields}
-          service={service}
-        />
-      )}
+      {FormComponent && <FormComponent onClose={onClose} defaultFields={defaultFields} service={service} />}
     </Dialog>
   )
 }

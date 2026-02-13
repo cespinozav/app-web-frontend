@@ -912,11 +912,7 @@ const AssetService = {
   },
   uploadFile: {
     get(filepath) {
-      return networkRequest('/upload-document/active', { params: { filepath } })
-        .then(res => res.json())
-        .then(res => {
-          console.log(res)
-        })
+      return networkRequest('/upload-document/active', { params: { filepath } }).then(res => res.json())
     },
     post(document) {
       const formData = new FormData()
