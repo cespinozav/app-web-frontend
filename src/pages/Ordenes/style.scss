@@ -108,10 +108,43 @@
 }
 
 .orders-export-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   .p-button {
     min-width: 42px;
     height: 42px;
   }
+}
+
+.general-products-loading {
+  display: grid;
+  gap: 8px;
+}
+
+.bulk-actions-bar {
+  border: 1px solid #ecebeb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: #fafbfc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  span {
+    color: #374151;
+    font-weight: 500;
+  }
+}
+
+.bulk-actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .tabla-ordenes {
@@ -155,6 +188,11 @@
 }
 
 .table td:last-child {
+  text-align: center;
+}
+
+.table th:first-child,
+.table td:first-child {
   text-align: center;
 }
 
@@ -412,6 +450,22 @@
   margin-top: 4px;
 }
 
+.bulk-result-card {
+  display: grid;
+  gap: 8px;
+}
+
+.bulk-result-errors {
+  border-top: 1px dashed #ecebeb;
+  padding-top: 8px;
+
+  p {
+    margin: 0 0 6px;
+    color: #dc2626;
+    font-size: 0.9rem;
+  }
+}
+
 .order-detail-modal {
   display: flex;
   flex-direction: column;
@@ -617,6 +671,11 @@
 
   .payment-actions {
     flex-direction: column-reverse;
+  }
+
+  .bulk-actions-bar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .payment-actions .p-button {

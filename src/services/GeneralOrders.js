@@ -98,6 +98,46 @@ const GeneralOrdersService = {
     return response.blob()
   },
 
+  getAllByFilters: async ({ search = '', state = '', date_ini = '', date_fin = '' } = {}) => {
+    const pageSize = 100
+    const fetchPage = async (page = 1, accumulated = []) => {
+      const response = await makeRequest(`${ENDPOINT}`, {
+        params: {
+          page,
+          page_size: pageSize,
+          search,
+          state,
+          date_ini,
+          date_fin
+        },
+        headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+      })
+      const parsed = parseResponse(await response.json())
+      const batch = parsed?.results || []
+      const totalCount = parsed?.count || 0
+      const nextAccumulated = accumulated.concat(batch)
+
+      if (batch.length === 0) {
+        return nextAccumulated
+      }
+
+      if (nextAccumulated.length >= totalCount) {
+        return nextAccumulated
+      }
+
+      return fetchPage(page + 1, nextAccumulated)
+    }
+
+    return fetchPage()
+  },
+
+  bulkChangeStatus: ({ ordenes = [], estado } = {}) =>
+    makeRequest('/ordenes-generales/cambio-estado-masivo', {
+      method: 'POST',
+      body: { ordenes, estado },
+      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+    }).then(res => res.json()),
+
   create: payload =>
     makeRequest('/ordenes/create', {
       method: 'POST',
