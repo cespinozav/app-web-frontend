@@ -198,6 +198,7 @@ export default function Ordenes() {
           )
         } else {
           toast.success(result.message || `Se actualizaron ${result.successCount} pedido(s) correctamente`)
+          setShowBulkModal(false)
         }
 
         setSelectedOrderIds([])
