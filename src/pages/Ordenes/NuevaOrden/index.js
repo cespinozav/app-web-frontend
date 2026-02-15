@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ClienteService from 'services/Cliente'
@@ -6,12 +7,12 @@ import ProductoService from 'services/Producto'
 import SedesClienteService from 'services/SedesCliente'
 import useToast from 'hooks/useToast'
 import { SUB_ROUTES } from 'routing/routes'
+import calcularFechaEntrega from 'services/CalcularFechaEntrega'
 import OrderForm from './components/Forms/OrderForm'
 import PaymentModal from './components/Modals/PaymentModal'
 import '../style.scss'
 
 const paymentMethods = [
-  { label: 'Efectivo', value: 'efectivo' },
   { label: 'Yape', value: 'yape' },
   { label: 'Plin', value: 'plin' },
   { label: 'Transferencia', value: 'transferencia' },
@@ -35,8 +36,9 @@ export default function NuevaOrden() {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('efectivo')
   const [operationNumber, setOperationNumber] = useState('')
-  const [receivedAmount, setReceivedAmount] = useState(null)
+  // Eliminado receivedAmount
   const [isSaving, setIsSaving] = useState(false)
+  const [fechaEntregaEstimada, setFechaEntregaEstimada] = useState(null)
 
   useEffect(() => {
     ClienteService.get({ page: 1, page_size: 100, state: 'activo' })
@@ -131,11 +133,7 @@ export default function NuevaOrden() {
     return { subtotal, discount, total }
   }, [cart])
 
-  const changeForCustomer = useMemo(() => {
-    const amount = Number(receivedAmount || 0)
-    if (paymentMethod !== 'efectivo') return 0
-    return Math.max(amount - summary.total, 0)
-  }, [paymentMethod, receivedAmount, summary.total])
+  // Eliminado changeForCustomer
 
   const clearForm = () => {
     setSelectedClient(null)
@@ -144,7 +142,7 @@ export default function NuevaOrden() {
     setCart([])
     setPaymentMethod('efectivo')
     setOperationNumber('')
-    setReceivedAmount(null)
+    setFechaEntregaEstimada(null)
   }
 
   const handleCreateOrder = async () => {
@@ -163,13 +161,19 @@ export default function NuevaOrden() {
       return
     }
 
-    if (paymentMethod === 'efectivo' && Number(receivedAmount || 0) < summary.total) {
-      toast.error('El monto recibido no cubre el total de la orden')
-      return
-    }
-
     setIsSaving(true)
     try {
+      // Obtener la fecha estimada justo antes de crear la orden
+      let fechaEntrega = fechaEntregaEstimada;
+      if (!fechaEntrega) {
+        try {
+          const data = await calcularFechaEntrega();
+          fechaEntrega = data?.result?.fecha_entrega_estimada || null;
+        } catch (e) {
+          fechaEntrega = null;
+        }
+      }
+
       const detalles = cart.map(item => {
         const quantity = Number(item.quantity)
         const unitPrice = Number(item.price)
@@ -187,14 +191,30 @@ export default function NuevaOrden() {
         }
       })
 
-      await GeneralOrdersService.create({
+      // Convertir fecha de DD-MM-YYYY a YYYY-MM-DD si es necesario
+      let fechaEntregaISO = fechaEntrega;
+      if (fechaEntrega && /^\d{2}-\d{2}-\d{4}$/.test(fechaEntrega)) {
+        const [dd, mm, yyyy] = fechaEntrega.split('-');
+        fechaEntregaISO = `${yyyy}-${mm}-${dd}`;
+      }
+      // Generar fecha_orden localmente en formato ISO con zona horaria
+      const now = new Date();
+      const fechaOrden = now.toISOString();
+
+      const payload = {
         sede: selectedSite,
         subtotal: toAmountString(summary.subtotal),
         descuento: toAmountString(summary.discount),
         total: toAmountString(summary.total),
         estado: 'pendiente',
+        fecha_orden: fechaOrden,
+        fecha_entrega_estimada: fechaEntregaISO,
         detalles
-      })
+      }
+      // Log temporal para depuración
+      // eslint-disable-next-line no-console
+      console.log('Payload a enviar:', payload)
+      await GeneralOrdersService.create(payload)
 
       toast.success('Orden registrada correctamente')
       setShowPaymentModal(false)
@@ -205,6 +225,17 @@ export default function NuevaOrden() {
     } finally {
       setIsSaving(false)
     }
+  }
+
+  // Al abrir el modal de pago, consultar la fecha estimada de entrega
+  const handleOpenPaymentModal = async () => {
+    try {
+      const data = await calcularFechaEntrega()
+      setFechaEntregaEstimada(data?.result?.fecha_entrega_estimada || null)
+    } catch (e) {
+      setFechaEntregaEstimada(null)
+    }
+    setShowPaymentModal(true)
   }
 
   return (
@@ -227,7 +258,7 @@ export default function NuevaOrden() {
         selectedSite={selectedSite}
         setSelectedSite={setSelectedSite}
         summary={summary}
-        onOpenPayment={() => setShowPaymentModal(true)}
+        onOpenPayment={handleOpenPaymentModal}
       />
 
       <PaymentModal
@@ -240,11 +271,9 @@ export default function NuevaOrden() {
         paymentMethods={paymentMethods}
         operationNumber={operationNumber}
         setOperationNumber={setOperationNumber}
-        receivedAmount={receivedAmount}
-        setReceivedAmount={setReceivedAmount}
-        changeForCustomer={changeForCustomer}
         isSaving={isSaving}
         onConfirm={handleCreateOrder}
+        fechaEntregaEstimada={fechaEntregaEstimada}
       />
     </>
   )

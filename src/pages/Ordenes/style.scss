@@ -1,3 +1,41 @@
+.delivery-estimate-card {
+  background: #f6f7fa;
+  border: 1.5px solid #e3e7ed;
+  border-radius: 10px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+  padding: 16px 18px 12px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.delivery-estimate-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.delivery-estimate-title {
+  font-size: 1.05rem;
+  color: #007185;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.delivery-estimate-date {
+  font-size: 1.25rem;
+  color: #222;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.delivery-estimate-note {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 6px;
+}
 @import 'src/components/styles/common.scss';
 
 .module {

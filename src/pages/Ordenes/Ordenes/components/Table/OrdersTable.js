@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react'
 import { Skeleton } from 'primereact/skeleton'
 import { Button } from 'primereact/button'
 import EstadoBadge from 'components/styles/EstadoBadge'
+import { formatDate, formatDateMin } from 'utils/dates'
 
 export default function OrdersTable({
   orders,
   isFetching,
   pageSize,
-  formatDate,
   formatCurrency,
   onOpenDetail,
   selectedOrderIds,
@@ -49,6 +49,7 @@ export default function OrdersTable({
               <th>Total</th>
               <th>Método de Pago</th>
               <th>Estado</th>
+              <th>Entrega Estimada</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -70,7 +71,7 @@ export default function OrdersTable({
                       aria-label={`Seleccionar orden ${order.code || order.id}`}
                     />
                   </td>
-                  <td>{formatDate(order.date)}</td>
+                  <td>{formatDateMin(order.raw?.fecha_orden || order.fecha_orden || order.date)}</td>
                   <td>{order.code || '-'}</td>
                   <td>{order.client}</td>
                   <td>{order.site}</td>
@@ -80,10 +81,16 @@ export default function OrdersTable({
                     <EstadoBadge estado={order.state} />
                   </td>
                   <td>
+                    {order.raw?.fecha_entrega_estimada || order.fecha_entrega_estimada
+                      ? formatDate(order.raw?.fecha_entrega_estimada || order.fecha_entrega_estimada)
+                      : '-'}
+                  </td>
+                  <td>
                     <div className="actions">
                       <Button
                         icon="pi pi-eye"
                         className="p-button p-component p-button-icon-only"
+                        style={{ background: 'transparent' }}
                         aria-label="Ver Orden"
                         onClick={() => onOpenDetail(order)}
                         tooltip="Ver detalle"

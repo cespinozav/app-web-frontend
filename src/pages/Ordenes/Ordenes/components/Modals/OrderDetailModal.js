@@ -1,9 +1,10 @@
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import EstadoBadge from 'components/styles/EstadoBadge'
+import { formatDate, formatDateMin } from 'utils/dates'
 import { openGoogleMapsByCoordinates } from 'components/Maps/maps'
-
-export default function OrderDetailModal({ visible, onHide, selectedOrder, formatDate, formatCurrency }) {
+// import { formatDate } from 'utils/dates' // Removed unused import
+export default function OrderDetailModal({ visible, onHide, selectedOrder, formatCurrency }) {
   const selectedOrderDetails = selectedOrder?.details || []
   const shippingSteps = ['pendiente', 'confirmado', 'en camino', 'entregado']
   const normalizedOrderState = String(selectedOrder?.state || '')
@@ -76,11 +77,11 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
             </div>
             <div className="order-detail-head-item">
               <span>Fecha</span>
-              <strong>{formatDate(selectedOrder.date)}</strong>
+              <strong>{formatDateMin(selectedOrder.raw?.fecha_orden || selectedOrder.fecha_orden || selectedOrder.date)}</strong>
             </div>
             <div className="order-detail-head-item">
-              <span>Estado</span>
-              <EstadoBadge estado={selectedOrder.state} />
+              <span>Entrega Estimada</span>
+              <strong>{selectedOrder.raw?.fecha_entrega_estimada || selectedOrder.fecha_entrega_estimada ? formatDate(selectedOrder.raw?.fecha_entrega_estimada || selectedOrder.fecha_entrega_estimada) : '-'}</strong>
             </div>
           </div>
 
@@ -144,31 +145,21 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
               <table className="p-datatable table order-detail-table">
                 <thead>
                   <tr>
-                    <th>Cantidad</th>
                     <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Descuento</th>
+                    <th>Precio Unitario</th>
+                    <th>Descuento Unitario</th>
                     <th>Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedOrderDetails.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} style={{ textAlign: 'center' }}>
-                        Sin detalles
-                      </td>
+                  {selectedOrderDetails.map((detail, idx) => (
+                    <tr key={idx}>
+                      <td>{formatProductDetail(detail)}</td>
+                      <td>{formatCurrency(detail.precio_unitario)}</td>
+                      <td>{formatCurrency(detail.descuento_unitario)}</td>
+                      <td>{formatCurrency(detail.subtotal)}</td>
                     </tr>
-                  ) : (
-                    selectedOrderDetails.map(detail => (
-                      <tr key={detail.id}>
-                        <td>{detail.cantidad || 0}</td>
-                        <td>{formatProductDetail(detail)}</td>
-                        <td>{formatCurrency(detail.precio_unitario)}</td>
-                        <td>{formatCurrency(detail.descuento_unitario)}</td>
-                        <td>{formatCurrency(detail.subtotal)}</td>
-                      </tr>
-                    ))
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -178,11 +169,7 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
             <h4>Envío</h4>
             <div className="order-detail-field">
               <span>Estado del envío</span>
-              {/* <div>
-                <EstadoBadge estado={selectedOrder.state} />
-              </div> */}
             </div>
-
             <div className="order-shipping-progress" role="list" aria-label="Progreso de envío">
               {shippingSteps.map((step, index) => {
                 const isCompleted = currentStepIndex >= 0 && index < currentStepIndex
@@ -194,11 +181,13 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
                   statusClass = 'is-completed'
                 }
                 const stepLabel = step.charAt(0).toUpperCase() + step.slice(1)
-
+                // Si es el paso actual, mostrar solo el EstadoBadge como label
                 return (
                   <div className={`order-shipping-step ${statusClass}`} key={step} role="listitem">
                     <span className="order-shipping-step-dot" />
-                    <span className="order-shipping-step-label">{stepLabel}</span>
+                    <span className="order-shipping-step-label">
+                      {isCurrent ? <EstadoBadge estado={selectedOrder.state} /> : stepLabel}
+                    </span>
                   </div>
                 )
               })}
