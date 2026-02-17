@@ -33,7 +33,7 @@ export default function OrdersTable({
         <table className="p-datatable table">
           <thead>
             <tr>
-              <th style={{ width: 42 }}>
+              <th>
                 <input
                   ref={selectAllRef}
                   type="checkbox"
@@ -42,8 +42,8 @@ export default function OrdersTable({
                   aria-label="Seleccionar pedidos de la página actual"
                 />
               </th>
-              <th>Fecha</th>
-              <th>Cod. Orden</th>
+              <th>Fecha Orden</th>
+              <th style={{ width: 150 }}>Cod. Orden</th>
               <th>Cliente</th>
               <th>Sede</th>
               <th>Total</th>
@@ -71,7 +71,7 @@ export default function OrdersTable({
                       aria-label={`Seleccionar orden ${order.code || order.id}`}
                     />
                   </td>
-                  <td>{formatDateMin(order.raw?.fecha_orden || order.fecha_orden || order.date)}</td>
+                  <td>{order.date || order.raw?.fecha_orden || '-'}</td>
                   <td>{order.code || '-'}</td>
                   <td>{order.client}</td>
                   <td>{order.site}</td>

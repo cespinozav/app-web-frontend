@@ -9,6 +9,7 @@ const KNOWN_DATE_FORMATS = [
   'YYYY/MM/DD',
   'YYYY-MM-DD HH:mm:ss',
   'YYYY/MM/DD HH:mm:ss',
+  'DD-MM-YYYY HH:mm',
   moment.ISO_8601
 ]
 

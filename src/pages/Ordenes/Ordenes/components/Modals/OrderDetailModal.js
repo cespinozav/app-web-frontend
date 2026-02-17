@@ -76,8 +76,8 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
               <strong>{selectedOrder.code || '-'}</strong>
             </div>
             <div className="order-detail-head-item">
-              <span>Fecha</span>
-              <strong>{formatDateMin(selectedOrder.raw?.fecha_orden || selectedOrder.fecha_orden || selectedOrder.date)}</strong>
+              <span>Fecha Orden</span>
+              <strong>{formatDateMin(selectedOrder.raw?.fecha_orden || selectedOrder.fecha_orden || selectedOrder.date || '-')}</strong>
             </div>
             <div className="order-detail-head-item">
               <span>Entrega Estimada</span>
@@ -145,19 +145,21 @@ export default function OrderDetailModal({ visible, onHide, selectedOrder, forma
               <table className="p-datatable table order-detail-table">
                 <thead>
                   <tr>
+                    <th>Cantidad</th>
                     <th>Producto</th>
-                    <th>Precio Unitario</th>
-                    <th>Descuento Unitario</th>
                     <th>Subtotal</th>
+                    <th>Descuento</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {selectedOrderDetails.map((detail, idx) => (
                     <tr key={idx}>
-                      <td>{formatProductDetail(detail)}</td>
-                      <td>{formatCurrency(detail.precio_unitario)}</td>
-                      <td>{formatCurrency(detail.descuento_unitario)}</td>
+                      <td>{detail.quantity}</td>
+                      <td>{detail.name || detail.product_name || '-'}</td>
                       <td>{formatCurrency(detail.subtotal)}</td>
+                      <td>{formatCurrency(detail.descuento_unitario ?? detail.discount)}</td>
+                      <td>{formatCurrency(detail.total)}</td>
                     </tr>
                   ))}
                 </tbody>

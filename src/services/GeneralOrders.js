@@ -2,7 +2,7 @@
 import { API, makeRequest } from 'utils/api'
 import { getBearer } from 'utils/auth'
 
-const ENDPOINT = '/ordenes-generales'
+const ENDPOINT = '/ordenes'
 
 const parseResponse = response => {
   const result = response?.result || response || {}
@@ -27,8 +27,9 @@ const parseResponse = response => {
     results: source.map(order => ({
       id: order.id,
       code: order.cod_orden || order.code || '-',
-      date: order.fecha_orden || order.fecha || order.date || order.date_created || order.created_at || null,
+      date: order.fecha_orden ?? null,
       client:
+        order.nombre_cliente ||
         order.sede_info?.cliente_nombre ||
         order.sede_info?.name_client ||
         order.client_name ||
@@ -36,7 +37,14 @@ const parseResponse = response => {
         order.cliente?.nombre ||
         order.cliente ||
         '-',
-      site: order.sede_info?.nombre || order.site_name || order.sede_nombre || order.sede?.nombre || order.sede || '-',
+      site:
+        order.nombre_sede ||
+        order.sede_info?.nombre ||
+        order.site_name ||
+        order.sede_nombre ||
+        order.sede?.nombre ||
+        order.sede ||
+        '-',
       site_address:
         order.sede_info?.adress || order.sede_info?.address || order.sede_adress || order.sede_address || '-',
       site_lat: order.sede_info?.lat || order.sede?.lat || '',
@@ -132,7 +140,7 @@ const GeneralOrdersService = {
   },
 
   bulkChangeStatus: ({ ordenes = [], estado } = {}) =>
-    makeRequest('/ordenes-generales/cambio-estado-masivo', {
+    makeRequest('/ordenes/cambio-masivo-estado', {
       method: 'POST',
       body: { ordenes, estado },
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined

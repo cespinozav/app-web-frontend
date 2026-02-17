@@ -174,42 +174,38 @@ export default function NuevaOrden() {
         }
       }
 
-      const detalles = cart.map(item => {
-        const quantity = Number(item.quantity)
-        const unitPrice = Number(item.price)
-        const unitDiscount = Number(item.discount)
-        const discountPercentage = unitPrice > 0 ? (unitDiscount * 100) / unitPrice : 0
-        const itemSubtotal = Math.max((unitPrice - unitDiscount) * quantity, 0)
-
+      const productos = cart.map(item => {
         return {
           producto: item.id,
-          cantidad: quantity,
-          precio_unitario: toAmountString(unitPrice),
-          descuento_unitario: toAmountString(unitDiscount),
-          descuento_porcentaje: toAmountString(discountPercentage),
-          subtotal: toAmountString(itemSubtotal)
+          cantidad: Number(item.quantity),
+          precio_unitario: Number(item.price),
+          descuento: Number(item.discount)
         }
       })
 
-      // Convertir fecha de DD-MM-YYYY a YYYY-MM-DD si es necesario
-      let fechaEntregaISO = fechaEntrega;
-      if (fechaEntrega && /^\d{2}-\d{2}-\d{4}$/.test(fechaEntrega)) {
-        const [dd, mm, yyyy] = fechaEntrega.split('-');
-        fechaEntregaISO = `${yyyy}-${mm}-${dd}`;
+      // Convertir fecha_entrega_estimada a DD-MM-YYYY
+      let fechaEntregaFinal = fechaEntrega;
+      if (fechaEntrega) {
+        // Si viene en YYYY-MM-DD, convertir a DD-MM-YYYY
+        if (/^\d{4}-\d{2}-\d{2}$/.test(fechaEntrega)) {
+          const [yyyy, mm, dd] = fechaEntrega.split('-');
+          fechaEntregaFinal = `${dd}-${mm}-${yyyy}`;
+        } else if (/^\d{2}-\d{2}-\d{4}$/.test(fechaEntrega)) {
+          fechaEntregaFinal = fechaEntrega;
+        }
+      } else {
+        fechaEntregaFinal = null;
       }
-      // Generar fecha_orden localmente en formato ISO con zona horaria
+
+      // Generar fecha_orden en formato DD-MM-YYYY HH:mm
       const now = new Date();
-      const fechaOrden = now.toISOString();
+      const fechaOrden = require('utils/dates').formatDateMin(now).replaceAll('/', '-');
 
       const payload = {
         sede: selectedSite,
-        subtotal: toAmountString(summary.subtotal),
-        descuento: toAmountString(summary.discount),
-        total: toAmountString(summary.total),
-        estado: 'pendiente',
+        fecha_entrega_estimada: fechaEntregaFinal,
         fecha_orden: fechaOrden,
-        fecha_entrega_estimada: fechaEntregaISO,
-        detalles
+        productos
       }
       // Log temporal para depuración
       // eslint-disable-next-line no-console

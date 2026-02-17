@@ -7,6 +7,7 @@ import useToast from 'hooks/useToast'
 import { formatDate } from 'utils/dates'
 import { SUB_ROUTES } from 'routing/routes'
 import GeneralOrdersService from 'services/GeneralOrders'
+import OrderDetailService from 'services/OrderDetail'
 import OrdersFiltersForm from './components/Forms/OrdersFiltersForm'
 import OrdersTable from './components/Table/OrdersTable'
 import OrderDetailModal from './components/Modals/OrderDetailModal'
@@ -62,14 +63,17 @@ export default function Ordenes() {
 
   const orders = data?.results || []
   const totalRecords = data?.count || 0
-  const selectedOrders = useMemo(() => orders.filter(order => selectedOrderIds.includes(order.id)), [orders, selectedOrderIds])
+  // selectedOrders global: todas las órdenes seleccionadas en todas las páginas
+  const selectedOrders = useMemo(() => {
+    if (!data?.allResults) return orders.filter(order => selectedOrderIds.includes(order.id))
+    // Si el backend provee allResults (todas las órdenes), usarlo
+    return data.allResults.filter(order => selectedOrderIds.includes(order.id))
+  }, [orders, selectedOrderIds, data])
   const selectedCount = selectedOrderIds.length
   const selectedPendingCount = selectedOrders.filter(order => normalizeState(order.state) === 'pendiente').length
   const selectedConfirmedCount = selectedOrders.filter(order => normalizeState(order.state) === 'confirmado').length
 
-  useEffect(() => {
-    setSelectedOrderIds([])
-  }, [page, search, state, dateIni, dateFin])
+
 
   const handleExport = async () => {
     if (isExporting) return
@@ -111,23 +115,38 @@ export default function Ordenes() {
   }
 
   const handleToggleCurrentPageSelection = checked => {
-    if (checked) {
-      setSelectedOrderIds(orders.map(order => order.id))
-      return
-    }
-    setSelectedOrderIds([])
+    setSelectedOrderIds(prev => {
+      const pageIds = orders.map(order => order.id)
+      if (checked) {
+        // Agrega los ids de la página actual a la selección global (sin duplicados)
+        return Array.from(new Set([...prev, ...pageIds]))
+      } else {
+        // Quita los ids de la página actual de la selección global
+        return prev.filter(id => !pageIds.includes(id))
+      }
+    })
   }
 
-  const handleOpenBulkModal = targetState => {
+  const handleOpenBulkModal = async targetState => {
     const originState = targetState === 'confirmado' ? 'pendiente' : 'confirmado'
-    const candidates = selectedOrders.filter(order => normalizeState(order.state) === originState)
+    // Obtener todas las órdenes seleccionadas (de todas las páginas)
+    let allSelectedOrders = []
+    try {
+      allSelectedOrders = await GeneralOrdersService.getAllByFilters({ search, state, date_ini: dateIni, date_fin: dateFin })
+    } catch (e) {
+      toast.error('No se pudieron obtener todas las órdenes seleccionadas')
+      return
+    }
+    // Filtrar solo las seleccionadas
+    const selectedFullOrders = allSelectedOrders.filter(order => selectedOrderIds.includes(order.id))
+    const candidates = selectedFullOrders.filter(order => normalizeState(order.state) === originState)
 
     if (candidates.length === 0) {
       toast.warn(`No hay pedidos seleccionados en estado ${originState} para cambiar a ${targetState}`)
       return
     }
 
-    const excluded = selectedOrders.length - candidates.length
+    const excluded = selectedFullOrders.length - candidates.length
     if (excluded > 0) {
       toast.warn(`Se excluyeron ${excluded} pedido(s) por no cumplir la transición de estado`)
     }
@@ -139,43 +158,37 @@ export default function Ordenes() {
   }
 
   const parseBulkExecutionResult = (response, fallbackOrderIds = []) => {
-    const source = response?.result || response || {}
-    const wasSuccessful = Boolean(source?.success)
-    const processed = fallbackOrderIds.length
-
+    const wasSuccessful = response?.status === true;
+    const processed = fallbackOrderIds.length;
     if (wasSuccessful) {
-      const updatedOrders = source?.data?.ordenes_actualizadas || []
-      const successCount = Number(source?.data?.total_actualizadas ?? updatedOrders.length ?? processed)
-      const failedCount = Math.max(processed - successCount, 0)
-      const failedItems =
-        failedCount > 0
-          ? fallbackOrderIds
-              .filter(orderId => !updatedOrders.includes(orderId))
-              .map(orderId => ({ orderId, message: 'No fue actualizado por validaciones del servidor' }))
-          : []
-
+      const updatedCount = Number(response?.result?.ordenes_actualizadas ?? 0);
+      const failedCount = Math.max(processed - updatedCount, 0);
+      let customMessage = '';
+      if (updatedCount > 0) {
+        customMessage = `Se ${fallbackOrderIds.length === 1 ? (bulkTargetState === 'confirmado' ? 'confirmó' : 'envió') : (bulkTargetState === 'confirmado' ? 'confirmaron' : 'enviaron')} ${updatedCount} orden${updatedCount === 1 ? '' : 'es'} ${bulkTargetState === 'confirmado' ? 'correctamente' : 'correctamente'}`;
+      } else {
+        customMessage = 'No se actualizaron órdenes.';
+      }
       return {
         processed,
-        successCount,
+        successCount: updatedCount,
         failedCount,
-        failedItems,
-        message: source?.message || 'Órdenes actualizadas correctamente.'
-      }
+        failedItems: [],
+        message: customMessage
+      };
     }
-
-    const errors = source?.errors || {}
+    const errors = response?.errors || {};
     const failedItems = Object.entries(errors).flatMap(([field, messages]) => {
-      const safeMessages = Array.isArray(messages) ? messages : [String(messages || source?.message || 'Error de validación')]
-      return safeMessages.map(message => ({ orderId: field, message }))
-    })
-
+      const safeMessages = Array.isArray(messages) ? messages : [String(messages || response?.message || 'Error de validación')];
+      return safeMessages.map(message => ({ orderId: field, message }));
+    });
     return {
       processed,
       successCount: 0,
       failedCount: processed,
-      failedItems: failedItems.length > 0 ? failedItems : [{ orderId: '-', message: source?.message || 'Error de validación.' }],
-      message: source?.message || 'Error de validación.'
-    }
+      failedItems: failedItems.length > 0 ? failedItems : [{ orderId: '-', message: response?.message || 'Error de validación.' }],
+      message: response?.message || 'Error de validación.'
+    };
   }
 
   const handleBulkStatusChange = async () => {
@@ -184,31 +197,34 @@ export default function Ordenes() {
     setPendingBulkAction(() => async () => {
       setIsBulkChangeLoading(true)
       try {
-        const orderIds = bulkCandidateOrders.map(order => order.id)
+        const orderCodes = bulkCandidateOrders.map(order => order.code);
         const response = await GeneralOrdersService.bulkChangeStatus({
-          ordenes: orderIds,
+          ordenes: orderCodes,
           estado: bulkTargetState
-        })
-        const result = parseBulkExecutionResult(response, orderIds)
-        setBulkExecutionResult(result)
+        });
+        const result = parseBulkExecutionResult(response, orderCodes);
+        setBulkExecutionResult(result);
 
         if (result.failedCount > 0) {
           toast.warn(
             `${result.message || 'Actualización con observaciones.'} Actualizados: ${result.successCount}. Fallidos: ${result.failedCount}.`
-          )
+          );
         } else {
-          toast.success(result.message || `Se actualizaron ${result.successCount} pedido(s) correctamente`)
-          setShowBulkModal(false)
+          toast.success(result.message || `Se actualizaron ${result.successCount} pedido(s) correctamente`);
+          setShowBulkModal(false);
         }
 
-        setSelectedOrderIds([])
-        await refetch()
+        if (result.successCount > 0) {
+          setShowBulkModal(false);
+        }
+        setSelectedOrderIds([]);
+        await refetch();
       } catch (error) {
-        toast.error(error?.message || error?.detail || 'No se pudo realizar el cambio masivo de estado')
+        toast.error(error?.message || error?.detail || 'No se pudo realizar el cambio masivo de estado');
       } finally {
-        setIsBulkChangeLoading(false)
-        setShowBulkConfirm(false)
-        setPendingBulkAction(null)
+        setIsBulkChangeLoading(false);
+        setShowBulkConfirm(false);
+        setPendingBulkAction(null);
       }
     })
   }
@@ -298,9 +314,14 @@ export default function Ordenes() {
           selectedOrderIds={selectedOrderIds}
           onToggleOrder={handleToggleOrderSelection}
           onToggleSelectPage={handleToggleCurrentPageSelection}
-          onOpenDetail={order => {
-            setSelectedOrder(order)
-            setShowDetailModal(true)
+          onOpenDetail={async order => {
+            try {
+              const detail = await OrderDetailService.getByCode(order.code)
+              setSelectedOrder(detail)
+              setShowDetailModal(true)
+            } catch (e) {
+              toast.error('No se pudo cargar el detalle de la orden')
+            }
           }}
         />
 
