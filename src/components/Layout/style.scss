@@ -1,17 +1,40 @@
 
 .layout {
   display: flex;
-  .side-menu {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 50px 16px;
-    width: 14rem;
-    position: fixed;
-    transition: width 0.2s ease-out;
-    height: 100vh;
-    background-color: white;
-    z-index: 1;
+    .side-menu {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 24px 16px 0 16px;
+      width: 14rem;
+      position: fixed;
+      transition: width 0.2s ease-out;
+      height: 100vh;
+      background-color: white;
+      z-index: 1;
+      overflow-y: auto;
+      .brand {
+        margin-bottom: 12px;
+        img:first-of-type {
+          width: 60%;
+          max-width: 120px;
+          margin-top: -10px;
+        }
+        img:last-of-type {
+          width: 28px;
+        }
+      }
+      .user {
+        padding: 24px 0 12px 0;
+      }
+      .options {
+        margin-bottom: 2rem;
+        margin-top: 0.5rem;
+        min-height: unset;
+        max-height: calc(100vh - 220px);
+        /* Ajusta el valor para que no tape el botón */
+        overflow-y: auto;
+      }
     .brand {
       display: flex;
       gap: 4px;
@@ -31,7 +54,7 @@
     }
     .user {
       text-align: center;
-      padding: 50px 0;
+      padding: 18px 0 12px 0;
       div:first-of-type {
         font-size: 1.1rem;
         color: $primary-color;
@@ -44,34 +67,40 @@
         color: $gray;
       }
     }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      a {
-        text-decoration: none;
-      }
-      .item {
+      .options {
         display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 12px;
-        border-radius: 8px;
-        color: $blue;
-        &.active {
-          background-color: $green-bg;
-          color: $green;
+        flex-direction: column;
+        gap: 16px;
+        max-height: 60vh;
+        overflow-y: auto;
+        a {
+          text-decoration: none;
         }
-        img {
-          width: 16px;
-          height: 16px;
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 12px;
+          border-radius: 8px;
+          color: $blue;
+          &.active {
+            background-color: $green-bg;
+            color: $green;
+          }
+          img {
+            width: 16px;
+            height: 16px;
+          }
+          span {
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
         }
-        span {
-          font-size: 0.9rem;
-          font-weight: 500;
+        .submenu {
+          max-height: 200px;
+          overflow-y: auto;
         }
       }
-    }
     .action {
       align-self: center;
       .version {
@@ -164,10 +193,20 @@
     &.show{
       margin-left: 0;
     }
+    width: 80vw;
+    min-width: 220px;
+    max-width: 320px;
+    .brand img:first-of-type {
+      width: 50%;
+      max-width: 90px;
+    }
+    .options {
+      max-height: calc(100vh - 180px);
+    }
   } 
   .layout > .content {
     margin-left: 0;
-    padding: 30px;
+    padding: 18px;
     min-height: 100vh;
     &.menu-shrink {
       margin-left: 0;

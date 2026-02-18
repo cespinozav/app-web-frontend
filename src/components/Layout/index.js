@@ -20,6 +20,17 @@ function Layout() {
   const [showMenu, setShowMenu] = useState(false)
   const [userInfo, setUserinfo] = useContext(UserContext)
   const [shrinkMenu, setShrinkMenu] = useState(false)
+  // Obtener cliente y sede desde localStorage
+  let cliente = ''
+  let sede = ''
+  try {
+    const stored = localStorage.getItem('selectedSede')
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      cliente = parsed.nombre_cliente || ''
+      sede = parsed.nombre_sede || ''
+    }
+  } catch {}
   const clickMenu = () => {
     setShowMenu(!showMenu)
   }
@@ -43,8 +54,8 @@ function Layout() {
               </button>
             </div>
             <div className="user">
-              <div>{userInfo?.name}</div>
-              <div>{userInfo?.job}</div>
+              <div>{cliente || userInfo?.name}</div>
+              <div>{sede || userInfo?.job}</div>
             </div>
           </header>
           <div className="options">

@@ -139,19 +139,7 @@ const Perfil = () => {
         <div className="perfil-grid">
           <section className="perfil-section-card">
             <h3 className="perfil-subtitle">Información personal</h3>
-            <div className="perfil-form-row">
-              <div className="perfil-item">
-                <span className="perfil-label">Fecha de nacimiento</span>
-                <div className="perfil-input-disabled">{formatDate(user.birthdate || user.fecha_nacimiento)}</div>
-              </div>
-              <div className="perfil-item">
-                <span className="perfil-label">Profesión</span>
-                <div className="perfil-input-disabled">
-                  {renderValue(user.occupation || user.profesion || user.profession)}
-                </div>
-              </div>
-            </div>
-
+            
             <div className="perfil-form-row">
               <div className="perfil-item">
                 <span className="perfil-label">Email</span>

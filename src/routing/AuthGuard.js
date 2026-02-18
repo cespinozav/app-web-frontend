@@ -17,6 +17,10 @@ const AUTH_STATE = {
 export default function AuthGuard() {
   const [userinfo, setUserinfo] = useContext(UserContext)
   const [authState, setAuthState] = useState(AUTH_STATE.MOUNTING)
+  const [sede, setSede] = useState(() => {
+    const stored = localStorage.getItem('selectedSede')
+    return stored ? JSON.parse(stored) : null
+  })
   useEffect(() => {
     setAuthState(AUTH_STATE.MOUNTED)
     if (!isSessionExpired() && hasToken()) {
@@ -34,8 +38,26 @@ export default function AuthGuard() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  useEffect(() => {
+    const stored = localStorage.getItem('selectedSede')
+    setSede(stored ? JSON.parse(stored) : null)
+  }, [userinfo])
   if (authState === AUTH_STATE.FETCHING || authState === AUTH_STATE.MOUNTING) return <LoadingScreen />
-  if (isSessionExpired()) return <SessionExpired />
-  if (userinfo?.user) return <Outlet />
+  if (isSessionExpired()) {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('selectedSede')
+    localStorage.removeItem('EXPIRED')
+    setUserinfo(null)
+    return <Navigate to={ROUTES.LOGIN} replace />
+  }
+  if (userinfo?.user && sede) return <Outlet />
+  if (userinfo?.user && !sede) {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('selectedSede')
+    setUserinfo(null)
+    return <Navigate to={ROUTES.LOGIN} replace />
+  }
   return <Navigate to={ROUTES.LOGIN} replace />
 }
