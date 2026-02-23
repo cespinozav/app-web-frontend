@@ -1,21 +1,28 @@
-import React, { useState } from 'react'
-import { Dialog } from 'primereact/dialog'
-import { Skeleton } from 'primereact/skeleton'
-import { useForm, Controller } from 'react-hook-form'
-import useToast from 'hooks/useToast'
-import { Button } from 'primereact/button'
-import { InputText } from 'primereact/inputtext'
-import { Dropdown } from 'primereact/dropdown'
-import { Paginator } from 'primereact/paginator'
-import { useQuery } from 'hooks/useRequest'
-import CategoriaService from 'services/Categoria'
-import ProductoService from 'services/Producto'
-import UnitService from 'services/Unit'
-import EstadoBadge from 'components/styles/EstadoBadge'
-import './style.scss'
+import EstadoBadge from 'components/styles/EstadoBadge';
+import React, { useState } from 'react';
+import { Dialog } from 'primereact/dialog';
+import { Skeleton } from 'primereact/skeleton';
+import { useForm, Controller } from 'react-hook-form';
+import useToast from 'hooks/useToast';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
+import { Paginator } from 'primereact/paginator';
+import { useQuery } from 'hooks/useRequest';
+import CategoriaService from 'services/Categoria';
+import ProductoService from 'services/Producto';
+import ProductDetailModal from './ProductDetailModal';
+import './style.scss';
+
+function normalizeState(state) {
+  if (!state) return 'activo';
+  const s = String(state).toLowerCase();
+  if (s === 'activo' || s === 'inactivo') return s;
+  return 'activo';
+}
 
 // Variable global para el tipo de moneda
-export const tipoMoneda = 'S/'
+// export const tipoMoneda = 'S/'
 
 const PAGE_SIZE = 10
 
@@ -23,17 +30,13 @@ export default function Productos() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [cat, setCat] = useState('')
-  const [state, setState] = useState('activo') // Por defecto, mostrar solo activos
+  // ...existing code...
   const [categorias, setCategorias] = useState([{ label: 'Todas', value: '' }])
   const [catLoading, setCatLoading] = useState(false)
 
   // const categorias = [...] // Eliminado: ahora se usa el estado categorias
   const categoriasSinTodas = categorias.filter(c => c.value !== '')
-  const estados = [
-    { label: 'Todos', value: '' },
-    { label: 'Activo', value: 'activo' },
-    { label: 'Inactivo', value: 'inactivo' }
-  ]
+  // ...existing code...
 
   // Cargar categorías al montar
   React.useEffect(() => {
@@ -48,9 +51,8 @@ export default function Productos() {
       .finally(() => setCatLoading(false))
   }, [])
 
-  const { data, isFetching, refetch } = useQuery(['productos', page, search, cat, state], () => {
+  const { data, isFetching, refetch } = useQuery(['productos', page, search, cat], () => {
     const params = { page, page_size: PAGE_SIZE, search, cat }
-    if (state !== '') params.state = state
     return ProductoService.get(params)
   })
   const productos = data?.results || []
@@ -60,6 +62,8 @@ export default function Productos() {
   const [showAdd, setShowAdd] = useState(false)
   const [isMutating, setIsMutating] = useState(false)
   const [rowData, setRowData] = useState(null)
+  const [showDetail, setShowDetail] = useState(false)
+  const [detailProduct, setDetailProduct] = useState(null)
   const toast = useToast()
   // Formulario separado como en categoría
   function ProductModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
@@ -69,34 +73,19 @@ export default function Productos() {
       reset,
       formState: { errors }
     } = useForm({
-      defaultValues: defaultValues || { nombre: '', cat: '', price: '', unit: '', active: 0 }
+      defaultValues: defaultValues || { nombre: '', cat: '', state: 'activo' }
     })
-    const [units, setUnits] = React.useState([])
-    const [unitsLoading, setUnitsLoading] = React.useState(false)
+    // ...existing code...
     // Cargar datos al editar
     React.useEffect(() => {
       if (defaultValues) {
         reset(defaultValues)
       } else {
-        reset({ nombre: '', cat: '', price: '', unit: '', active: 0 })
+        reset({ nombre: '', cat: '', state: 'activo' })
       }
     }, [defaultValues, reset])
 
-    React.useEffect(() => {
-      setUnitsLoading(true)
-      UnitService.get({ page: 1, page_size: 100 })
-        .then(res => {
-          setUnits(
-            Array.isArray(res.results)
-              ? res.results.map(u => ({
-                  label: u.reference ? `${u.description} (${u.reference})` : u.description,
-                  value: u.id
-                }))
-              : []
-          )
-        })
-        .finally(() => setUnitsLoading(false))
-    }, [])
+    // Unidad ya no se usa
     const handleError = formErrors => {
       // Mostrar solo los primeros 4 errores, como en mantenimiento
       const messages = Object.values(formErrors)
@@ -118,39 +107,7 @@ export default function Productos() {
             />
             {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
           </div>
-          <div className="m-row">
-            <label htmlFor="price">Precio:</label>
-            <Controller
-              name="price"
-              control={control}
-              rules={{
-                required: 'Precio requerido',
-                pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'Formato: 0.00' }
-              }}
-              render={({ field }) => (
-                <InputText {...field} autoComplete="off" className="p-inputtext p-component" placeholder="0.00" />
-              )}
-            />
-            {errors.price && <div className="error-message">{errors.price.message}</div>}
-          </div>
-          <div className="m-row">
-            <label htmlFor="unit">Unidad:</label>
-            <Controller
-              name="unit"
-              control={control}
-              rules={{ required: 'Unidad requerida' }}
-              render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={units}
-                  placeholder="Seleccione unidad"
-                  style={{ minWidth: 160 }}
-                  disabled={unitsLoading}
-                />
-              )}
-            />
-            {errors.unit && <div className="error-message">{errors.unit.message}</div>}
-          </div>
+          {/* Campos de precio y unidad eliminados */}
           <div className="m-row">
             <label htmlFor="cat">Categoría:</label>
             <Controller
@@ -182,7 +139,7 @@ export default function Productos() {
                     { label: 'Activo', value: 'activo' },
                     { label: 'Inactivo', value: 'inactivo' }
                   ]}
-                  placeholder="Seleccione"
+                  placeholder="Seleccione estado"
                   style={{ minWidth: 160 }}
                 />
               )}
@@ -214,18 +171,12 @@ export default function Productos() {
       if (catValue && typeof catValue === 'object') {
         catValue = catValue.value || catValue.id || ''
       }
-      let unitId = formData.unit
-      if (unitId && typeof unitId === 'object') {
-        unitId = unitId.value || unitId.id || ''
-      }
       // Si rowData existe, es edición
       if (rowData && rowData.id) {
         await ProductoService.put({
           id: rowData.id,
           nombre: formData.nombre,
           cat: catValue,
-          price: formData.price,
-          unit_id: unitId,
           state: formData.state
         })
         setShowAdd(false)
@@ -237,8 +188,6 @@ export default function Productos() {
         await ProductoService.post({
           nombre: formData.nombre,
           cat: catValue,
-          price: formData.price,
-          unit_id: unitId,
           state: formData.state
         })
         setShowAdd(false)
@@ -305,22 +254,7 @@ export default function Productos() {
               disabled={catLoading}
             />
           </div>
-          <div className="filtro-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <label htmlFor="estado-filter" style={{ minWidth: 60 }}>
-              Estado
-            </label>
-            <Dropdown
-              id="estado-filter"
-              value={state}
-              options={estados}
-              onChange={e => {
-                setState(e.value)
-                setPage(1)
-              }}
-              placeholder="Estado"
-              style={{ minWidth: 160 }}
-            />
-          </div>
+          {/* Estado filter removed */}
         </div>
         <div className="tabla-productos">
           {isFetching ? (
@@ -332,50 +266,53 @@ export default function Productos() {
                   <th>ID</th>
                   <th>Nombre</th>
                   <th>Categoría</th>
-                  <th>Precio</th>
-                  <th>Unidad</th>
                   <th>Estado</th>
                   <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {productos.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} style={{ textAlign: 'center' }}>
-                      No hay resultados
-                    </td>
-                  </tr>
+                    <tr>
+                      <td colSpan={5} style={{ textAlign: 'center' }}>
+                        No hay resultados
+                      </td>
+                    </tr>
                 ) : (
                   productos.map(prod => (
                     <tr key={prod.id}>
-                      <td>{prod.id}</td>
-                      <td>{prod.nombre || prod.description}</td>
-                      <td>{prod.category_name || '-'}</td>
-                      <td>
-                        {typeof prod.price !== 'undefined' ? `${tipoMoneda} ${Number(prod.price).toFixed(2)}` : '-'}
-                      </td>
-                      <td>
-                        {prod.unit_description
-                          ? `${prod.unit_description}${prod.unit_reference ? ` (${prod.unit_reference})` : ''}`
-                          : '-'}
-                      </td>
-                      <td>
-                        <EstadoBadge estado={prod.state} />
-                      </td>
-                      <td>
-                        <div className="actions">
-                          <Button
-                            icon="pi pi-pencil"
-                            className="p-button p-component p-button-icon-only"
-                            style={{ background: 'transparent' }}
-                            onClick={() => {
-                              setRowData(prod)
-                              setShowAdd(true)
-                            }}
-                            aria-label="Editar"
-                          />
-                        </div>
-                      </td>
+                        <td>{prod.id}</td>
+                        <td>{prod.nombre || prod.description}</td>
+                        <td>{prod.category_name || '-'}</td>
+                        <td><EstadoBadge estado={prod.state} /></td>
+                        <td>
+                          <div className="actions">
+                            <Button
+                              icon="pi pi-pencil"
+                              className="p-button p-component p-button-icon-only"
+                              style={{ background: 'transparent' }}
+                              onClick={() => {
+                                setRowData(prod)
+                                setShowAdd(true)
+                              }}
+                              aria-label="Editar"
+                            />
+                            <Button
+                              icon="pi pi-info-circle"
+                              className="p-button p-component p-button-icon-only"
+                              style={{ background: 'transparent', marginLeft: 8 }}
+                              onClick={() => {
+                                setDetailProduct(prod)
+                                setShowDetail(true)
+                              }}
+                              aria-label="Detalles"
+                            />
+                          </div>
+                              <ProductDetailModal
+                                visible={showDetail}
+                                onHide={() => setShowDetail(false)}
+                                product={detailProduct}
+                              />
+                        </td>
                     </tr>
                   ))
                 )}
@@ -411,9 +348,7 @@ export default function Productos() {
                 ? {
                     nombre: rowData.nombre || '',
                     cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
-                    price: rowData.price || '',
-                    unit: rowData.unit_id || (rowData.unit && rowData.unit.id) || '',
-                    state: rowData.state || 'activo'
+                    state: normalizeState(rowData.state)
                   }
                 : undefined
             }

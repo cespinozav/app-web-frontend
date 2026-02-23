@@ -1,3 +1,5 @@
+// Prefijo de moneda centralizado
+export const tipoMoneda = 'S/';
 export const APP_VERSION = '0.2.19'
 
 export const DATE_STR_FORMAT = 'DD/MM/YYYY'

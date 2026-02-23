@@ -26,22 +26,10 @@ const ProductoService = {
                   category_name = '-'
                 }
               }
-              // Adaptar unidad para mostrar descripción y referencia
-              let unit_id = ''
-              let unit_description = ''
-              let unit_reference = ''
-              if (prod.unit && typeof prod.unit === 'object') {
-                unit_id = prod.unit.id
-                unit_description = prod.unit.description
-                unit_reference = prod.unit.reference
-              }
-              return {
-                ...prod,
-                category_name,
-                unit_id,
-                unit_description,
-                unit_reference
-              }
+                return {
+                  ...prod,
+                  category_name
+                }
             })
           : []
         return {
