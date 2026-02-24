@@ -27,7 +27,7 @@ export default function CartTable({ cart, toCurrency, updateCartItem, removeProd
               const subtotal = Math.max((Number(item.price) - Number(item.discount)) * Number(item.quantity), 0)
 
               return (
-                <tr key={item.id}>
+                <tr key={item.productDetailId}>
                   <td>{item.description}</td>
                   <td>{toCurrency(item.price)}</td>
                   <td>
@@ -38,7 +38,7 @@ export default function CartTable({ cart, toCurrency, updateCartItem, removeProd
                       minFractionDigits={2}
                       maxFractionDigits={2}
                       mode="decimal"
-                      onValueChange={e => updateCartItem(item.id, { discount: Number(e.value || 0) })}
+                      onValueChange={e => updateCartItem(item.productDetailId, { discount: Number(e.value || 0) })}
                       inputStyle={{ width: 90 }}
                     />
                   </td>
@@ -48,7 +48,7 @@ export default function CartTable({ cart, toCurrency, updateCartItem, removeProd
                       min={1}
                       mode="decimal"
                       useGrouping={false}
-                      onValueChange={e => updateCartItem(item.id, { quantity: Number(e.value || 1) })}
+                      onValueChange={e => updateCartItem(item.productDetailId, { quantity: Number(e.value || 1) })}
                       inputStyle={{ width: 90 }}
                     />
                   </td>
@@ -57,7 +57,7 @@ export default function CartTable({ cart, toCurrency, updateCartItem, removeProd
                     <Button
                       icon="pi pi-trash"
                       className="p-button-danger p-button-sm"
-                      onClick={() => removeProduct(item.id)}
+                      onClick={() => removeProduct(item.productDetailId)}
                       aria-label="Eliminar producto"
                     />
                   </td>

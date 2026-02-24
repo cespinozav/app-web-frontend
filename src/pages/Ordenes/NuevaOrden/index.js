@@ -1,7 +1,7 @@
-
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ClienteService from 'services/Cliente'
+import { formatDateMin } from 'utils/dates'
 import GeneralOrdersService from 'services/GeneralOrders'
 import ProductoService from 'services/Producto'
 import SedesClienteService from 'services/SedesCliente'
@@ -21,7 +21,7 @@ const paymentMethods = [
 ]
 
 const toCurrency = value => `S/ ${Number(value || 0).toFixed(2)}`
-const toAmountString = value => Number(value || 0).toFixed(2)
+
 
 export default function NuevaOrden() {
   const navigate = useNavigate()
@@ -78,18 +78,40 @@ export default function NuevaOrden() {
 
   const searchProducts = event => {
     ProductoService.get({ page: 1, page_size: 8, search: event.query, state: 'activo' })
-      .then(response => {
-        const options = (response?.results || []).map(product => ({
-          id: product.id,
-          code: product.codigo || product.code || product.sku || '',
-          //   name: product.nombre || product.description || `Producto ${product.id}`,
-          description: `${product.nombre || product.description || `Producto ${product.id}`} - ${
-            product.category_name || 'Sin categoría'
-          } - ${product.unit?.description || 'Sin unidad'}${
-            product.unit?.reference ? ` (${product.unit.reference})` : ''
-          }`,
-          price: Number(product.price || 0)
-        }))
+      .then(async response => {
+        const products = response?.results || []
+        // If productdetail_id is present, use it. Otherwise, fetch from ProductoDetalleService.
+        const options = await Promise.all(
+          products.map(async product => {
+            let productDetailId = product.productdetail_id
+            if (!productDetailId && product.id) {
+              // Try to fetch product detail for this product
+              try {
+                const detalles = await (
+                  await import('services/ProductoDetalle')
+                ).default.get({ productId: product.id })
+                if (Array.isArray(detalles) && detalles.length > 0) {
+                  productDetailId = detalles[0].id
+                }
+              } catch (e) {
+                // ignore error, fallback to product.id
+              }
+            }
+            return {
+              id: productDetailId || product.id,
+              productDetailId: productDetailId || product.id,
+              code: product.codigo || product.code || product.sku || '',
+              description: `${
+                product.nombre || product.description || `Producto ${product.id}`
+              } - ${
+                product.category_name || 'Sin categoría'
+              } - ${product.unit?.description || 'Sin unidad'}${
+                product.unit?.reference ? ` (${product.unit.reference})` : ''
+              }`,
+              price: Number(product.price || 0)
+            }
+          })
+        )
         setProductSuggestions(options)
       })
       .catch(() => setProductSuggestions([]))
@@ -100,15 +122,23 @@ export default function NuevaOrden() {
     setProductSuggestions([])
 
     setCart(currentCart => {
-      const existing = currentCart.find(item => item.id === product.id)
+      const { productDetailId } = product
+      const existing = currentCart.find(
+        item => item.productDetailId === productDetailId
+      )
       if (existing) {
-        return currentCart.map(item => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
+        return currentCart.map(
+          item =>
+            item.productDetailId === productDetailId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+        )
       }
 
       return [
         ...currentCart,
         {
-          id: product.id,
+          productDetailId,
           description: product.description,
           price: Number(product.price || 0),
           discount: 0,
@@ -118,17 +148,31 @@ export default function NuevaOrden() {
     })
   }
 
-  const removeProduct = productId => {
-    setCart(currentCart => currentCart.filter(item => item.id !== productId))
+  const removeProduct = productDetailId => {
+    setCart(currentCart =>
+      currentCart.filter(item => item.productDetailId !== productDetailId)
+    )
   }
 
-  const updateCartItem = (productId, patch) => {
-    setCart(currentCart => currentCart.map(item => (item.id === productId ? { ...item, ...patch } : item)))
+  const updateCartItem = (productDetailId, patch) => {
+    setCart(currentCart =>
+      currentCart.map(item =>
+        item.productDetailId === productDetailId
+          ? { ...item, ...patch }
+          : item
+      )
+    )
   }
 
   const summary = useMemo(() => {
-    const subtotal = cart.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0)
-    const discount = cart.reduce((acc, item) => acc + Number(item.discount) * Number(item.quantity), 0)
+    const subtotal = cart.reduce(
+      (acc, item) => acc + Number(item.price) * Number(item.quantity),
+      0
+    )
+    const discount = cart.reduce(
+      (acc, item) => acc + Number(item.discount) * Number(item.quantity),
+      0
+    )
     const total = Math.max(subtotal - discount, 0)
     return { subtotal, discount, total }
   }, [cart])
@@ -174,14 +218,12 @@ export default function NuevaOrden() {
         }
       }
 
-      const productos = cart.map(item => {
-        return {
-          producto: item.id,
-          cantidad: Number(item.quantity),
-          precio_unitario: Number(item.price),
-          descuento: Number(item.discount)
-        }
-      })
+      const productos = cart.map(item => ({
+        producto: item.productDetailId,
+        cantidad: Number(item.quantity),
+        precio_unitario: Number(item.price),
+        descuento: Number(item.discount)
+      }))
 
       // Convertir fecha_entrega_estimada a DD-MM-YYYY
       let fechaEntregaFinal = fechaEntrega;
@@ -199,7 +241,7 @@ export default function NuevaOrden() {
 
       // Generar fecha_orden en formato DD-MM-YYYY HH:mm
       const now = new Date();
-      const fechaOrden = require('utils/dates').formatDateMin(now).replaceAll('/', '-');
+      const fechaOrden = formatDateMin(now).replaceAll('/', '-');
 
       const payload = {
         sede: selectedSite,
