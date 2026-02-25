@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Skeleton } from 'primereact/skeleton'
 import { Button } from 'primereact/button'
 import EstadoBadge from 'components/styles/EstadoBadge'
-import { formatDate, formatDateMin } from 'utils/dates'
+import { formatDate } from 'utils/dates'
 
 export default function OrdersTable({
   orders,

@@ -4,9 +4,8 @@ import { Skeleton } from 'primereact/skeleton'
 import EstadoBadge from 'components/styles/EstadoBadge'
 import { formatDate } from 'utils/dates'
 
-const PAGE_SIZE = 10
 
-export default function ClientesTable({ clientes, isFetching, onEdit }) {
+export default function ClientesTable({ clientes, page, PAGE_SIZE, setRowData, setShowAdd, setShowSedes, isFetching }) {
   return (
     <div className="tabla-clientes">
       {isFetching ? (
@@ -15,7 +14,7 @@ export default function ClientesTable({ clientes, isFetching, onEdit }) {
         <table className="p-datatable table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Nro</th>
               <th>Nombre</th>
               <th>Abreviatura</th>
               <th>Categoría</th>
@@ -36,7 +35,7 @@ export default function ClientesTable({ clientes, isFetching, onEdit }) {
             ) : (
               clientes.map(cli => (
                 <tr key={cli.id}>
-                  <td>{cli.id}</td>
+                  <td>{(page - 1) * PAGE_SIZE + clientes.indexOf(cli) + 1}</td>
                   <td>{cli.nombre}</td>
                   <td>{cli.abreviatura}</td>
                   <td>{cli.categoria || '-'}</td>
@@ -52,8 +51,21 @@ export default function ClientesTable({ clientes, isFetching, onEdit }) {
                         icon="pi pi-pencil"
                         className="p-button p-component p-button-icon-only"
                         style={{ background: 'transparent' }}
-                        onClick={() => onEdit(cli)}
+                        onClick={() => {
+                          setRowData(cli)
+                          setShowAdd(true)
+                        }}
                         aria-label="Editar"
+                      />
+                      <Button
+                        icon="pi pi-map-marker"
+                        className="p-button p-component p-button-icon-only"
+                        style={{ background: 'transparent', marginLeft: 8 }}
+                        onClick={() => {
+                          setRowData(cli)
+                          setShowSedes(true)
+                        }}
+                        aria-label="Sedes"
                       />
                     </div>
                   </td>

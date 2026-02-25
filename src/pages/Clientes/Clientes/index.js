@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Dialog } from 'primereact/dialog'
-import { Skeleton } from 'primereact/skeleton'
 import { useForm, Controller } from 'react-hook-form'
 import useToast from 'hooks/useToast'
 import { Button } from 'primereact/button'
@@ -10,8 +9,7 @@ import CategoriaClienteService from 'services/CategoriaCliente'
 import ClienteService from 'services/Cliente'
 import { Paginator } from 'primereact/paginator'
 import { useQuery } from 'hooks/useRequest'
-import EstadoBadge from 'components/styles/EstadoBadge'
-import { formatDate } from 'utils/dates'
+import ClientesTable from './components/Table/ClientesTable'
 import SedesModal from './components/Modals/SedesModal'
 import '../style.scss'
 
@@ -250,75 +248,15 @@ export default function MantenimientoClientes() {
             />
           </div>
         </div>
-        <div className="tabla-clientes">
-          {isFetching ? (
-            Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
-          ) : (
-            <table className="p-datatable table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Abreviatura</th>
-                  <th>Categoría</th>
-                  <th>RUC</th>
-                  <th>Estado</th>
-                  <th>Usuario creado</th>
-                  <th>Fecha creada</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clientes.length === 0 ? (
-                  <tr>
-                    <td colSpan={8} style={{ textAlign: 'center' }}>
-                      No hay resultados
-                    </td>
-                  </tr>
-                ) : (
-                  clientes.map(cli => (
-                    <tr key={cli.id}>
-                      <td>{cli.id}</td>
-                      <td>{cli.nombre}</td>
-                      <td>{cli.abreviatura}</td>
-                      <td>{cli.categoria || '-'}</td>
-                      <td>{cli.ruc}</td>
-                      <td>
-                        <EstadoBadge estado={cli.active} />
-                      </td>
-                      <td>{cli.usuario_creado || '-'}</td>
-                      <td>{formatDate(cli.fecha_creada)}</td>
-                      <td>
-                        <div className="actions">
-                          <Button
-                            icon="pi pi-pencil"
-                            className="p-button p-component p-button-icon-only"
-                            style={{ background: 'transparent' }}
-                            onClick={() => {
-                              setRowData(cli)
-                              setShowAdd(true)
-                            }}
-                            aria-label="Editar"
-                          />
-                          <Button
-                            icon="pi pi-map-marker"
-                            className="p-button p-component p-button-icon-only"
-                            style={{ background: 'transparent', marginLeft: 8 }}
-                            onClick={() => {
-                              setRowData(cli)
-                              setShowSedes(true)
-                            }}
-                            aria-label="Sedes"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
-        </div>
+        <ClientesTable
+          clientes={clientes}
+          page={page}
+          PAGE_SIZE={PAGE_SIZE}
+          setRowData={setRowData}
+          setShowAdd={setShowAdd}
+          setShowSedes={setShowSedes}
+          isFetching={isFetching}
+        /> 
         <Dialog
           className="dialog clientes-dialog maintenance"
           draggable={false}

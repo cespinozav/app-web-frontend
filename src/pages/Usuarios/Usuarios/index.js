@@ -312,7 +312,7 @@ export default function Usuarios() {
             <table className="p-datatable table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Nro</th>
                   <th>DNI</th>
                   <th>Correo</th>
                   <th>Teléfono</th>
@@ -336,7 +336,7 @@ export default function Usuarios() {
                 ) : (
                   usuarios.map(usuario => (
                     <tr key={usuario.id}>
-                      <td>{usuario.id}</td>
+                      <td>{usuarios.indexOf(usuario) + 1}</td>
                       <td>{usuario.dni}</td>
                       <td>{usuario.correo}</td>
                       <td>{usuario.telefono || '-'}</td>

@@ -1,24 +1,24 @@
-import EstadoBadge from 'components/styles/EstadoBadge';
-import React, { useState } from 'react';
-import { Dialog } from 'primereact/dialog';
-import { Skeleton } from 'primereact/skeleton';
-import { useForm, Controller } from 'react-hook-form';
-import useToast from 'hooks/useToast';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
-import { Paginator } from 'primereact/paginator';
-import { useQuery } from 'hooks/useRequest';
-import CategoriaService from 'services/Categoria';
-import ProductoService from 'services/Producto';
-import ProductDetailModal from './ProductDetailModal';
-import './style.scss';
+import EstadoBadge from 'components/styles/EstadoBadge'
+import React, { useState } from 'react'
+import { Dialog } from 'primereact/dialog'
+import { Skeleton } from 'primereact/skeleton'
+import { useForm, Controller } from 'react-hook-form'
+import useToast from 'hooks/useToast'
+import { Button } from 'primereact/button'
+import { InputText } from 'primereact/inputtext'
+import { Dropdown } from 'primereact/dropdown'
+import { Paginator } from 'primereact/paginator'
+import { useQuery } from 'hooks/useRequest'
+import CategoriaService from 'services/Categoria'
+import ProductoService from 'services/Producto'
+import ProductDetailModal from './ProductDetailModal'
+import './style.scss'
 
 function normalizeState(state) {
-  if (!state) return 'activo';
-  const s = String(state).toLowerCase();
-  if (s === 'activo' || s === 'inactivo') return s;
-  return 'activo';
+  if (!state) return 'activo'
+  const s = String(state).toLowerCase()
+  if (s === 'activo' || s === 'inactivo') return s
+  return 'activo'
 }
 
 // Variable global para el tipo de moneda
@@ -263,7 +263,7 @@ export default function Productos() {
             <table className="p-datatable table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Nro</th>
                   <th>Nombre</th>
                   <th>Categoría</th>
                   <th>Estado</th>
@@ -280,10 +280,12 @@ export default function Productos() {
                 ) : (
                   productos.map(prod => (
                     <tr key={prod.id}>
-                        <td>{prod.id}</td>
+                        <td>{(page - 1) * PAGE_SIZE + productos.indexOf(prod) + 1}</td>
                         <td>{prod.nombre || prod.description}</td>
                         <td>{prod.category_name || '-'}</td>
-                        <td><EstadoBadge estado={prod.state} /></td>
+                        <td>
+                          <EstadoBadge estado={prod.state} />
+                        </td>
                         <td>
                           <div className="actions">
                             <Button
@@ -307,11 +309,11 @@ export default function Productos() {
                               aria-label="Detalles"
                             />
                           </div>
-                              <ProductDetailModal
-                                visible={showDetail}
-                                onHide={() => setShowDetail(false)}
-                                product={detailProduct}
-                              />
+                          <ProductDetailModal
+                            visible={showDetail}
+                            onHide={() => setShowDetail(false)}
+                            product={detailProduct}
+                          />
                         </td>
                     </tr>
                   ))
