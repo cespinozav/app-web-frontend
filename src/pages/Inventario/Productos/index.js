@@ -278,11 +278,11 @@ export default function Productos() {
                       </td>
                     </tr>
                 ) : (
-                  productos.map(prod => (
-                    <tr key={prod.id}>
-                        <td>{(page - 1) * PAGE_SIZE + productos.indexOf(prod) + 1}</td>
+                  productos.map((prod, idx) => (
+                    <tr key={prod.id ?? `row-${idx}`}>
+                        <td>{(page - 1) * PAGE_SIZE + idx + 1}</td>
                         <td>{prod.nombre || prod.description}</td>
-                        <td>{prod.category_name || '-'}</td>
+                        <td>{prod.categoria || '-'}</td>
                         <td>
                           <EstadoBadge estado={prod.state} />
                         </td>

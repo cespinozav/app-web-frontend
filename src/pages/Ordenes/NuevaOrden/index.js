@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import ClienteService from 'services/Cliente'
 import { formatDateMin } from 'utils/dates'
 import GeneralOrdersService from 'services/GeneralOrders'
-import ProductoService from 'services/Producto'
+import { makeRequest } from 'utils/api'
+import { getBearer } from 'utils/auth'
 import SedesClienteService from 'services/SedesCliente'
 import useToast from 'hooks/useToast'
 import { SUB_ROUTES } from 'routing/routes'
@@ -77,44 +78,29 @@ export default function NuevaOrden() {
   }, [selectedClient])
 
   const searchProducts = event => {
-    ProductoService.get({ page: 1, page_size: 8, search: event.query, state: 'activo' })
-      .then(async response => {
-        const products = response?.results || []
-        // If productdetail_id is present, use it. Otherwise, fetch from ProductoDetalleService.
-        const options = await Promise.all(
-          products.map(async product => {
-            let productDetailId = product.productdetail_id
-            if (!productDetailId && product.id) {
-              // Try to fetch product detail for this product
-              try {
-                const detalles = await (
-                  await import('services/ProductoDetalle')
-                ).default.get({ productId: product.id })
-                if (Array.isArray(detalles) && detalles.length > 0) {
-                  productDetailId = detalles[0].id
-                }
-              } catch (e) {
-                // ignore error, fallback to product.id
-              }
-            }
-            return {
-              id: productDetailId || product.id,
-              productDetailId: productDetailId || product.id,
-              code: product.codigo || product.code || product.sku || '',
-              description: `${
-                product.nombre || product.description || `Producto ${product.id}`
-              } - ${
-                product.category_name || 'Sin categoría'
-              } - ${product.unit?.description || 'Sin unidad'}${
-                product.unit?.reference ? ` (${product.unit.reference})` : ''
-              }`,
-              price: Number(product.price || 0)
-            }
-          })
-        )
-        setProductSuggestions(options)
+    makeRequest('/buscar-producto-orden', {
+      params: { page: 1, page_size: 8, search: event.query, state: 'activo' },
+      headers: localStorage.getItem('accessToken') ? { Authorization: getBearer() } : undefined
+    })
+      .then(res => res.json())
+      .then(response => {
+        const products = response?.result?.results || [];
+        const options = products.map(product => ({
+          id: product.id, // id de ProductDetail
+          productDetailId: product.id,
+          code: product.codigo || product.code || product.sku || '',
+          description: `${
+            product.nombre || product.description || `Producto ${product.id}`
+          } - ${
+            product.categoria || 'Sin categoría'
+          } - ${product.unit?.description || 'Sin unidad'}${
+            product.unit?.reference ? ` (${product.unit.reference})` : ''
+          }`,
+          price: Number(product.price || 0)
+        }));
+        setProductSuggestions(options);
       })
-      .catch(() => setProductSuggestions([]))
+      .catch(() => setProductSuggestions([]));
   }
 
   const addProductToCart = product => {
