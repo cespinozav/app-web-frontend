@@ -30,7 +30,9 @@ function Layout() {
       cliente = parsed.nombre_cliente || ''
       sede = parsed.nombre_sede || ''
     }
-  } catch {}
+  } catch (e) {
+    // Ignorar error de parseo de localStorage
+  }
   const clickMenu = () => {
     setShowMenu(!showMenu)
   }
@@ -60,6 +62,7 @@ function Layout() {
           </header>
           <div className="options">
             <MenuItem path="/" name="Dashboard" icon={DASHBOARD_ICON} isDefault={true} />
+            <MenuItem path="/catalogo" name="Catálogo" icon={INVENTORY_ICON} />
             <MenuItem path="/ordenes" name="Ordenes" icon={ORDERS_ICON} />
             <MenuItem path="/inventario" name="Inventario" icon={INVENTORY_ICON} />
             <MenuItem path="/clientes" name="Clientes" icon={CLIENTS_ICON} />

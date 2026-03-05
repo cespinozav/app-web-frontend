@@ -14,7 +14,9 @@ const ROUTES = {
   USERS_MAIN: '/usuarios/usuarios',
   USERS_MAINTENANCE: '/usuarios/mantenimientos',
   PROFILE: '/perfil',
-  PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token'
+  PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token',
+  CATALOG: '/catalogo',
+  PRODUCT_DETAIL: '/catalogo/:id'
 }
 
 export const SUB_ROUTES = {
@@ -33,6 +35,9 @@ export const SUB_ROUTES = {
   USERS: {
     MAIN: `${ROUTES.USERS}/usuarios`,
     MAINTENANCE: `${ROUTES.USERS}/mantenimientos`
+  },
+  CATALOG: {
+    MAIN: '/catalogo',
   }
 }
 

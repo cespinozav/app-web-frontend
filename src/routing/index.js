@@ -15,6 +15,8 @@ import Usuarios from 'pages/Usuarios/Usuarios'
 import MantenimientoUsuarios from 'pages/Usuarios/Mantenimiento'
 import Perfil from 'pages/Perfil'
 import ROUTES from 'routing/routes'
+import Catalogo from 'pages/Catalogo/Catalogo'
+import DetalleProducto from 'pages/Catalogo/DetalleProducto'
 import OrdenesModule from '../pages/Ordenes/OrdenesModule'
 import Ordenes from '../pages/Ordenes/Ordenes'
 import NuevaOrden from '../pages/Ordenes/NuevaOrden'
@@ -29,6 +31,8 @@ export default function AppRoutes() {
         <Route element={<AuthGuard />}>
           <Route element={<Layout />}>
             <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.CATALOG} element={<Catalogo />} />
+            <Route path={ROUTES.PRODUCT_DETAIL} element={<DetalleProducto />} />
             <Route path={ROUTES.ORDERS} element={<OrdenesModule />}>
               <Route index element={<Navigate to={ROUTES.ORDERS_MAIN} replace />} />
               <Route path={ROUTES.ORDERS_MAIN} element={<Ordenes />} />

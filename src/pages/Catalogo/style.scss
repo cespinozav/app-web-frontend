@@ -1,0 +1,128 @@
+// Rediseño profesional catálogo
+.catalogo-container {
+  padding: 2.5rem 1rem 1.5rem 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  h1 {
+    font-size: 2.3rem;
+    margin-bottom: 2.2rem;
+    text-align: left;
+    font-weight: 800;
+    color: #23272f;
+    letter-spacing: -1px;
+  }
+  .catalogo-filters {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    background: #f4f6fa;
+    border-radius: 1.2rem;
+    padding: 1.5rem 1.2rem 1rem 1.2rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    border: 1px solid #e5e7eb;
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      min-width: 180px;
+      flex: 1;
+      label {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: #23272f;
+      }
+      .p-dropdown, .p-inputnumber, .p-autocomplete {
+        width: 100%;
+      }
+    }
+  }
+}
+// Grid más aireado y moderno
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.2rem;
+  margin-top: 1.5rem;
+  align-items: stretch;
+}
+// Card profesional, hover destacado
+.catalogo-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s, transform 0.18s;
+  border: 1.5px solid #e5e7eb;
+  position: relative;
+  min-height: 410px;
+  &:hover {
+    box-shadow: 0 8px 32px rgba(52,131,250,0.13);
+    transform: translateY(-4px) scale(1.025);
+    border-color: #3483fa;
+  }
+}
+// Imagen centrada, fondo suave
+.catalogo-img-wrap {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: linear-gradient(120deg, #f7fafd 60%, #eaf1fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    max-width: 88%;
+    max-height: 88%;
+    object-fit: contain;
+    border-radius: 0.7rem;
+    box-shadow: 0 1px 8px #0001;
+    background: #fff;
+  }
+}
+// Info clara, precio grande, badge categoría
+.catalogo-info {
+  padding: 1.1rem 1.1rem 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  h2 {
+    font-size: 1.18rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    color: #23272f;
+    line-height: 1.2;
+    min-height: 2.2em;
+  }
+  .catalogo-precio {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #00a650;
+    margin-bottom: 0.5rem;
+    .agotado {
+      color: #b91c1c;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+  }
+  .catalogo-categoria {
+    display: inline-block;
+    font-size: 0.93rem;
+    color: #3483fa;
+    background: #eaf1fb;
+    border-radius: 0.7em;
+    padding: 0.18em 0.8em;
+    font-weight: 600;
+    margin-top: 0.2rem;
+    letter-spacing: 0.01em;
+  }
+}
+// Mensajes centrados
+.catalogo-loading, .catalogo-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  color: #64748b;
+  font-size: 1.13rem;
+  padding: 2.5rem 0;
+}

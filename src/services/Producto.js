@@ -1,9 +1,27 @@
 /* eslint-disable camelcase, global-require, prefer-destructuring */
 import { makeRequest } from 'utils/api'
+import { getBearer } from 'utils/auth'
 
 const ENDPOINT = '/productos'
 
 const ProductoService = {
+    getProductoDetalle: async (id) => {
+      // Obtener producto base
+      const producto = await makeRequest(`${ENDPOINT}/${id}`, {
+        headers: localStorage.getItem('accessToken') ? { Authorization: getBearer() } : undefined
+      }).then(res => res.json());
+      // Obtener unidades desde ProductoDetalleService
+      let unidades = [];
+      try {
+        const mod = await import('./ProductoDetalle');
+        if (mod && mod.default && typeof mod.default.get === 'function') {
+          unidades = await mod.default.get({ productId: id });
+        }
+      } catch (e) {
+        // Si falla, dejar unidades vacío
+      }
+      return { producto, unidades };
+    },
   get: ({ page = 1, page_size = 10, search = '', cat = '', state = '' } = {}) =>
     makeRequest(`${ENDPOINT}`, {
       params: { page, page_size, search, cat, state },
@@ -37,18 +55,18 @@ const ProductoService = {
           count: typeof result.count === 'number' ? result.count : 0
         }
       }),
-  post: ({ nombre, cat, price, unit_id, state }) =>
+  post: ({ nombre, categoria_id, state }) =>
     makeRequest(`${ENDPOINT}/create`, {
       method: 'POST',
-      body: { nombre, cat, price, unit_id, state },
-      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+      body: { nombre, categoria_id, state },
+      headers: localStorage.getItem('accessToken') ? { Authorization: getBearer() } : undefined
     }),
 
-  put: ({ id, nombre, cat, price, unit_id, state }) =>
+  put: ({ id, nombre, categoria_id, state }) =>
     makeRequest(`${ENDPOINT}/${id}`, {
-      method: 'PUT',
-      body: { nombre, cat, price, unit_id, state },
-      headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
+      method: 'PATCH',
+      body: { nombre, categoria_id, state },
+      headers: localStorage.getItem('accessToken') ? { Authorization: getBearer() } : undefined
     })
 }
 

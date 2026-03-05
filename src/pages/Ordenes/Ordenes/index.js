@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Paginator } from 'primereact/paginator'
 import { Button } from 'primereact/button'
@@ -120,10 +120,9 @@ export default function Ordenes() {
       if (checked) {
         // Agrega los ids de la página actual a la selección global (sin duplicados)
         return Array.from(new Set([...prev, ...pageIds]))
-      } else {
-        // Quita los ids de la página actual de la selección global
-        return prev.filter(id => !pageIds.includes(id))
       }
+      // Quita los ids de la página actual de la selección global
+      return prev.filter(id => !pageIds.includes(id))
     })
   }
 
@@ -165,7 +164,13 @@ export default function Ordenes() {
       const failedCount = Math.max(processed - updatedCount, 0);
       let customMessage = '';
       if (updatedCount > 0) {
-        customMessage = `Se ${fallbackOrderIds.length === 1 ? (bulkTargetState === 'confirmado' ? 'confirmó' : 'envió') : (bulkTargetState === 'confirmado' ? 'confirmaron' : 'enviaron')} ${updatedCount} orden${updatedCount === 1 ? '' : 'es'} ${bulkTargetState === 'confirmado' ? 'correctamente' : 'correctamente'}`;
+        let verbo;
+        if (fallbackOrderIds.length === 1) {
+          verbo = bulkTargetState === 'confirmado' ? 'confirmó' : 'envió';
+        } else {
+          verbo = bulkTargetState === 'confirmado' ? 'confirmaron' : 'enviaron';
+        }
+        customMessage = `Se ${verbo} ${updatedCount} orden${updatedCount === 1 ? '' : 'es'} correctamente`;
       } else {
         customMessage = 'No se actualizaron órdenes.';
       }

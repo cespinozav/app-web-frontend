@@ -56,6 +56,7 @@ export default function Productos() {
     return ProductoService.get(params)
   })
   const productos = data?.results || []
+  console.log(productos);
   const totalRecords = data?.count || 0
 
   // Modal de agregar/editar producto
@@ -117,10 +118,12 @@ export default function Productos() {
               render={({ field }) => (
                 <Dropdown
                   {...field}
+                  value={field.value || ''}
                   options={categoriasSinTodas}
                   placeholder="Seleccione categoría"
                   style={{ minWidth: 160 }}
                   disabled={catLoading}
+                  onChange={e => field.onChange(e.value)}
                 />
               )}
             />
@@ -167,16 +170,13 @@ export default function Productos() {
   const onSubmitFields = async (formData, resetForm) => {
     setIsMutating(true)
     try {
-      let catValue = formData.cat
-      if (catValue && typeof catValue === 'object') {
-        catValue = catValue.value || catValue.id || ''
-      }
+      const categoriaIdValue = formData.cat || '';
       // Si rowData existe, es edición
       if (rowData && rowData.id) {
         await ProductoService.put({
           id: rowData.id,
           nombre: formData.nombre,
-          cat: catValue,
+          categoria_id: categoriaIdValue,
           state: formData.state
         })
         setShowAdd(false)
@@ -187,7 +187,7 @@ export default function Productos() {
       } else {
         await ProductoService.post({
           nombre: formData.nombre,
-          cat: catValue,
+          categoria_id: categoriaIdValue,
           state: formData.state
         })
         setShowAdd(false)
@@ -349,7 +349,7 @@ export default function Productos() {
               rowData
                 ? {
                     nombre: rowData.nombre || '',
-                    cat: rowData.cat || rowData.categoria || rowData.categoria_id || '',
+                    cat: rowData.categoria_id || rowData.cat || rowData.categoria || '',
                     state: normalizeState(rowData.state)
                   }
                 : undefined
