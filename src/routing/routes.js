@@ -37,7 +37,8 @@ export const SUB_ROUTES = {
     MAINTENANCE: `${ROUTES.USERS}/mantenimientos`
   },
   CATALOG: {
-    MAIN: '/catalogo',
+    MAIN: `${ROUTES.CATALOG}`,
+    CART: `${ROUTES.CATALOG}/carrito`,
   }
 }
 

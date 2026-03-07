@@ -1,15 +1,70 @@
+@import '../Ordenes/style.scss';
+
+// Replica estilos de .module y .active para menú lateral
+.module {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+
+  a {
+    text-decoration: none;
+    color: #414141;
+    font-size: 20px;
+
+    img {
+      width: 20px;
+      margin-right: 8px;
+      vertical-align: bottom;
+      margin-bottom: 2px;
+      filter: invert(37%) sepia(22%) saturate(0%) hue-rotate(64deg) brightness(99%) contrast(91%);
+    }
+  }
+
+  .active {
+    a {
+      color: #007ad9;
+
+      img {
+        filter: invert(17%) sepia(23%) saturate(5978%) hue-rotate(209deg) brightness(85%) contrast(105%);
+      }
+    }
+  }
+
+  & > div {
+    &:first-child {
+      margin-right: 60px;
+    }
+  }
+}
 // Rediseño profesional catálogo
+// Homologar diseño con Inventario/Ordenes/Clientes
 .catalogo-container {
-  padding: 2.5rem 1rem 1.5rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2.5rem 2.2rem 1.5rem 2.2rem;
   max-width: 1280px;
   margin: 0 auto;
-  h1 {
-    font-size: 2.3rem;
-    margin-bottom: 2.2rem;
-    text-align: left;
-    font-weight: 800;
-    color: #23272f;
-    letter-spacing: -1px;
+  width: 100%;
+  box-sizing: border-box;
+  .catalogo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #ecebeb;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    h1 {
+      font-size: 2.3rem;
+      margin: 0;
+      font-weight: 800;
+      color: #23272f;
+      letter-spacing: -1px;
+    }
+    .acciones {
+      display: flex;
+      gap: 8px;
+    }
   }
   .catalogo-filters {
     display: flex;
@@ -45,6 +100,7 @@
   gap: 2.2rem;
   margin-top: 1.5rem;
   align-items: stretch;
+  padding-bottom: 1.5rem;
 }
 // Card profesional, hover destacado
 .catalogo-card {

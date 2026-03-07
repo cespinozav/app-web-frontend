@@ -1,5 +1,5 @@
 import EstadoBadge from 'components/styles/EstadoBadge'
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Dialog } from 'primereact/dialog'
 import { Skeleton } from 'primereact/skeleton'
 import { useForm, Controller } from 'react-hook-form'
@@ -64,7 +64,11 @@ export default function Productos() {
   const [isMutating, setIsMutating] = useState(false)
   const [rowData, setRowData] = useState(null)
   const [showDetail, setShowDetail] = useState(false)
-  const [detailProduct, setDetailProduct] = useState(null)
+  const [detailProductId, setDetailProductId] = useState(null)
+  const detailProduct = useMemo(() => {
+    if (!detailProductId) return null;
+    return productos?.find(p => p.id === detailProductId) || null;
+  }, [detailProductId, productos]);
   const toast = useToast()
   // Formulario separado como en categoría
   function ProductModalForm({ onSubmitFields: onSubmitFieldsHandler, isMutating: isMutatingProp, defaultValues }) {
@@ -303,7 +307,7 @@ export default function Productos() {
                               className="p-button p-component p-button-icon-only"
                               style={{ background: 'transparent', marginLeft: 8 }}
                               onClick={() => {
-                                setDetailProduct(prod)
+                                setDetailProductId(prod.id)
                                 setShowDetail(true)
                               }}
                               aria-label="Detalles"

@@ -5,7 +5,7 @@ import { InputNumber } from 'primereact/inputnumber';
 
 const CURRENCY_CODE = 'PEN';
 
-export default function CatalogoFilters({ categoria, setCategoria, precioMin, setPrecioMin, precioMax, setPrecioMax }) {
+export default function Filters({ categoria, setCategoria, precioMin, setPrecioMin, precioMax, setPrecioMax }) {
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(false);
 

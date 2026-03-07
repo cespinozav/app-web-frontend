@@ -1,5 +1,5 @@
 import { tipoMoneda } from 'utils/constants';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 // ...existing code...
@@ -19,8 +19,17 @@ export default function ProductDetailModal({ visible, onHide, product }) {
   const [rowData, setRowData] = useState(null);
   const toast = useToast();
 
+  const lastProductId = useRef();
+  const fetchedOnOpen = useRef(false);
   useEffect(() => {
-    if (visible && product?.id) {
+    if (!visible) {
+      fetchedOnOpen.current = false;
+      lastProductId.current = null;
+      return;
+    }
+    if (visible && product?.id && !fetchedOnOpen.current) {
+      fetchedOnOpen.current = true;
+      lastProductId.current = product.id;
       setIsFetching(true);
       ProductoDetalleService.get({ productId: product.id })
         .then(res => {
@@ -32,7 +41,7 @@ export default function ProductDetailModal({ visible, onHide, product }) {
         })
         .finally(() => setIsFetching(false));
     }
-  }, [visible, product?.id, showForm]);
+  }, [visible, product?.id]);
 
   const handleAdd = () => {
     setRowData(null);
