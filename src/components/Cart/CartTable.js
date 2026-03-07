@@ -30,38 +30,43 @@ export default function CartTable({ cart, toCurrency, onQuantityChange, removePr
               alt={item.nombre}
             />
             <div className={styles['cart-card-details']}>
-              <div className={styles['cart-card-product-title']}>{item.nombre}</div>
-              <div className={styles['cart-card-product-meta']}>
-                {item.categoria}
-                {item.unidad || item.referencia ? (
-                  <>
-                    {item.categoria ? ' \u00b7 ' : ''}
-                    {item.unidad}
-                    {item.referencia ? ` (${item.referencia})` : ''}
-                  </>
-                ) : null}
-                <div style={{ fontSize: '0.93em', color: (item.estadoProducto || item.estado) === 'disponible' ? '#00a650' : '#d32f2f', fontWeight: 500, marginTop: 2 }}>
-                  {(item.estadoProducto || item.estado) === 'disponible' ? 'Disponible' : 'No disponible'}
+                <div className={styles['cart-card-main-row']}>
+                  <div className={styles['cart-card-main-left']}>
+                    <div className={styles['cart-card-product-title']}>{item.nombre}</div>
+                    <div className={styles['cart-card-product-meta']}>
+                      {item.categoria}
+                      {item.unidad || item.referencia ? (
+                        <>
+                          {item.categoria ? ' \u00b7 ' : ''}
+                          {item.unidad}
+                          {item.referencia ? ` (${item.referencia})` : ''}
+                        </>
+                      ) : null}
+                      <div style={{ fontSize: '0.93em', color: (item.estadoProducto || item.estado) === 'disponible' ? '#00a650' : '#d32f2f', fontWeight: 500, marginTop: 2 }}>
+                        {(item.estadoProducto || item.estado) === 'disponible' ? 'Disponible' : 'No disponible'}
+                      </div>
+                    </div>
+                    <div className={styles['cart-card-quantity-row']}>
+                      <CartStepper
+                        value={item.quantity}
+                        min={1}
+                        onChange={val => handleQuantityChange(item.id, val)}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles['cart-card-price-remove-align']}>
+                    <span className={styles['cart-card-price']}>{toCurrency(item.price)}</span>
+                    <Button
+                      icon="pi pi-trash"
+                      className={styles['cart-card-remove']}
+                      severity="danger"
+                      size="small"
+                      style={{ fontSize: '1rem', width: 26, height: 26, color: '#d32f2f' }}
+                      onClick={() => removeProduct(item.id)}
+                      aria-label="Eliminar producto"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className={styles['cart-card-actions']}>
-                <span className={styles['cart-card-price']}>{toCurrency(item.price)}</span>
-                <span className={styles['cart-card-quantity']}>
-                  <CartStepper
-                    value={item.quantity}
-                    min={1}
-                    onChange={val => handleQuantityChange(item.id, val)}
-                  />
-                </span>
-                <Button
-                  icon="pi pi-trash"
-                  className={styles['cart-card-remove']}
-                  severity="danger"
-                  size="small"
-                  onClick={() => removeProduct(item.id)}
-                  aria-label="Eliminar producto"
-                />
-              </div>
             </div>
           </div>
         </div>
