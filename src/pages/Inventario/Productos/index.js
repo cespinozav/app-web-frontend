@@ -296,17 +296,6 @@ export default function Productos() {
                         <td>
                           <div className="actions">
                             <Button
-                              icon="pi pi-image"
-                              className="p-button p-component p-button-icon-only"
-                              style={{ background: 'transparent', marginRight: 8 }}
-                              onClick={() => {
-                                setImagenesProduct(prod);
-                                setShowImagenes(true);
-                              }}
-                              aria-label="Imágenes"
-                              tooltip="Gestionar imágenes"
-                            />
-                            <Button
                               icon="pi pi-pencil"
                               className="p-button p-component p-button-icon-only"
                               style={{ background: 'transparent' }}
@@ -325,6 +314,17 @@ export default function Productos() {
                                 setShowDetail(true)
                               }}
                               aria-label="Detalles"
+                            />
+                            <Button
+                              icon="pi pi-image"
+                              className="p-button p-component p-button-icon-only"
+                              style={{ background: 'transparent', marginRight: 8 }}
+                              onClick={() => {
+                                setImagenesProduct(prod);
+                                setShowImagenes(true);
+                              }}
+                              aria-label="Imágenes"
+                              tooltip="Gestionar imágenes"
                             />
                           </div>
                           <ImagenesModal
