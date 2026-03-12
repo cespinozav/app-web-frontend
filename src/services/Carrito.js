@@ -29,7 +29,8 @@ const CarritoService = {
             precio: item.producto?.precio,
             estadoRegistro: item.estado,
             unidad: item.producto?.unidad,
-            referencia: item.producto?.referencia
+            referencia: item.producto?.referencia,
+            imagen: item.producto?.imagen || (item.producto && item.producto.image) || ''
           })),
           count: results.length
         }

@@ -54,6 +54,7 @@ export default function NuevoCarritoForm() {
           referencia: item.referencia,
           estado: item.estado,
           estadoProducto: item.estadoProducto || item.estado || undefined,
+          imagen: item.imagen
         }))
       );
       setLoading(false);

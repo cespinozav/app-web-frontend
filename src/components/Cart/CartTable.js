@@ -1,10 +1,12 @@
 import React from 'react';
-
+import getS3Url from 'utils/s3';
+// ...existing code...
 import { Button } from 'primereact/button';
 import styles from './CartTable.module.scss';
 import CartStepper from './CartStepper';
 
 export default function CartTable({ cart, toCurrency, onQuantityChange, removeProduct }) {
+  console.log('CartTable cart:', cart);
   if (!cart || cart.length === 0) {
     return <div className={styles['cart-empty']}>No hay productos en el carrito</div>;
   }
@@ -13,6 +15,12 @@ export default function CartTable({ cart, toCurrency, onQuantityChange, removePr
     if (newQuantity > 0) {
       onQuantityChange(id, { quantity: newQuantity });
     }
+  };
+
+  // Helper para obtener la imagen del producto
+  const getProductImage = (item) => {
+    const url = getS3Url(item.imagen);
+    return url || 'https://via.placeholder.com/220x220?text=Sin+Imagen';
   };
 
   return (
@@ -26,7 +34,7 @@ export default function CartTable({ cart, toCurrency, onQuantityChange, removePr
           <div className={styles['cart-card-content']}>
             <img
               className={styles['cart-card-image']}
-              src={item.imagen || '/img/icons/default-product.png'}
+              src={getProductImage(item)}
               alt={item.nombre}
             />
             <div className={styles['cart-card-details']}>

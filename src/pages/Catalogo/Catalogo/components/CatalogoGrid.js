@@ -1,4 +1,5 @@
 import React from 'react';
+import getS3Url from 'utils/s3';
 
 export default function CatalogoGrid({ productos, loading, onShowDetalle }) {
   if (loading) {
@@ -23,19 +24,22 @@ export default function CatalogoGrid({ productos, loading, onShowDetalle }) {
             }}
             style={{ cursor: 'pointer' }}
           >
-            <img src={producto.imagen || producto.imagen_url || 'https://via.placeholder.com/220x220?text=Sin+Imagen'} alt={producto.nombre} />
+            <img src={getS3Url(producto.imagen) || 'https://via.placeholder.com/220x220?text=Sin+Imagen'} alt={producto.nombre} />
           </div>
           <div className="catalogo-info">
             <h2>{producto.nombre}</h2>
             <div className="catalogo-precio">
-              {producto.stock === 0
-                ? <span className="agotado">Agotado</span>
-                : <>S/ {Number(producto.precio).toFixed(2)}</>
-              }
+              <span className={producto.estado === 'disponible' ? 'disponible' : 'agotado'}>
+                {producto.estado === 'disponible' ? 'Disponible' : 'No disponible'}
+              </span>
+              <br />
+              {producto.estado === 'disponible' && producto.precio
+                ? <>
+                    S/ {Number(producto.precio).toFixed(2)}
+                    {producto.unidad && producto.unidad.unidad ? <span style={{ marginLeft: 8, color: '#888', fontSize: 14 }}>{producto.unidad.unidad}</span> : null}
+                  </>
+                : null}
             </div>
-            {producto.categoria_nombre && (
-              <span className="catalogo-categoria">{producto.categoria_nombre}</span>
-            )}
             <button
               className="add add-cart-btn"
               style={{ marginTop: 16, width: '100%' }}

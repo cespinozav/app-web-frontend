@@ -12,6 +12,7 @@ import { useQuery } from 'hooks/useRequest'
 import CategoriaService from 'services/Categoria'
 import ProductoService from 'services/Producto'
 import ProductDetailModal from './ProductDetailModal'
+import ImagenesModal from './ImagenesModal';
 import './style.scss'
 
 function normalizeState(state) {
@@ -27,6 +28,8 @@ function normalizeState(state) {
 const PAGE_SIZE = 10
 
 export default function Productos() {
+  const [showImagenes, setShowImagenes] = useState(false);
+  const [imagenesProduct, setImagenesProduct] = useState(null);
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [cat, setCat] = useState('')
@@ -293,6 +296,17 @@ export default function Productos() {
                         <td>
                           <div className="actions">
                             <Button
+                              icon="pi pi-image"
+                              className="p-button p-component p-button-icon-only"
+                              style={{ background: 'transparent', marginRight: 8 }}
+                              onClick={() => {
+                                setImagenesProduct(prod);
+                                setShowImagenes(true);
+                              }}
+                              aria-label="Imágenes"
+                              tooltip="Gestionar imágenes"
+                            />
+                            <Button
                               icon="pi pi-pencil"
                               className="p-button p-component p-button-icon-only"
                               style={{ background: 'transparent' }}
@@ -313,6 +327,14 @@ export default function Productos() {
                               aria-label="Detalles"
                             />
                           </div>
+                          <ImagenesModal
+                            visible={showImagenes && imagenesProduct?.id === prod.id}
+                            onHide={() => setShowImagenes(false)}
+                            producto={imagenesProduct}
+                            onUpdate={() => {
+                              // Aquí podrías actualizar el producto en el backend o en el estado global
+                            }}
+                          />
                           <ProductDetailModal
                             visible={showDetail}
                             onHide={() => setShowDetail(false)}

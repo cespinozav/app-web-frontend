@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style.scss';
-import ProductoService from 'services/Producto';
+
+import CatalogoProductoService from 'services/CatalogoProducto';
 
 
 import DetalleModal from './components/DetalleModal';
@@ -26,11 +27,26 @@ export default function Catalogo() {
       page_size: 40,
       cat: categoria,
     };
-    ProductoService.get(params).then(res => {
-      let filtered = res.results;
-      if (precioMin != null) filtered = filtered.filter(p => Number(p.precio) >= precioMin);
-      if (precioMax != null) filtered = filtered.filter(p => Number(p.precio) <= precioMax);
-      setProductos(filtered);
+    CatalogoProductoService.get(params).then(res => {
+      // Nueva estructura: res.result.results
+      let productosData = [];
+      if (Array.isArray(res)) {
+        productosData = res;
+      } else if (res.result && Array.isArray(res.result.results)) {
+        productosData = res.result.results;
+      }
+      // Adaptar estructura: usar unidad.precio si existe
+      const productosAdaptados = productosData.map(p => ({
+        ...p,
+        precio: p.unidad && p.unidad.precio ? p.unidad.precio : null,
+        categoria_nombre: p.categoria || '',
+        imagen: p.imagen || null,
+        unidad: p.unidad || null,
+      }));
+      let productosFiltrados = productosAdaptados;
+      if (precioMin != null) productosFiltrados = productosFiltrados.filter(p => Number(p.precio) >= precioMin);
+      if (precioMax != null) productosFiltrados = productosFiltrados.filter(p => Number(p.precio) <= precioMax);
+      setProductos(productosFiltrados);
     }).finally(() => setLoading(false));
   }, [categoria, precioMin, precioMax]);
 

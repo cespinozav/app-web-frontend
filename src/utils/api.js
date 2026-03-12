@@ -36,15 +36,21 @@ export async function makeRequest(suffix, { method = HTTP_METHODS.GET, params, b
     }
   }
   try {
-    let bodyValue = null
-    if (body) {
-      bodyValue = typeof body === 'string' ? body : JSON.stringify(body)
+    let bodyValue = null;
+    let finalHeaders = headers
+      ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) }
+      : HEADERS;
+    if (body instanceof FormData) {
+      bodyValue = body;
+      // Eliminar Content-Type para que el navegador lo gestione
+      finalHeaders = { ...finalHeaders };
+      delete finalHeaders['Content-Type'];
+    } else if (body) {
+      bodyValue = typeof body === 'string' ? body : JSON.stringify(body);
     }
     const response = await fetch(url, {
       method,
-      headers: headers
-        ? { ...HEADERS, ...headers, ...(localStorage.getItem('accessToken') && { Authorization: getBearer() }) }
-        : HEADERS,
+      headers: finalHeaders,
       body: bodyValue,
       signal
     })
