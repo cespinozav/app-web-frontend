@@ -202,7 +202,7 @@ const Perfil = () => {
         <section className="perfil-section-card perfil-sedes-section">
           <h3 className="perfil-subtitle">Sedes asignadas</h3>
           <div className="perfil-table-wrap">
-            <table className="p-datatable table perfil-table">
+            <table className="app-table perfil-table">
               <thead>
                 <tr>
                   <th>ID</th>

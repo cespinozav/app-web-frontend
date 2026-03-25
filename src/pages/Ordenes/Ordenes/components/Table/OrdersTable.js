@@ -30,7 +30,7 @@ export default function OrdersTable({
       {isFetching ? (
         Array.from({ length: pageSize }).map((_, index) => <Skeleton className="table" key={index} />)
       ) : (
-        <table className="p-datatable table">
+        <table className="app-table">
           <thead>
             <tr>
               <th>

@@ -11,7 +11,7 @@ export default function ClientesTable({ clientes, page, PAGE_SIZE, setRowData, s
       {isFetching ? (
         Array.from({ length: PAGE_SIZE }).map((_, i) => <Skeleton className="table" key={i} />)
       ) : (
-        <table className="p-datatable table">
+        <table className="app-table">
           <thead>
             <tr>
               <th>Nro</th>

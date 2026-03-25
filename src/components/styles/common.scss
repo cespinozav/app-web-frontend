@@ -1,3 +1,43 @@
+// Estilo profesional para tablas reutilizable
+.app-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.app-table th, .app-table td {
+  padding: 14px 12px;
+  text-align: left;
+}
+
+.app-table th {
+  background: #f7f8fa;
+  font-weight: 600;
+  font-size: 1.05em;
+  color: #222;
+  border-bottom: 2px solid #e3e6ec;
+}
+
+.app-table tr {
+  transition: background 0.2s;
+}
+
+.app-table tr:hover {
+  background: #f0f4fa;
+}
+
+
+.app-table td {
+  border-bottom: none;
+}
+
+.app-table tr:last-child td {
+  border-bottom: none;
+}
 // Botón de acción editar estandarizado (circular azul, icono)
 .actions {
   display: flex;

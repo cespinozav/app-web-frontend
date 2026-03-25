@@ -119,7 +119,7 @@ export default function SedesModal({ visible, onHide, cliente }) {
                       <td>
                         <EstadoBadge estado={sede.state} />
                       </td>
-                      <td>{sede.name_country}</td>
+                      <td>{sede.name_city}</td>
                       <td>{sede.adress}</td>
                       {/* <td>{sede.lat}</td>
                       <td>{sede.long}</td> */}

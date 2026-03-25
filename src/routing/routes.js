@@ -16,7 +16,9 @@ const ROUTES = {
   PROFILE: '/perfil',
   PASSWORD_RESET_CONFIRM: '/reset-password/:uid/:token',
   CATALOG: '/catalogo',
-  PRODUCT_DETAIL: '/catalogo/:id'
+  PRODUCT_DETAIL: '/catalogo/:id',
+  CUENTAS_BANCARIAS: '/cuentas-bancarias',
+  CUENTAS_BANCARIAS_LIST: '/cuentas-bancarias/listado',
 }
 
 export const SUB_ROUTES = {
@@ -39,7 +41,10 @@ export const SUB_ROUTES = {
   CATALOG: {
     MAIN: `${ROUTES.CATALOG}`,
     CART: `${ROUTES.CATALOG}/carrito`,
-  }
+  },
+  CUENTAS_BANCARIAS: {
+    MAIN: `${ROUTES.CUENTAS_BANCARIAS}/listado`,
+  },
 }
 
 export default ROUTES

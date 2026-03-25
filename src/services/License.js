@@ -64,7 +64,7 @@ function formatAssignmentInfo(res) {
     authorName,
     authorId: author.id,
     authorDni: author.dni,
-    country: res.ubication,
+    city: res.ubication,
     reference: res.ticket,
     comments: res.comments,
     classificationId: res.classification_license.id,
@@ -247,7 +247,7 @@ const LicenseService = {
               licensesNames: r.licencias.map(l => l.name_license).join(', '),
               lastname: r.apellido,
               created: r.cuando_se_crea,
-              country: r.ubicacion_pais ?? '',
+              city: r.ubicacion_pais ?? '',
               observation: r.valide_observation
             })) || []
         )
@@ -262,7 +262,7 @@ const LicenseService = {
         nombre: r.name,
         apellido: r.lastname,
         cuando_se_crea: r.created,
-        ubicacion_pais: r.country,
+        ubicacion_pais: r.city,
         valide_observation: r.observation
       }))
       return networkRequest('/operate-license-file', {
@@ -285,7 +285,7 @@ const LicenseService = {
                 numRow: r.num_row,
                 licensesNames: `${r.licenses.map(l => l.name_license).join(', ')}`,
                 personId: r.person,
-                country: r.ubicacion_pais ?? '',
+                city: r.ubicacion_pais ?? '',
                 observation
               }
             }) || []

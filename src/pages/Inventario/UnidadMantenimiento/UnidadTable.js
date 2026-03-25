@@ -49,7 +49,7 @@ export default function UnidadTable({ option }) {
             service={service}
             FormComponent={FormComponent}
           />
-          <DataTable value={data} className="table" emptyMessage="No hay resultados">
+          <DataTable value={data} className="app-table" emptyMessage="No hay resultados">
             <Column field="id" header="ID" />
             <Column field="description" header="Unidad" />
             <Column field="reference" header="Referencia" />

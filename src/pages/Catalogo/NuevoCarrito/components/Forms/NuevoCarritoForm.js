@@ -270,11 +270,12 @@ export default function NuevoCarritoForm() {
               <strong>{toCurrency(summary.total)}</strong>
             </div>
           </div>
+          <hr className="my-2" />
           <div className="orden-actions">
             <Button
               className="p-button-info"
-              label="Generar Orden"
-              icon="pi pi-file-pdf"
+              label="Continuar Compra"
+              icon="pi pi-shopping-cart"
               iconPos="left"
               disabled={cart.length === 0 || !selectedClient || !selectedSite}
               onClick={handleOpenPaymentModal}

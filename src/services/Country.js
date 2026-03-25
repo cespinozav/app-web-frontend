@@ -1,9 +1,9 @@
 /* eslint-disable camelcase, global-require */
 import { makeRequest } from 'utils/api'
 
-const ENDPOINT = '/countries'
+const ENDPOINT = '/cities'
 
-const CountryService = {
+const CityService = {
   get: ({ page = 1, page_size = 100 } = {}) =>
     makeRequest(`${ENDPOINT}/?page=${page}&page_size=${page_size}`, {
       headers: localStorage.getItem('accessToken') ? { Authorization: require('utils/auth').getBearer() } : undefined
@@ -18,4 +18,4 @@ const CountryService = {
       })
 }
 
-export default CountryService
+export default CityService

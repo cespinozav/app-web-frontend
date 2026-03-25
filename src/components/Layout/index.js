@@ -68,6 +68,7 @@ function Layout() {
             <MenuItem path="/clientes" name="Clientes" icon={CLIENTS_ICON} />
             <MenuItem path="/usuarios" name="Usuarios" icon={USERS_ICON} />
             <MenuItem path="/perfil" name="Perfil" icon={SETTINGS_ICON} />
+              <MenuItem path="/cuentas-bancarias" name="Mis cuentas bancarias" icon={ORDERS_ICON} />
           </div>
         </div>
         <div className="action">

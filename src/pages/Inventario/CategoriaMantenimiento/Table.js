@@ -58,7 +58,7 @@ export default function Table({ option }) {
             FormComponent={FormComponent}
           />
           {/* Eliminar modal de eliminación */}
-          <DataTable value={data} className="table" emptyMessage="No hay resultados">
+          <DataTable value={data} className="app-table" emptyMessage="No hay resultados">
             <Column field="id" header="ID" />
             <Column field="description" header="Nombre" />
             <Column field="user_created" header="Creador" />

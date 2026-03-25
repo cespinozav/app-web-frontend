@@ -127,7 +127,7 @@ export default function SedesAsignadasModal({ visible, onHide, usuario }) {
                 usuario={usuario}
               />
             </Dialog>
-            <table className="p-datatable table">
+            <table className="app-table">
               <thead>
                 <tr>
                   <th>ID</th>

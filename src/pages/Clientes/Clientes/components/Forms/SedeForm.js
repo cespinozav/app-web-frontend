@@ -22,19 +22,19 @@ function SedeForm({ defaultValues, onSubmitFields, toast, isMutating }) {
     defaultValues: defaultValues
       ? {
           ...defaultValues,
-          id_country:
-            typeof defaultValues.id_country === 'number' && defaultValues.name_country
+          id_city:
+            typeof defaultValues.id_city === 'number' && defaultValues.name_city
               ? {
-                  id: defaultValues.id_country,
-                  description: defaultValues.name_country,
-                  nombre: defaultValues.name_country
+                  id: defaultValues.id_city,
+                  description: defaultValues.name_city,
+                  nombre: defaultValues.name_city
                 }
-              : defaultValues.id_country || null
+              : defaultValues.id_city || null
         }
       : {
           nombre: '',
           adress: '',
-          id_country: null,
+          id_city: null,
           lat: '',
           long: '',
           state: 'activo'
@@ -47,10 +47,10 @@ function SedeForm({ defaultValues, onSubmitFields, toast, isMutating }) {
     if (toast) toast.error(messages)
   }
   const onSubmit = data => {
-    // Si id_country es un objeto, extrae el id
+    // Si id_city es un objeto, extrae el id
     const payload = { ...data }
-    if (payload.id_country && typeof payload.id_country === 'object' && 'id' in payload.id_country) {
-      payload.id_country = payload.id_country.id
+    if (payload.id_city && typeof payload.id_city === 'object' && 'id' in payload.id_city) {
+      payload.id_city = payload.id_city.id
     }
     onSubmitFields(payload, reset)
   }
@@ -69,9 +69,9 @@ function SedeForm({ defaultValues, onSubmitFields, toast, isMutating }) {
             {errors.nombre && <div className="error-message">{errors.nombre.message}</div>}
           </div>
           <div className="m-row">
-            <label htmlFor="id_country">Ciudad:</label>
+            <label htmlFor="id_city">Ciudad:</label>
             <FormAutoComplete
-              name="id_country"
+              name="id_city"
               control={control}
               rules={{ required: 'Ciudad requerida' }}
               placeholder="Buscar ciudad"
@@ -83,7 +83,7 @@ function SedeForm({ defaultValues, onSubmitFields, toast, isMutating }) {
               minLength={2}
               style={{ minWidth: 160 }}
             />
-            {errors.id_country && <div className="error-message">{errors.id_country.message}</div>}
+            {errors.id_city && <div className="error-message">{errors.id_city.message}</div>}
           </div>
           <div className="m-row">
             <label htmlFor="lat">Latitud:</label>

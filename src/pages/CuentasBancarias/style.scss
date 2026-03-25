@@ -1,0 +1,134 @@
+.ordenes-listado {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-ordenes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid #ecebeb;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+
+.header-ordenes h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.filtros-ordenes {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.orders-export-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .p-button {
+    min-width: 42px;
+    height: 42px;
+  }
+}
+
+.tabla-ordenes {
+  margin-top: 2rem;
+}
+
+
+.p-datatable.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.p-datatable.table th, .p-datatable.table td {
+  padding: 14px 12px;
+  text-align: left;
+}
+
+.p-datatable.table th {
+  background: #f7f8fa;
+  font-weight: 600;
+  font-size: 1.05em;
+  color: #222;
+  border-bottom: 2px solid #e3e6ec;
+}
+
+.p-datatable.table tr {
+  transition: background 0.2s;
+}
+
+.p-datatable.table tr:hover {
+  background: #f0f4fa;
+}
+
+.p-datatable.table td {
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.p-datatable.table tr:last-child td {
+  border-bottom: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.paginate {
+  margin-top: 24px;
+}
+
+.p-paginator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tabla-productos {
+  margin-top: 2rem;
+}
+
+.p-datatable.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.p-datatable.table th, .p-datatable.table td {
+  border: 1px solid #ecebeb;
+  padding: 8px;
+  text-align: left;
+}
+
+.p-datatable.table th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+
+.p-datatable.table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}

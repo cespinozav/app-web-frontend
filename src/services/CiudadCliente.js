@@ -1,7 +1,7 @@
 /* eslint-disable camelcase, global-require */
 import { makeRequest } from 'utils/api'
 
-const ENDPOINT = '/countries'
+const ENDPOINT = '/cities'
 
 const CiudadClienteService = {
   get: ({ page = 1, page_size = 10, search = '' } = {}) => {

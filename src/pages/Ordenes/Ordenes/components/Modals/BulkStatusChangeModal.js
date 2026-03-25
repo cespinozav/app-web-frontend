@@ -143,7 +143,7 @@ export default function BulkStatusChangeModal({
             <section className="order-detail-card">
               <h4>Detalle general de productos</h4>
               <div className="order-detail-table-wrap">
-                <table className="p-datatable table order-detail-table">
+                <table className="app-table order-detail-table">
                   <thead>
                     <tr>
                       <th>Nro</th>

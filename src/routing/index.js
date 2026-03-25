@@ -25,6 +25,9 @@ import Ordenes from '../pages/Ordenes/Ordenes'
 import NuevaOrden from '../pages/Ordenes/NuevaOrden'
 import AuthGuard from './AuthGuard'
 
+import CuentasBancariasModule from '../pages/CuentasBancarias/CuentasBancariasModule'
+import CuentasBancarias from '../pages/CuentasBancarias/CuentasBancarias'
+
 export default function AppRoutes() {
   return (
     <BrowserRouter>
@@ -73,6 +76,10 @@ export default function AppRoutes() {
               <Route path={ROUTES.USERS_MAINTENANCE} element={<MantenimientoUsuarios />} />
             </Route>
             <Route path={ROUTES.PROFILE} element={<Perfil />} />
+              <Route path={ROUTES.CUENTAS_BANCARIAS} element={<CuentasBancariasModule />}>
+                <Route index element={<Navigate to={ROUTES.CUENTAS_BANCARIAS_LIST} replace />} />
+                <Route path={ROUTES.CUENTAS_BANCARIAS_LIST} element={<CuentasBancarias />} />
+              </Route>
           </Route>
         </Route>
       </Routes>
